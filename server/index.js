@@ -22,7 +22,7 @@ const jwtCheck = jwt({
 });
 
 // Priority serve any static files.
-app.use(express.static(path.resolve(__dirname, '../react-ui/build')), cors(), helmet());
+app.use(express.static(path.resolve(__dirname, '../client/build')), cors(), helmet());
 
 // Answer API requests.
 app.get('/data', jwtCheck, (req, res) => {
@@ -37,7 +37,7 @@ app.get('/api', jwtCheck, (req, res) => {
 
 // All remaining requests return the React app, so it can handle routing.
 app.get('*', (request, response) => {
-    response.sendFile(path.resolve(__dirname, '../react-ui/build', 'index.html'));
+    response.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
 });
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
