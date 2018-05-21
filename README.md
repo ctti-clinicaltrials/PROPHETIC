@@ -13,7 +13,7 @@ A combo of two npm projects, the backend server and the frontend UI. So there ar
 ## Deploy to Heroku
 
 ```bash
-git clone
+git clone https://github.com/ctti-clinicaltrials/PROPHETIC.git
 cd /
 heroku create
 git push heroku master
