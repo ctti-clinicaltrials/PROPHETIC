@@ -1,7 +1,8 @@
 {
-  "name": "mobx_react_app_starter",
+  "name": "CTTI_PROPHETIC",
   "version": "0.1.0",
   "private": true,
+  "author": "@caseychoiniere",
   "dependencies": {
     "@mars/heroku-js-runtime-env": "^3.0.2",
     "@material-ui/core": "^1.0.0",

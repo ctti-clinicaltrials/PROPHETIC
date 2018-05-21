@@ -4,11 +4,20 @@ Mobx was added without ejecting the app via the [Custom React Scripts](https://w
 
 ## Get Started
 
-1.) `$ git clone https://github.com/caseychoiniere/mobx-cra-starter.git`
+1.) `$ git clone https://github.com/ctti-clinicaltrials/PROPHETIC.git`
 
-2.) `$ cd MyApp`
+2.) `$ cd MyApp/client`
 
-3.) `$ yarn start`
+3.) If `.env` doesn't exist in the root then create one and add the following to allow CSS modules and decorator support for Mobx.
+ `REACT_APP_DECORATORS = true;
+
+  REACT_APP_BABEL_STAGE_0 = true;
+
+  REACT_APP_CSS_MODULES = true;
+
+  REACT_APP_WEBPACK_DASHBOARD = true;`
+
+4.) `$ yarn start`
 
 For the project to build, **these files must exist with exact filenames**:
 
