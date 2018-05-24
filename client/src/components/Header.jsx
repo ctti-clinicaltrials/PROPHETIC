@@ -25,7 +25,8 @@ const styles = {
         flex: 1,
     },
     logo: {
-        maxWidth: 200
+        maxWidth: 200,
+        marginBottom: -5,
     },
     menuButton: {
         marginLeft: -12,

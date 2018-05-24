@@ -26,7 +26,6 @@ class Login extends Component {
                 }
             </div>
         );
-        {/*<Button label="Login" primary={true} onClick={this.login} />*/}
     }
 }
 

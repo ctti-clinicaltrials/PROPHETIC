@@ -10,6 +10,9 @@ npm-debug.log
 .idea/
 *.iml
 
+# env secrets
+
+
 # Docker
 Dockerfile
 docker-compose.yml
