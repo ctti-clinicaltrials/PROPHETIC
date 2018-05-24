@@ -39,7 +39,7 @@ They will not be included in the production build so you can use them for things
 
 In the project directory, you can run:
 
-### `yarn start`
+### `npm start`
 
 Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -61,5 +61,5 @@ The build is minified and the filenames include the hashes.<br>
 
 ## More Info
 
-For more info on Create React App you can find the most recent version of the Create React App guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
+For more info see the main [README.md file](https://github.com/ctti-clinicaltrials/PROPHETIC/blob/master/README.md) in the root of the project
 
