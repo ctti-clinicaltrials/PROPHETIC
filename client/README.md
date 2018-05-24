@@ -1,6 +1,6 @@
 This project uses [Create React App](https://github.com/facebookincubator/create-react-app) in addition to
 [Mobx](https://github.com/mobxjs/mobx) for state management, [React Router v4](https://github.com/ReactTraining/react-router) for routing and [Material-UI](http://www.material-ui.com/#/) for styled components.
-Mobx was added without ejecting the app via the [Custom React Scripts](https://www.npmjs.com/package/custom-react-scripts) package.
+Mobx was added without ejecting the app via the [React App Rewired](https://github.com/timarney/react-app-rewired) package. We use [Auth0](https://auth0.com/) for authenticating users.
 
 ## Get Started
 
@@ -8,14 +8,12 @@ Mobx was added without ejecting the app via the [Custom React Scripts](https://w
 
 2.) `$ cd MyApp/client`
 
-3.) If `.env` doesn't exist in the root then create one and add the following to allow CSS modules and decorator support for Mobx.
- `REACT_APP_DECORATORS = true;
+3.) Custom React Scripts allows you to define a `.env` file in the root and add env vars for development.
+ Custom React Scripts has preset vars to allow CSS modules, Stylus, Sass etc. You can find more info [here](https://www.npmjs.com/package/custom-react-scripts).
+ You can also define your own custom env vars using this format `REACT_APP_*`.
 
-  REACT_APP_BABEL_STAGE_0 = true;
-
-  REACT_APP_CSS_MODULES = true;
-
-  REACT_APP_WEBPACK_DASHBOARD = true;`
+ If you choose to use Auth0 for authentication, you can define `REACT_APP_CLIENT_ID` and add your Auth0 client ID in `.env` for local development.
+ Be careful not to check this information into a public repository.
 
 4.) `$ yarn start`
 

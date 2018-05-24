@@ -6,15 +6,17 @@ import runtimeEnv from '@mars/heroku-js-runtime-env';
 
 const env = process.env.NODE_ENV !== 'production' ? runtimeEnv() : process.env.NODE_ENV;
 
-const redirectUri = process.env.NODE_ENV !== 'production' ? 'http://localhost:3000/login' : 'https://blooming-ridge-83489.herokuapp.com/login';
-const clientID = !process.env.NODE_ENV ? env.REACT_APP_CLIENT_ID : process.env.REACT_APP_CLIENT_ID;
+const redirectUri = process.env.NODE_ENV !== 'production' ? 'http://localhost:3000/login' : 'https://blooming-ridge-83489.herokuapp.com/login'; //Todo: replace with appropriate env vars/url
+
+let clientID = !process.env.NODE_ENV ? env.REACT_APP_CLIENT_ID : process.env.REACT_APP_CLIENT_ID;
+
+clientID = clientID || ''; /* auth0 requires a value for clientID. This keeps app from failing during Travis CI build and test run*/
 
 export class AuthStore {
     @observable auth0;
     @observable userProfile;
 
     constructor() {
-        this.api = api;
         this.auth0 = new auth0.WebAuth({
             clientID: clientID,
             domain: 'securepoint.auth0.com',
