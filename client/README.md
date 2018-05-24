@@ -14,7 +14,6 @@ Mobx was added without ejecting the app via the [React App Rewired](https://gith
 
  If you choose to use Auth0 for authentication, you can define `REACT_APP_CLIENT_ID` and add your Auth0 client ID in `.env` for local development.
  Be careful not to check this information into a public repository.
- ``
 
 4.) `$ yarn start`
 
