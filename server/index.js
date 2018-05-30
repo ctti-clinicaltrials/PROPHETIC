@@ -1,38 +1,56 @@
 const cors = require('cors');
+const corsOptions = {
+    origin: '*',
+    optionsSuccessStatus: 200
+};
 const express = require('express');
+const fetch = require('node-fetch');
 const helmet = require('helmet');
 const jwks = require('jwks-rsa');
 const jwt = require('express-jwt');
 const path = require('path');
+if (!process.env.NODE_ENV) require('dotenv').load();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
 
 const jwtCheck = jwt({
     secret: jwks.expressJwtSecret({
         cache: true,
         rateLimit: true,
         jwksRequestsPerMinute: 5,
-        jwksUri: "https://securepoint.auth0.com/.well-known/jwks.json"
+        jwksUri: process.env.REACT_APP_JWKS_URI
     }),
-    audience: 'https://blooming-ridge-83489.herokuapp.com/',
-    issuer: "https://securepoint.auth0.com/",
+    audience: process.env.REACT_APP_API_ID,
+    issuer: process.env.REACT_APP_AUTH0,
     algorithms: ['RS256']
 });
 
 // Priority serve any static files.
-app.use(express.static(path.resolve(__dirname, '../client/build')), cors(), helmet());
+app.use(express.static(path.resolve(__dirname, '../client/build')), cors(corsOptions), helmet());
 
-// Answer API requests.
-app.get('/data', jwtCheck, (req, res) => {
-  res.set('Content-Type', 'application/json');
-  res.send('{"message":"DATA"}');
-});
-// Answer API requests.
-app.get('/api', jwtCheck, (req, res) => {
+// Get Duke Data Service api token
+app.get('/api/agent-token', jwtCheck, (req, res) => {
     res.set('Content-Type', 'application/json');
-    res.send('{"message":"Hello from the server"}');
+    fetch(`${process.env.REACT_APP_DDS_API_URL}software_agents/api_token`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            'agent_key': process.env.REACT_APP_AGENT_KEY,
+            'user_key': process.env.REACT_APP_AGENT_USER_KEY
+        })
+    }).then(res => res.json()).then((json) => {
+        return res.send(json)
+    })
+});
+
+// App status.
+app.get('/api/status', jwtCheck, (req, res) => {
+    res.set('Content-Type', 'application/json');
+    res.send('{"status":"ok"}');
 });
 
 // All remaining requests return the React app, so it can handle routing.
