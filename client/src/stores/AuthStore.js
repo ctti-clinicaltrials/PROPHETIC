@@ -13,7 +13,7 @@ export class AuthStore {
             clientID: config.CLIENT_ID,
             domain: config.AUTH0_URL,
             responseType: 'token id_token',
-            audience: config.APP_URL,
+            audience: config.API_ID,
             redirectUri: config.REDIRECT_URI,
             scope: 'openid email profile',
             options: {

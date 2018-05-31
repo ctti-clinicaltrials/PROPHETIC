@@ -4,6 +4,8 @@ const env = process.env.NODE_ENV !== 'production' ? runtimeEnv() : process.env.N
 
 const agentKey = !process.env.NODE_ENV ? env.REACT_APP_AGENT_KEY : process.env.REACT_APP_AGENT_KEY;
 
+const apiId = !process.env.NODE_ENV ? env.REACT_APP_API_ID : process.env.REACT_APP_API_ID;
+
 const appUrl = !process.env.NODE_ENV ? env.REACT_APP_URL : process.env.REACT_APP_URL;
 
 const auth0Url = !process.env.NODE_ENV ? env.REACT_APP_CLIENT_AUTH_0_DOMAIN : process.env.REACT_APP_CLIENT_AUTH_0_DOMAIN;
@@ -23,6 +25,7 @@ const userKey = !process.env.NODE_ENV ? env.REACT_APP_AGENT_USER_KEY : process.e
 export const config = {
     AGENT_KEY: agentKey,
     APP_URL: appUrl,
+    API_ID: apiId,
     AUTH0_URL: auth0Url,
     CLIENT_ID: clientID,
     DDS_API_URL: ddsApiUrl,
