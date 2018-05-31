@@ -14,6 +14,7 @@ if (!process.env.NODE_ENV) require('dotenv').load();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+console.log(process.env)
 const jwtCheck = jwt({
     secret: jwks.expressJwtSecret({
         cache: true,
@@ -42,9 +43,9 @@ app.get('/api/agent-token', jwtCheck, (req, res) => {
             'agent_key': process.env.REACT_APP_AGENT_KEY,
             'user_key': process.env.REACT_APP_AGENT_USER_KEY
         })
-    }).then(res => res.json()).then((json) => {
-        return res.send(json)
-    })
+    }).then(res => res.json())
+      .then((json) => res.send(json))
+      .catch((er) => res.send(er))
 });
 
 // App status.

@@ -33,18 +33,14 @@ export class AuthStore {
 
     @action getDDSApiToken() {
         api.getDDSApiToken()
-            .then()
             .then(response => response.json())
             .then((json) => {
                 api.getProjects(json.api_token)
-                    .then()
                     .then(response => response.json())
-                    .then((json) => {
-                        console.log(json.results);
-                    }).catch(ex =>MainStore.handleErrors(ex))
-            }).catch((er) => {
-            MainStore.handleErrors(er)
-        })
+                    .then(json => console.log(json.results))
+                    .catch(ex =>MainStore.handleErrors(ex))
+            })
+            .catch(er => MainStore.handleErrors(er))
     }
 
     @action getProfile() {
