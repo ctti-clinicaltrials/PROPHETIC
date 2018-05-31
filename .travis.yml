@@ -8,7 +8,7 @@ cache:
     - node_modules
 
 script:
-  - cd client/ && npm install && npm install --only=dev --no-shrinkwrap && npm run test && CI=false TRAVIS_SECURE_ENV_VARS= true npm run build
+  - cd client/ && npm install && npm install --only=dev --no-shrinkwrap && npm run test && CI=false TRAVIS_SECURE_ENV_VARS=true npm run build
 
 branches:
   only:
