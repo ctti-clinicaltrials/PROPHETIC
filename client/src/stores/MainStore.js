@@ -48,6 +48,4 @@ export class MainStore {
     }
 }
 
-const mainStore = new MainStore();
-
-export default mainStore;
+export default new MainStore();
