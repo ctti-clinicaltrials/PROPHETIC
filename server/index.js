@@ -47,7 +47,7 @@ app.get('/api/agent-token', jwtCheck, (req, res) => {
       .catch((er) => res.send(er))
 });
 
-// App status.
+// App status
 app.get('/api/status', jwtCheck, (req, res) => {
     res.set('Content-Type', 'application/json');
     res.send('{"status":"ok"}');
