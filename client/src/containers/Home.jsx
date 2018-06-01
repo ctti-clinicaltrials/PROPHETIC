@@ -26,7 +26,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 @observer
 class Home extends Component {
     componentDidMount() {
-        MainStore.test();
         AuthStore.getProfile();
         AuthStore.getDDSApiToken();
     }
