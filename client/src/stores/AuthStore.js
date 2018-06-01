@@ -6,6 +6,7 @@ import MainStore from './MainStore';
 
 export class AuthStore {
     @observable auth0;
+    @observable ddsAPIToken;
     @observable userProfile;
 
     constructor() {
@@ -20,7 +21,16 @@ export class AuthStore {
                 rememberLastLogin: false
             }
         });
+        this.ddsAPIToken = null;
         this.userProfile = null;
+    }
+
+    @action checkTokenExpiration() {
+        if(this.isAuthenticated()) {
+            setInterval(() => this.checkTokenExpiration(), 60000);
+        } else {
+            this.logout();
+        }
     }
 
     @action getAccessToken() {
@@ -35,6 +45,7 @@ export class AuthStore {
         api.getDDSApiToken()
             .then(response => response.json())
             .then((json) => {
+                this.ddsAPIToken = json.api_token;
                 api.getProjects(json.api_token)
                     .then(response => response.json())
                     .then(json => console.log(json.results))
@@ -65,7 +76,7 @@ export class AuthStore {
         });
     }
 
-    isAuthenticated() {
+    @action isAuthenticated() {
         let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
         return new Date().getTime() < expiresAt;
     }
