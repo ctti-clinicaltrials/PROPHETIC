@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "React client with Node API on Heroku built for the CTTI Prophetic project",
   "author": "@caseychoiniere",
+  "license": "MIT",
   "engines": {
     "node": "6.11.x"
   },
   "scripts": {
     "start": "node server",
+    "dev": "nodemon --watch server",
     "heroku-postbuild": "cd client/ && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "cacheDirectories": [
@@ -23,6 +25,9 @@
     "jwks-rsa": "^1.2.1",
     "node-fetch": "^2.1.2"
   },
+  "devDependencies": {
+    "nodemon": "^1.17.5"
+  },
   "repository": {
     "type": "git",
     "url": ""
@@ -35,7 +40,5 @@
     "heroku",
     "create-react-app",
     "react"
-  ],
-  "license": "MIT",
-  "devDependencies": {}
+  ]
 }
