@@ -6,6 +6,7 @@ import CTTI_logo from '../images/CTTI_logo.png';
 import { Color } from '../theme/theme';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
+import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import { createMuiTheme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -21,6 +22,9 @@ const styles = {
     appBar: {
         backgroundColor: Color.white
     },
+    avatar: {
+        margin: '16px 10px 10px',
+    },
     flex: {
         flex: 1,
     },
@@ -28,9 +32,12 @@ const styles = {
         maxWidth: 200,
         marginBottom: -5,
     },
+    drawerButton: {
+        marginRight: 10,
+        marginTop: 6
+    },
     menuButton: {
-        marginLeft: -12,
-        marginRight: 20,
+        marginTop: 6
     },
     toolbar: {
         zIndex: theme.zIndex.drawer + 1
@@ -44,7 +51,7 @@ class Header extends Component {
 
     initiateLogin = () => AuthStore.login();
 
-    loggedIn = (props) => (
+    menu = (props) => (
         AuthStore.isAuthenticated() ?
             <Menu id="simple-menu"
                 anchorEl={MainStore.anchorElements.get('headerMenu')}
@@ -70,39 +77,42 @@ class Header extends Component {
     toggleDrawer = (key) => MainStore.toggleDrawer(key);
 
     render() {
+        const { userProfile } = AuthStore;
         const { classes } = this.props;
         const open = MainStore.anchorElements.has('headerMenu');
 
         return (
-            <div>
-                <AppBar position="static"
-                        style={styles.appBar}>
-                    <Toolbar style={styles.toolbar}>
+            <AppBar position="static"
+                    style={styles.appBar}>
+                <Toolbar style={styles.toolbar}>
+                    {AuthStore.isAuthenticated() &&
+                    <IconButton className={classes.drawerButton}
+                        aria-label="Menu"
+                        onClick={() => this.toggleDrawer('mainNavDrawer')}>
+                        <MenuIcon />
+                    </IconButton>}
+                    <Typography variant="title"
+                                color="inherit"
+                                className={classes.flex}>
+                       <img src={CTTI_logo}
+                            alt="CTTI logo"
+                            style={styles.logo}
+                       />
+                    </Typography>
+                        {userProfile &&
+                            <Avatar alt="your profile avatar" src={userProfile.picture} className={classes.avatar} />
+                        }
                         {AuthStore.isAuthenticated() &&
-                        <IconButton className={classes.menuButton}
-                            aria-label="Menu"
-                            onClick={() => this.toggleDrawer('mainNavDrawer')}>
-                            <MenuIcon />
-                        </IconButton>}
-                        <Typography variant="title"
-                                    color="inherit"
-                                    className={classes.flex}>
-                           <img src={CTTI_logo}
-                                alt="CTTI logo"
-                                style={styles.logo}
-                           />
-                        </Typography>
-                            {AuthStore.isAuthenticated() &&
-                                <IconButton aria-owns={open ? 'menu-appbar' : null}
-                                            aria-haspopup="true"
-                                            onClick={(e) => this.openMenu(e, 'headerMenu')}>
-                                    <MoreVert />
-                                </IconButton>
-                            }
-                        {this.loggedIn()}
-                    </Toolbar>
-                </AppBar>
-            </div>
+                            <IconButton className={classes.menuButton}
+                                aria-owns={open ? 'menu-appbar' : null}
+                                aria-haspopup="true"
+                                onClick={(e) => this.openMenu(e, 'headerMenu')}>
+                                <MoreVert />
+                            </IconButton>
+                        }
+                        {this.menu()}
+                </Toolbar>
+            </AppBar>
         );
     }
 }
