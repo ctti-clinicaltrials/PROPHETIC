@@ -27,7 +27,7 @@ export class AuthStore {
 
     @action checkTokenExpiration() {
         if(this.isAuthenticated()) {
-            setInterval(() => this.checkTokenExpiration(), 60000);
+            setTimeout(() => this.checkTokenExpiration(), 60000);
         } else {
             this.logout();
         }
@@ -46,7 +46,7 @@ export class AuthStore {
             .then(response => response.json())
             .then((json) => {
                 this.ddsAPIToken = json.api_token;
-                api.getProjects(json.api_token)
+                api.getProjects(this.ddsAPIToken)
                     .then(response => response.json())
                     .then(json => console.log(json.results))
                     .catch(ex =>MainStore.handleErrors(ex))
@@ -61,7 +61,6 @@ export class AuthStore {
                 this.userProfile = profile;
                 this.postUserSession(this.userProfile);
             }
-            console.log(err, profile);
         });
     }
 
@@ -108,4 +107,6 @@ export class AuthStore {
     }
 }
 
-export default new AuthStore();
+const authStore = new AuthStore();
+
+export default authStore;

@@ -40,7 +40,7 @@ export default () => (
                 <Route component={Header} />
             </Grid>
             {AuthStore.isAuthenticated() && <Route component={LeftNav} />}
-            <Grid container spacing={16} justify="center" style={{marginTop: 20}}>
+            <Grid container spacing={16} justify="center">
                 <Grid item xs={11} s={10} md={10} lg={8}>
                     <Switch>
                         <LoginRoute path='/login' component={Login} />

@@ -12,7 +12,15 @@ const api = {
     },
 
     getProjects: (token) => {
-        return fetch(`${config.DDS_API_URL}/projects?per_page=1000`,getFetchParams('get', token))
+        return fetch(`${config.DDS_API_URL}/projects?per_page=1000`, getFetchParams('get', token))
+    },
+
+    getAllDataSets: (token) => {
+        return fetch(`${config.DDS_API_URL}projects/f04fdb24-2ccd-4bc2-ae0d-15c1d6bc1852/children`,getFetchParams('get', token))
+    },
+
+    getDatasetMetadata: (id, token) => {
+        return fetch(`${config.DDS_API_URL}meta/dds-file/${id}`,getFetchParams('get', token))
     },
 
     postUserSession: (profile) => {
