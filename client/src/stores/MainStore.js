@@ -67,7 +67,7 @@ export class MainStore {
                             .catch(ex => mainStore.handleErrors(ex))
                     })
                 })
-                .catch(ex => this.handleErrors(ex))
+                .catch(ex => mainStore.handleErrors(ex))
         } else {
             const counterId = cid !== undefined ? cid : generateUniqueKey();
             mainStore.waitForToken(mainStore.getAllDataSets, [counterId], 1000, counterId);

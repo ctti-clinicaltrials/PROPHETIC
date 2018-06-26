@@ -20,7 +20,7 @@ const api = {
     },
 
     getAllDataSets: (token) => {
-        return fetch(`${config.DDS_API_URL}projects/f04fdb24-2ccd-4bc2-ae0d-15c1d6bc1852/children`,getFetchParams('get', token))
+        return fetch(`${config.DDS_API_URL}projects/${config.DDS_PROJECT_ID}/children`,getFetchParams('get', token))
     },
 
     getDatasetMetadata: (id, token) => {
