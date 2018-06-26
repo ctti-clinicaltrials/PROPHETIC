@@ -36,6 +36,9 @@ const styles = {
         marginRight: 10,
         marginTop: 6
     },
+    loginBtn: {
+        marginTop: 8
+    },
     menuButton: {
         marginTop: 6
     },
@@ -63,9 +66,9 @@ class Header extends Component {
                 <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
             </Menu> :
             <Button variant="raised"
-                    color="primary"
+                    color="secondary"
                     onClick={this.initiateLogin}
-                    styles={{}}>
+                    style={styles.loginBtn}>
                 Login
             </Button>
     );

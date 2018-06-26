@@ -51,9 +51,16 @@ export class MainStore {
                             .then(checkStatus)
                             .then(response => response.json())
                             .then((json) => {
+                                // If description metadata is not defined just show the dataset without it
+                                if(!json.results.length ) {
+                                        mainStore.datasets.push({
+                                            id: d.id,
+                                            file: d
+                                        })
+                                }
                                 datasets.map(d => {
                                     json.results.map(m => {
-                                        if(m.object.id === d.id){
+                                        if (m.object.id === d.id) {
                                             mainStore.datasets.push({
                                                 description: m.properties[0].value,
                                                 id: d.id,
@@ -62,14 +69,15 @@ export class MainStore {
                                         }
                                     });
                                 });
-                                mainStore.toggleLoading();
                             })
                             .catch(ex => mainStore.handleErrors(ex))
                     })
+                    mainStore.toggleLoading();
                 })
                 .catch(ex => mainStore.handleErrors(ex))
         } else {
             const counterId = cid !== undefined ? cid : generateUniqueKey();
+            mainStore.toggleLoading();
             mainStore.waitForToken(mainStore.getAllDataSets, [counterId], 1000, counterId);
         }
     }
