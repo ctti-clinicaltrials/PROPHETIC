@@ -1,5 +1,6 @@
 const runtimeEnv = require('@mars/heroku-js-runtime-env');
 
+// Set env vars to those defined in .env if doing development work else use vars set in Heroku
 const env = process.env.NODE_ENV !== 'production' ? runtimeEnv() : process.env.NODE_ENV;
 
 const agentKey = !process.env.NODE_ENV ? env.REACT_APP_AGENT_KEY : process.env.REACT_APP_AGENT_KEY;
@@ -16,6 +17,8 @@ clientID = clientID || '';
 
 const ddsApiUrl = !process.env.NODE_ENV ? env.REACT_APP_DDS_API_URL : process.env.REACT_APP_DDS_API_URL;
 
+const ddsProjectID = process.env.NODE_ENV !== 'production' ? env.REACT_APP_DDS_PROJECT_ID : process.env.REACT_APP_DDS_PROJECT_ID;
+
 const jwksURI = !process.env.NODE_ENV ? env.REACT_APP_JWKS_URI : process.env.REACT_APP_JWKS_URI;
 
 const redirectUri = process.env.NODE_ENV !== 'production' ? 'http://localhost:3000/login' : `${process.env.REACT_APP_URL}login`;
@@ -29,6 +32,7 @@ export const config = {
     AUTH0_URL: auth0Url,
     CLIENT_ID: clientID,
     DDS_API_URL: ddsApiUrl,
+    DDS_PROJECT_ID: ddsProjectID,
     JWKS_URI: jwksURI,
     REDIRECT_URI: redirectUri,
     USER_KEY: userKey
