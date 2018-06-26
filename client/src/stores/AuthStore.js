@@ -6,6 +6,7 @@ import MainStore from './MainStore';
 
 export class AuthStore {
     @observable auth0;
+    @observable ddsAPIToken;
     @observable userProfile;
 
     constructor() {
@@ -20,7 +21,16 @@ export class AuthStore {
                 rememberLastLogin: false
             }
         });
+        this.ddsAPIToken = null;
         this.userProfile = null;
+    }
+
+    @action checkTokenExpiration() {
+        if(this.isAuthenticated()) {
+            setTimeout(() => this.checkTokenExpiration(), 60000);
+        } else {
+            this.logout();
+        }
     }
 
     @action getAccessToken() {
@@ -33,18 +43,15 @@ export class AuthStore {
 
     @action getDDSApiToken() {
         api.getDDSApiToken()
-            .then()
             .then(response => response.json())
             .then((json) => {
-                api.getProjects(json.api_token)
-                    .then()
+                this.ddsAPIToken = json.api_token;
+                api.getProjects(this.ddsAPIToken)
                     .then(response => response.json())
-                    .then((json) => {
-                        console.log(json.results);
-                    }).catch(ex =>MainStore.handleErrors(ex))
-            }).catch((er) => {
-            MainStore.handleErrors(er)
-        })
+                    .then(json => console.log(json.results))
+                    .catch(ex =>MainStore.handleErrors(ex))
+            })
+            .catch(er => MainStore.handleErrors(er))
     }
 
     @action getProfile() {
@@ -54,7 +61,6 @@ export class AuthStore {
                 this.userProfile = profile;
                 this.postUserSession(this.userProfile);
             }
-            console.log(err, profile);
         });
     }
 
@@ -69,7 +75,7 @@ export class AuthStore {
         });
     }
 
-    isAuthenticated() {
+    @action isAuthenticated() {
         let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
         return new Date().getTime() < expiresAt;
     }
