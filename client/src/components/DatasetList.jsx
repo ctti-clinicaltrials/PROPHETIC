@@ -19,7 +19,7 @@ const styles = theme => ({
         fontWeight: theme.typography.fontWeightRegular,
     },
     rightIcon: {
-        // marginLeft: theme.spacing.unit,
+        marginLeft: theme.spacing.unit,
     },
     root: {
         width: '100%',
@@ -29,8 +29,8 @@ const styles = theme => ({
 @observer
 class DatasetList extends Component {
 
-    downloadFile = () => {
-        MainStore.downloadFile();
+    downloadDataset = (id) => {
+        MainStore.downloadDataset(id);
     };
 
     render() {
@@ -54,7 +54,7 @@ class DatasetList extends Component {
                             </ExpansionPanelDetails>
                             <Divider />
                             <ExpansionPanelActions>
-                                <Button size="small" color="primary" onClick={this.downloadFile}>
+                                <Button size="small" color="primary" onClick={() => this.downloadDataset(d.file.id)}>
                                     Download
                                     <FileDownload className={classes.rightIcon} />
                                 </Button>

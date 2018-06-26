@@ -17,21 +17,38 @@ export class MainStore {
         this.counter = observable.map();
         this.datasets = [];
         this.drawers = observable.map();
-        this.loading = true;
+        this.loading = false;
         this.openNav = false;
     }
 
+    @action downloadDataset(id) {
+        api.downloadDataset(id, AuthStore.ddsAPIToken)
+            .then(checkStatus)
+            .then(response => response.json())
+            .then((json) => {
+                let host = json.host;
+                let url = json.url;
+                let win = window.open(host + url, '_blank');
+                if (win) {
+                    win.focus();
+                } else { // if browser blocks popups use location.href instead
+                    window.location.href = host + url;
+                }
+            }).catch(ex => this.handleErrors(ex))
+    }
 
     @action getAllDataSets(cid) {
         mainStore.toggleLoading();
         const token = AuthStore.ddsAPIToken;
         if(token) {
             api.getAllDataSets(token)
+                .then(checkStatus)
                 .then(response => response.json())
                 .then((json) => {
                     let datasets = json.results;
                     json.results.forEach((d) => {
                         api.getDatasetMetadata(d.id, token)
+                            .then(checkStatus)
                             .then(response => response.json())
                             .then((json) => {
                                 datasets.map(d => {
@@ -43,10 +60,9 @@ export class MainStore {
                                                 file: d
                                             })
                                         }
-                                    })
+                                    });
                                 });
-
-                                // mainStore.toggleLoading();
+                                mainStore.toggleLoading();
                             })
                             .catch(ex => mainStore.handleErrors(ex))
                     })
@@ -54,7 +70,15 @@ export class MainStore {
                 .catch(ex => this.handleErrors(ex))
         } else {
             const counterId = cid !== undefined ? cid : generateUniqueKey();
-            mainStore.waitForToken(mainStore.getAllDataSets, [counterId], 1000, counterId)
+            mainStore.waitForToken(mainStore.getAllDataSets, [counterId], 1000, counterId);
+        }
+    }
+
+    @action handleErrors(er) {
+        this.loading = false;
+        if (er.response.status === 401) {
+            localStorage.setItem('redirectUrl', window.location.href);
+            AuthStore.logout(er);
         }
     }
 
@@ -73,21 +97,12 @@ export class MainStore {
         this.anchorElements = a;
     }
 
-    @action toggleLoading() {
-        // this.loading = !this.loading;
-    }
-
     @action toggleDrawer(key) {
         !this.drawers.has(key) ? this.drawers.set(key, true) : this.drawers.delete(key);
     }
 
-    @action handleErrors(er) {
-        console.log(er)
-        // this.loading = false;
-        if (er.response.status === 401) {
-            localStorage.setItem('redirectUrl', window.location.href);
-            AuthStore.logout(er);
-        }
+    @action toggleLoading() {
+        this.loading = !this.loading;
     }
 
     @action waitForToken(func, args, delay, counterId) {

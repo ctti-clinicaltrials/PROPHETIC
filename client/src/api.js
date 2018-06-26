@@ -7,6 +7,10 @@ const api = {
         return fetch(`${config.APP_URL}api/status`, getFetchParams('get', 'Bearer ' +localStorage.getItem('access_token')))
     },
 
+    downloadDataset: (id, token) => { // GET/files/{id}/url
+        return fetch(`${config.DDS_API_URL}/files/${id}/url`, getFetchParams('get', token))
+    },
+
     getDDSApiToken: () => {
         return fetch(`${config.APP_URL}api/agent-token`, getFetchParams('get', 'Bearer ' +localStorage.getItem('access_token')))
     },

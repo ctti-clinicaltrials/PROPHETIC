@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-d
 import AuthStore from '../stores/AuthStore';
 import Graph from '../containers/Graph.jsx';
 import Footer from '../components/Footer.jsx';
-import Header from '../components/Header';
+import Header from '../components/Header.jsx';
+import IndeterminateLoader from '../components/IndeterminateLoader.jsx';
 import Grid from '@material-ui/core/Grid';
 import Home from '../containers/Home.jsx';
 import LeftNav from '../components/LeftNav.jsx';
@@ -38,10 +39,13 @@ export default () => (
         <div>
             <Grid container spacing={16} justify="center" >
                 <Route component={Header} />
+                <Grid item xs={12} style={{padding: 0}}>
+                    <Route component={IndeterminateLoader} />
+                </Grid>
             </Grid>
             {AuthStore.isAuthenticated() && <Route component={LeftNav} />}
             <Grid container spacing={16} justify="center">
-                <Grid item xs={11} s={10} md={10} lg={8}>
+                <Grid item xs={11} s={10} md={10} lg={8} style={{padding: '20px 0px'}}>
                     <Switch>
                         <LoginRoute path='/login' component={Login} />
                         <PrivateRoute exact path="/" component={Home} />

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import AuthStore from '../stores/AuthStore'
 import MainStore from '../stores/MainStore'
-import LinearProgress from '@material-ui/core/LinearProgress';
 import DatasetList from '../components/DatasetList.jsx'
 import { withStyles } from '@material-ui/core/styles';
 
@@ -24,12 +23,9 @@ class Home extends Component {
     }
 
     render() {
-        const { classes } = this.props;
-        const { datasets, loading } = MainStore;
-
         return (
-            <div className={classes.root}>
-                {loading ? <LinearProgress /> : <DatasetList />}
+            <div>
+                <DatasetList />
             </div>
         );
     }
