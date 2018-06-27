@@ -17,7 +17,7 @@ clientID = clientID || '';
 
 const ddsApiUrl = !process.env.NODE_ENV ? env.REACT_APP_DDS_API_URL : process.env.REACT_APP_DDS_API_URL;
 
-// const ddsProjectID = process.env.NODE_ENV !== 'production' ? env.REACT_APP_DDS_PROJECT_ID : process.env.REACT_APP_DDS_PROJECT_ID;
+const ddsProjectID = process.env.NODE_ENV !== 'production' ? env.REACT_APP_DDS_PROJECT_ID : process.env.REACT_APP_DDS_PROJECT_ID;
 
 const jwksURI = !process.env.NODE_ENV ? env.REACT_APP_JWKS_URI : process.env.REACT_APP_JWKS_URI;
 
@@ -32,7 +32,7 @@ export const config = {
     AUTH0_URL: auth0Url,
     CLIENT_ID: clientID,
     DDS_API_URL: ddsApiUrl,
-    // DDS_PROJECT_ID: ddsProjectID,
+    DDS_PROJECT_ID: ddsProjectID,
     JWKS_URI: jwksURI,
     REDIRECT_URI: redirectUri,
     USER_KEY: userKey
