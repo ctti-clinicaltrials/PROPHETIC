@@ -6,7 +6,6 @@ import MainStore from '../stores/MainStore'
 import DatasetList from '../components/DatasetList.jsx'
 import { withStyles } from '@material-ui/core/styles';
 
-
 const styles = theme => ({
     root: {
         width: '100%',
@@ -18,7 +17,6 @@ class Home extends Component {
     componentDidMount() {
         AuthStore.getProfile();
         AuthStore.getDDSApiToken();
-        MainStore.test();
         MainStore.getAllDataSets();
     }
 

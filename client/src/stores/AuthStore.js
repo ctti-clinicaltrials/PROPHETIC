@@ -49,7 +49,7 @@ export class AuthStore {
                 api.getProjects(this.ddsAPIToken)
                     .then(response => response.json())
                     .then(json => console.log(json.results))
-                    .catch(ex =>MainStore.handleErrors(ex))
+                    .catch(ex => MainStore.handleErrors(ex))
             })
             .catch(er => MainStore.handleErrors(er))
     }
