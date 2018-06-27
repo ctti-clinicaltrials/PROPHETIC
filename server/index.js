@@ -1,16 +1,16 @@
-const agentToken = require('./routes/agentToken');
+const agentToken = require('./src/routes/agentToken');
 const cors = require('cors');
 const corsOptions = { origin: '*' };
 const bodyParser = require('body-parser');
 if (!process.env.NODE_ENV) require('dotenv').load();
-const dbConfig = require('./db');
+const dbConfig = require('./src/db');
 const express = require('express');
 const fetch = require('node-fetch');
 const helmet = require('helmet');
 const morgan = require("morgan");
 // const jwks = require('jwks-rsa');
 // const jwt = require('express-jwt');
-const jwt = require('./middleware/jwtCheck');
+const jwt = require('./src/middleware/jwtCheck');
 const mongoose = require('mongoose');
 const path = require('path');
 
