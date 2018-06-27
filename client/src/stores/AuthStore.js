@@ -12,7 +12,7 @@ export class AuthStore {
     constructor() {
         this.auth0 = new auth0.WebAuth({
             clientID: config.CLIENT_ID,
-            domain: config.AUTH0_URL,
+            domain: config.AUTH0_URL || '',
             responseType: 'token id_token',
             audience: config.API_ID,
             redirectUri: config.REDIRECT_URI,
