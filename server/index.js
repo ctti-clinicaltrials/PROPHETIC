@@ -1,16 +1,14 @@
-const agentToken = require('./src/routes/agentToken');
+const agentToken = require('./routes/agentToken');
 const cors = require('cors');
 const corsOptions = { origin: '*' };
 const bodyParser = require('body-parser');
 if (!process.env.NODE_ENV) require('dotenv').load();
-const dbConfig = require('./src/db');
+const dbConfig = require('./db');
 const express = require('express');
 const fetch = require('node-fetch');
 const helmet = require('helmet');
 const morgan = require("morgan");
-// const jwks = require('jwks-rsa');
-// const jwt = require('express-jwt');
-const jwt = require('./src/middleware/jwtCheck');
+const jwt = require('./middleware/jwtCheck');
 const mongoose = require('mongoose');
 const path = require('path');
 
@@ -50,25 +48,6 @@ app.use((error, req, res, next) => {
         }
     });
 });
-// Get Duke Data Service api token
-// app.get('/api/agent-token', jwtCheck.check(), (req, res) => {
-//     res.set('Content-Type', 'application/json');
-//     fetch(`${process.env.REACT_APP_DDS_API_URL}software_agents/api_token`, {
-//         method: 'POST',
-//         headers: {
-//             'Accept': 'application/json',
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({
-//             'agent_key': process.env.REACT_APP_AGENT_KEY,
-//             'user_key': process.env.REACT_APP_AGENT_USER_KEY
-//         })
-//     }).then(res => res.json())
-//         .then((json) => res.send(json))
-//         .catch((er) => res.send(er))
-// });
-
-// App status
 
 // All remaining requests return the React app, so it can handle routing.
 app.get('*', (request, response) => {
