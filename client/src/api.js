@@ -8,7 +8,7 @@ const api = {
     },
 
     downloadDataset: (id, token) => {
-        // return fetch(`${config.DDS_API_URL}/files/${id}/url`, getFetchParams('get', token))
+        return fetch(`${config.DDS_API_URL}/files/${id}/url`, getFetchParams('get', token))
     },
 
     getDDSApiToken: () => {
@@ -20,7 +20,7 @@ const api = {
     },
 
     getAllDataSets: (token) => {
-        // return fetch(`${config.DDS_API_URL}projects/${config.DDS_PROJECT_ID}/children`,getFetchParams('get', token))
+        return fetch(`${config.DDS_API_URL}projects/${config.DDS_PROJECT_ID}/children`,getFetchParams('get', token))
     },
 
     getDatasetMetadata: (id, token) => {
