@@ -14,6 +14,9 @@ import FileDownload from '@material-ui/icons/FileDownload';
 import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
+    expandedPanel: {
+        margin: '10px -10px'
+    },
     heading: {
         fontSize: theme.typography.pxToRem(15),
         fontWeight: theme.typography.fontWeightRegular,
@@ -32,17 +35,23 @@ class DatasetList extends Component {
     downloadDataset = (id) => {
         MainStore.toggleModal('dlq');
         MainStore.queueDownload(id);
-        // MainStore.downloadDataset(id);
+    };
+
+    expandPanel = (id) => {
+        MainStore.toggleExpandedPanel(id)
     };
 
     render() {
         const { classes } = this.props;
-        const { datasets } = MainStore;
+        const { datasets, expandedPanels } = MainStore;
         return (
             <div>
                 {datasets && datasets.map((d) => {
                     return (
-                        <ExpansionPanel key={d.id}>
+                        <ExpansionPanel key={d.id}
+                                        expanded={expandedPanels.has(d.id)}
+                                        onChange={() => this.expandPanel(d.id)}
+                                        className={expandedPanels.has(d.id) ? classes.expandedPanel : ''}>
                             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                 <Typography className={classes.heading}>{d.file.name}</Typography>
                             </ExpansionPanelSummary>
