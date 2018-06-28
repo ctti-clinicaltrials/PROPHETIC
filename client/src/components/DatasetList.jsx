@@ -30,7 +30,9 @@ const styles = theme => ({
 class DatasetList extends Component {
 
     downloadDataset = (id) => {
-        MainStore.downloadDataset(id);
+        MainStore.toggleModal('dlq');
+        MainStore.queueDownload(id);
+        // MainStore.downloadDataset(id);
     };
 
     render() {
