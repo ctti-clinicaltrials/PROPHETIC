@@ -34,21 +34,6 @@ app.get('/api/status', jwt.check(), (req, res) => {
     res.send('{"status":"ok"}');
 });
 
-// app.use((req, res, next) => {
-//     const error = new Error("Not found");
-//     error.status = 404;
-//     next(error);
-// });
-//
-// app.use((error, req, res, next) => {
-//     res.status(error.status || 500);
-//     res.json({
-//         error: {
-//             message: error.message
-//         }
-//     });
-// });
-
 // All remaining requests return the React app, so it can handle routing.
 app.get('/*', (request, response) => {
     response.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));

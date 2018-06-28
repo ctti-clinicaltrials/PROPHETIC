@@ -91,9 +91,14 @@ export class MainStore {
 
     @action handleErrors(er) {
         this.loading = false;
-        if (er.response.status === 401) {
-            localStorage.setItem('redirectUrl', window.location.href);
-            AuthStore.logout(er);
+        if(er.response) {
+            if (er.response.status === 401) {
+                localStorage.setItem('redirectUrl', window.location.href);
+                AuthStore.logout(er);
+            }
+        } else {
+            console.log(er);
+            throw new Error(er)
         }
     }
 
@@ -137,7 +142,7 @@ export class MainStore {
         }
     }
 
-    queueDownload(id) {
+    @action queueDownload(id) {
         if(id) {
             this.downloadQueue.set(id)
         } else {
