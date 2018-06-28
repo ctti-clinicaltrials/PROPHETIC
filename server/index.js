@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 5000;
 app.use(morgan('dev'));
 
 // Priority serve any static files.
-app.use(express.static(path.resolve(__dirname, '.../client/build/index.html')), cors(corsOptions), helmet(), bodyParser.json());
+app.use(express.static(path.resolve(__dirname, '../client/build/index.html')), cors(corsOptions), helmet(), bodyParser.json());
 
 // Connect to DB
 mongoose.connect(dbConfig.DB).then(
