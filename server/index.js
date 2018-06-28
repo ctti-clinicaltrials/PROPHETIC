@@ -50,7 +50,7 @@ app.use((error, req, res, next) => {
 });
 
 // All remaining requests return the React app, so it can handle routing.
-app.get('*', (request, response) => {
+app.get('/*', (request, response) => {
     response.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
 });
 
