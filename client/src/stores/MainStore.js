@@ -8,6 +8,7 @@ export class MainStore {
     @observable anchorElements;
     @observable datasets;
     @observable downloadQueue;
+    @observable expandedPanels;
     @observable counter;
     @observable drawers;
     @observable loading;
@@ -19,6 +20,7 @@ export class MainStore {
         this.counter = observable.map();
         this.datasets = [];
         this.downloadQueue = observable.map();
+        this.expandedPanels = observable.map();
         this.drawers = observable.map();
         this.loading = false;
         this.openNav = false;
@@ -112,6 +114,15 @@ export class MainStore {
 
     @action toggleDrawer(key) {
         !this.drawers.has(key) ? this.drawers.set(key, true) : this.drawers.delete(key);
+    }
+
+    @action toggleExpandedPanel(id) {
+        if(this.expandedPanels.has(id)) {
+            this.expandedPanels.delete(id);
+        } else {
+            this.expandedPanels.clear();
+            this.expandedPanels.set(id);
+        }
     }
 
     @action toggleLoading() {
