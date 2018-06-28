@@ -89,13 +89,13 @@ const jwtCheck = jwt({
 app.use(express.static(path.resolve(__dirname, '../client/build')), cors(corsOptions), helmet(), bodyParser.json());
 
 // Connect to DB
-mongoose.connect(dbConfig.DB, { useMongoClient: true }).then(
+mongoose.connect(dbConfig.DB).then(
     () => {console.log('Database is connected') },
     err => { console.log('Can not connect to the database' +err)
     });
 
 // Get Duke Data Service api token
-app.get('/api/agent-token', jwtCheck, (req, res) => {
+app.get('api/agent-token', jwtCheck, (req, res) => {
     res.set('Content-Type', 'application/json');
     fetch(`${process.env.REACT_APP_DDS_API_URL}software_agents/api_token`, {
         method: 'POST',
