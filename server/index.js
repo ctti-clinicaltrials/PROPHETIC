@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 5000;
 app.use(morgan('dev'));
 
 // Priority serve any static files.
-app.use(express.static(path.resolve(__dirname, '.../client/build/index.html')), cors(corsOptions), helmet(), bodyParser.json());
+app.use(express.static(path.resolve(__dirname, '../client/build')), cors(corsOptions), helmet(), bodyParser.json());
 
 // Connect to DB
 mongoose.connect(dbConfig.DB).then(
@@ -51,7 +51,7 @@ app.use((error, req, res, next) => {
 
 // All remaining requests return the React app, so it can handle routing.
 app.get('/*', (request, response) => {
-    response.sendFile(path.join(__dirname, '../client/build/index.html'));
+    response.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
 });
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
