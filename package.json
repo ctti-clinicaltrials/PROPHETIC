@@ -8,8 +8,8 @@
     "node": "6.11.x"
   },
   "scripts": {
-    "start": "node server/src",
-    "dev": "nodemon --watch server/src",
+    "start": "node server",
+    "dev": "nodemon --watch server",
     "heroku-postbuild": "cd client/ && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "cacheDirectories": [

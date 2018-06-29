@@ -7,21 +7,30 @@ import { generateUniqueKey } from '../util/baseUtils';
 export class MainStore {
     @observable anchorElements;
     @observable datasets;
+    @observable downloadQueue;
+    @observable errors;
+    @observable expandedPanels;
     @observable counter;
     @observable drawers;
     @observable loading;
     @observable openNav;
+    @observable modals;
 
     constructor() {
         this.anchorElements = observable.map();
         this.counter = observable.map();
         this.datasets = [];
+        this.downloadQueue = observable.map();
+        this.errors = observable.map();
+        this.expandedPanels = observable.map();
         this.drawers = observable.map();
         this.loading = false;
         this.openNav = false;
+        this.modals = observable.map();
     }
 
-    @action downloadDataset(id) {
+    @action downloadDataset() {
+        const id = this.downloadQueue.keys().next().value;
         api.downloadDataset(id, AuthStore.ddsAPIToken)
             .then(checkStatus)
             .then(response => response.json())
@@ -71,7 +80,7 @@ export class MainStore {
                                 });
                             })
                             .catch(ex => mainStore.handleErrors(ex))
-                    })
+                    });
                     mainStore.toggleLoading();
                 })
                 .catch(ex => mainStore.handleErrors(ex))
@@ -84,9 +93,16 @@ export class MainStore {
 
     @action handleErrors(er) {
         this.loading = false;
-        if (er.response.status === 401) {
-            localStorage.setItem('redirectUrl', window.location.href);
-            AuthStore.logout(er);
+        if(er.response) {
+            if (er.response.status === 401) {
+                localStorage.setItem('redirectUrl', window.location.href);
+                AuthStore.logout(er);
+            } else {
+                this.errors.set(er.response.status, er);
+            }
+        } else {
+            console.log(er);
+            throw new Error(er)
         }
     }
 
@@ -109,8 +125,33 @@ export class MainStore {
         !this.drawers.has(key) ? this.drawers.set(key, true) : this.drawers.delete(key);
     }
 
+    @action toggleExpandedPanel(id) {
+        if(this.expandedPanels.has(id)) {
+            this.expandedPanels.delete(id);
+        } else {
+            this.expandedPanels.clear();
+            this.expandedPanels.set(id);
+        }
+    }
+
     @action toggleLoading() {
         this.loading = !this.loading;
+    }
+
+    @action toggleModal(id) {
+        if(this.modals.has(id)) {
+            this.modals.delete(id)
+        } else {
+            this.modals.set(id)
+        }
+    }
+
+    @action queueDownload(id) {
+        if(id) {
+            this.downloadQueue.set(id)
+        } else {
+            this.downloadQueue.clear();
+        }
     }
 
     @action waitForToken(func, args, delay, counterId) {

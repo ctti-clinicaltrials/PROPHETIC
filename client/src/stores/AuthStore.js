@@ -12,7 +12,7 @@ export class AuthStore {
     constructor() {
         this.auth0 = new auth0.WebAuth({
             clientID: config.CLIENT_ID,
-            domain: config.AUTH0_URL,
+            domain: config.AUTH0_URL || '',
             responseType: 'token id_token',
             audience: config.API_ID,
             redirectUri: config.REDIRECT_URI,
@@ -49,7 +49,7 @@ export class AuthStore {
                 api.getProjects(this.ddsAPIToken)
                     .then(response => response.json())
                     .then(json => console.log(json.results))
-                    .catch(ex =>MainStore.handleErrors(ex))
+                    .catch(ex => MainStore.handleErrors(ex))
             })
             .catch(er => MainStore.handleErrors(er))
     }
