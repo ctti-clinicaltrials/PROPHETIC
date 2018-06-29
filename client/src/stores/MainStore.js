@@ -8,6 +8,7 @@ export class MainStore {
     @observable anchorElements;
     @observable datasets;
     @observable downloadQueue;
+    @observable errors;
     @observable expandedPanels;
     @observable counter;
     @observable drawers;
@@ -20,6 +21,7 @@ export class MainStore {
         this.counter = observable.map();
         this.datasets = [];
         this.downloadQueue = observable.map();
+        this.errors = observable.map();
         this.expandedPanels = observable.map();
         this.drawers = observable.map();
         this.loading = false;
@@ -95,6 +97,8 @@ export class MainStore {
             if (er.response.status === 401) {
                 localStorage.setItem('redirectUrl', window.location.href);
                 AuthStore.logout(er);
+            } else {
+                this.errors.set(er.response.status, er);
             }
         } else {
             console.log(er);
