@@ -13,15 +13,16 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = {
     appBar: {
         height: 105,
-        backgroundColor: Color.white
+        backgroundColor: Color.white,
     },
-    root: {
-        height: 105
-    },
-    flex: {
-        flex: 1,
+    drawer: {
+        position: 'relative',
+        inner: {
+            minWidth: 250,
+        },
     },
     menuButton: {
+        backgroundColor: Color.light_blue,
         position: 'absolute',
         top: 8,
         left: 10,
@@ -39,12 +40,11 @@ class LeftNav extends Component {
         return (
             <Drawer open={drawers.has('mainNavDrawer')}
                     onClose={() => this.toggleDrawer('mainNavDrawer')}
-                    style={{position: 'relative'}}>
-                <div
-                    tabIndex={0}
-                    role="button"
-                    onClick={() => this.toggleDrawer('mainNavDrawer')}
-                    onKeyDown={() => this.toggleDrawer('mainNavDrawer')}>
+                    style={styles.drawer}>
+                <div tabIndex={0}
+                     role="button"
+                     onClick={() => this.toggleDrawer('mainNavDrawer')}
+                     onKeyDown={() => this.toggleDrawer('mainNavDrawer')}>
                     <AppBar position="static"
                             style={styles.appBar}
                             elevation={0}>
@@ -55,8 +55,10 @@ class LeftNav extends Component {
                             <KeyboardBackspace/>
                         </IconButton>
                     </AppBar>
-                    <MenuItem style={{marginTop: 64}}>Menu Item</MenuItem>
-                    <MenuItem >Menu Item 2</MenuItem>
+                    <div style={styles.drawer.inner}>
+                        <MenuItem style={{marginTop: 64}}>Menu Item</MenuItem>
+                        <MenuItem >Menu Item 2</MenuItem>
+                    </div>
                 </div>
             </Drawer>
         );

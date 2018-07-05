@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import AuthStore from '../stores/AuthStore';
-import MainStore from '../stores/MainStore'
+import MainStore from '../stores/MainStore';
+import HeaderDropdownMenu from './HeaderDropdownMenu';
 import CTTI_logo from '../images/CTTI_logo.png';
 import { Color } from '../theme/theme';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
 import { createMuiTheme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import { Menu as MenuIcon, MoreVert } from '@material-ui/icons'
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
@@ -36,9 +34,6 @@ const styles = {
         marginRight: 10,
         marginTop: 6
     },
-    loginBtn: {
-        marginTop: 8
-    },
     menuButton: {
         marginTop: 6
     },
@@ -50,32 +45,7 @@ const styles = {
 @observer
 class Header extends Component {
 
-    handleLogout = () => AuthStore.logout();
-
-    initiateLogin = () => AuthStore.login();
-
-    menu = (props) => (
-        AuthStore.isAuthenticated() ?
-            <Menu id="simple-menu"
-                anchorEl={MainStore.anchorElements.get('headerMenu')}
-                open={MainStore.anchorElements.has('headerMenu')}
-                onClose={(e) => this.openMenu(e, 'headerMenu')}
-            >
-                <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                <MenuItem onClick={this.handleClose}>My account</MenuItem>
-                <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
-            </Menu> :
-            <Button variant="raised"
-                    color="secondary"
-                    onClick={this.initiateLogin}
-                    style={styles.loginBtn}>
-                Login
-            </Button>
-    );
-
-    openMenu = (event, i) => {
-        MainStore.setAnchorElement(event.currentTarget, i)
-    };
+    openMenu = (event, i) => MainStore.setAnchorElement(event.currentTarget, i);
 
     toggleDrawer = (key) => MainStore.toggleDrawer(key);
 
@@ -88,12 +58,12 @@ class Header extends Component {
             <AppBar position="static"
                     style={styles.appBar}>
                 <Toolbar style={styles.toolbar}>
-                    {AuthStore.isAuthenticated() &&
-                    <IconButton className={classes.drawerButton}
-                        aria-label="Menu"
-                        onClick={() => this.toggleDrawer('mainNavDrawer')}>
-                        <MenuIcon />
-                    </IconButton>}
+                    {/*{AuthStore.isAuthenticated() &&*/}
+                    {/*<IconButton className={classes.drawerButton}*/}
+                        {/*aria-label="Menu"*/}
+                        {/*onClick={() => this.toggleDrawer('mainNavDrawer')}>*/}
+                        {/*<MenuIcon />*/}
+                    {/*</IconButton>}*/}
                     <Typography variant="title"
                                 color="inherit"
                                 className={classes.flex}>
@@ -113,7 +83,7 @@ class Header extends Component {
                                 <MoreVert />
                             </IconButton>
                         }
-                        {this.menu()}
+                        <HeaderDropdownMenu />
                 </Toolbar>
             </AppBar>
         );
