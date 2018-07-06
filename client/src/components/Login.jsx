@@ -4,7 +4,6 @@ import AuthStore from '../stores/AuthStore';
 import MainStore from '../stores/MainStore';
 import Button from '@material-ui/core/Button';
 
-
 @observer
 class Login extends Component {
 
@@ -17,13 +16,12 @@ class Login extends Component {
         const {loading} = MainStore;
         return (
             <div>
-                {
-                    !loading ?
-                        <Button variant="raised" color="secondary" onClick={this.login}>
-                            Login
-                        </Button>
-                        : null
-                }
+                {/*{!loading ?*/}
+                    {/*<Button variant="raised" color="secondary" onClick={this.login}>*/}
+                        {/*Login*/}
+                    {/*</Button>*/}
+                    {/*: null*/}
+                {/*}*/}
             </div>
         );
     }
