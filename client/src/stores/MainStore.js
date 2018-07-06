@@ -15,6 +15,7 @@ export class MainStore {
     @observable loading;
     @observable openNav;
     @observable modals;
+    @observable showSharingIcons;
 
     constructor() {
         this.anchorElements = observable.map();
@@ -27,6 +28,7 @@ export class MainStore {
         this.loading = false;
         this.openNav = false;
         this.modals = observable.map();
+        this.showSharingIcons = false;
     }
 
     @action downloadDataset() {
@@ -144,6 +146,10 @@ export class MainStore {
         } else {
             this.modals.set(id)
         }
+    }
+
+    @action toggleSharing() {
+        this.showSharingIcons = !this.showSharingIcons;
     }
 
     @action queueDownload(id) {
