@@ -70,6 +70,14 @@ describe('Main Store', () => {
         expect(MainStore.drawers.has('test')).toBe(false);
         expect(MainStore.drawers.size).toBe(0);
     });
+    
+    it('@action toggleSharing - should toggle sharing icon visible state from true to false', () => {
+        expect(MainStore.showSharingIcons).toBe(false);
+        MainStore.toggleSharing();
+        expect(MainStore.showSharingIcons).toBe(true);
+        MainStore.toggleSharing();
+        expect(MainStore.showSharingIcons).toBe(false);
+    });
 
     it('@action waitForToken - should set a counter and try function again', () => {
         expect(MainStore.modals.has(2)).toBe(false);

@@ -4,6 +4,7 @@ import AuthStore from '../stores/AuthStore';
 import MainStore from '../stores/MainStore';
 import HeaderDropdownMenu from './HeaderDropdownMenu';
 import CTTI_logo from '../images/CTTI_logo.png';
+import CTTI_logo_crop from '../images/CTTI_logo_crop.png';
 import { Color } from '../theme/theme';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -13,6 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { Menu as MenuIcon, MoreVert } from '@material-ui/icons'
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import SocialSharing from "./SocialSharing";
 
 const theme = createMuiTheme();
 
@@ -21,7 +23,10 @@ const styles = {
         backgroundColor: Color.white
     },
     avatar: {
-        margin: '16px 10px 10px',
+        // margin: '16px 10px 10px',
+        position: 'absolute',
+        top: 33,
+        right: 126
     },
     flex: {
         flex: 1,
@@ -29,6 +34,11 @@ const styles = {
     logo: {
         maxWidth: 200,
         marginBottom: -5,
+    },
+    logoCropped: {
+        maxWidth: 64,
+        marginBottom: -5,
+        marginTop: 5,
     },
     drawerButton: {
         marginRight: 10,
@@ -51,6 +61,7 @@ class Header extends Component {
 
     render() {
         const { userProfile } = AuthStore;
+        const { showSharingIcons } = MainStore;
         const { classes } = this.props;
         const open = MainStore.anchorElements.has('headerMenu');
 
@@ -67,13 +78,16 @@ class Header extends Component {
                     <Typography variant="title"
                                 color="inherit"
                                 className={classes.flex}>
-                       <img src={CTTI_logo}
+                       <img src={window.innerWidth >= 520 ? CTTI_logo : CTTI_logo_crop}
                             alt="CTTI logo"
-                            style={styles.logo}
+                            style={window.innerWidth >= 520 ? styles.logo : styles.logoCropped}
                        />
                     </Typography>
-                        {userProfile &&
+                        {userProfile && !showSharingIcons &&
                             <Avatar alt="your profile avatar" src={userProfile.picture} className={classes.avatar} />
+                        }
+                        {AuthStore.isAuthenticated() &&
+                            <SocialSharing />
                         }
                         {AuthStore.isAuthenticated() &&
                             <IconButton className={classes.menuButton}
