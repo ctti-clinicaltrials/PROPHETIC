@@ -59,7 +59,6 @@ export class AuthStore {
         this.auth0.client.userInfo(accessToken, (err, profile) => {
             if (profile) {
                 this.userProfile = profile;
-                this.postUserSession(this.userProfile);
             }
         });
     }
@@ -92,9 +91,9 @@ export class AuthStore {
         window.location.assign(`${config.AUTH0_URL}v2/logout?returnTo=${config.REDIRECT_URI}`);
     }
 
-    @action postUserSession(profile) {
-        api.postUserSession(profile);
-    }
+    // @action postUserSession(profile) {
+    //     api.postUserSession(profile);
+    // }
 
     @action setSession(authResult) {
         const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
