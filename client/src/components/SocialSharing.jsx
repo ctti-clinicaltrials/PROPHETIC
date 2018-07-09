@@ -19,18 +19,18 @@ class SocialSharing extends Component {
 
     toggleSharing = () => MainStore.toggleSharing();
 
-    getRightPosition = (el) => {
-        if(el === 'fb') return 123;
-        if(el === 'tw') return 161;
-        if(el === 'gp') return 200;
+    getTopPosition = (el) => {
+        if(el === 'fb') return 80;
+        if(el === 'tw') return 119;
+        if(el === 'gp') return 158;
     };
 
     getIconCss = (btn, el) => {
         if(btn === 'share') {
             return {
                 position: 'absolute',
-                top: 37,
-                right: this.getRightPosition(el),
+                top: this.getTopPosition(el),
+                right: 78,
                 cursor: 'pointer',
                 zIndex: 2000,
                 boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',

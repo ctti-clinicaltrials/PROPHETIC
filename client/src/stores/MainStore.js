@@ -16,6 +16,7 @@ export class MainStore {
     @observable openNav;
     @observable modals;
     @observable showSharingIcons;
+    @observable validationErrors;
 
     constructor() {
         this.anchorElements = observable.map();
@@ -29,6 +30,7 @@ export class MainStore {
         this.openNav = false;
         this.modals = observable.map();
         this.showSharingIcons = false;
+        this.validationErrors = observable.map();
     }
 
     @action downloadDataset() {
@@ -45,6 +47,7 @@ export class MainStore {
                 } else { // if browser blocks popups use location.href instead
                     window.location.href = host + url;
                 }
+                this.queueDownload();
             }).catch(ex => this.handleErrors(ex))
     }
 
@@ -108,6 +111,14 @@ export class MainStore {
         }
     }
 
+    @action postUserResponse(profile, formData) {
+        api.postUserResponse(profile, formData)
+        .then(checkStatus)
+            .then(response => response.json())
+            .then(json => this.downloadDataset())
+            .catch(er => this.handleErrors(er))
+    }
+
     @action test() {
         api.test()
             .then(checkStatus)
@@ -121,6 +132,14 @@ export class MainStore {
         let a = this.anchorElements;
         !a.has(i) ? a.set(i, anchorEl) : a.delete(i);
         this.anchorElements = a;
+    }
+
+    @action setValidationErrors(id) {
+        if(!this.validationErrors.has(id)) {
+            this.validationErrors.set(id)
+        } else {
+            this.validationErrors.delete(id)
+        }
     }
 
     @action toggleDrawer(key) {

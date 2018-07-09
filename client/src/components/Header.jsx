@@ -61,9 +61,7 @@ class Header extends Component {
 
     render() {
         const { userProfile } = AuthStore;
-        const { showSharingIcons } = MainStore;
         const { classes } = this.props;
-        const open = MainStore.anchorElements.has('headerMenu');
 
         return (
             <AppBar position="static"
@@ -83,7 +81,7 @@ class Header extends Component {
                             style={window.innerWidth >= 520 ? styles.logo : styles.logoCropped}
                        />
                     </Typography>
-                        {userProfile && !showSharingIcons &&
+                        {userProfile &&
                             <Avatar alt="your profile avatar" src={userProfile.picture} className={classes.avatar} />
                         }
                         {AuthStore.isAuthenticated() &&
@@ -91,7 +89,7 @@ class Header extends Component {
                         }
                         {AuthStore.isAuthenticated() &&
                             <IconButton className={classes.menuButton}
-                                aria-owns={open ? 'menu-appbar' : null}
+                                aria-owns={MainStore.anchorElements.has('headerMenu') ? 'menu-appbar' : null}
                                 aria-haspopup="true"
                                 onClick={(e) => this.openMenu(e, 'headerMenu')}>
                                 <MoreVert />
