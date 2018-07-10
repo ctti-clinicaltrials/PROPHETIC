@@ -64,14 +64,16 @@ class DatasetList extends Component {
                                         {d.description}
                                     </Typography>
                                 }
+                            </ExpansionPanelDetails>
+                            <ExpansionPanelDetails>
                                 <Typography>
-                                    {d.file.audit.created_by.full_name}
+                                    <b>Added by </b> {d.file.audit.created_by.full_name}
                                 </Typography>
                             </ExpansionPanelDetails>
                             <Divider />
                             <ExpansionPanelActions>
                                 <Button size="small" color="primary" onClick={() => this.downloadDataset(d.file.id)}>
-                                    Download
+                                    Download Data
                                     <FileDownload className={classes.rightIcon} />
                                 </Button>
                             </ExpansionPanelActions>
