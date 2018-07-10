@@ -27,10 +27,11 @@ const api = {
         return fetch(`${config.DDS_API_URL}meta/dds-file/${id}`,getFetchParams('get', token))
     },
 
-    postUserResponse: (profile, formData) => {
+    postUserResponse: (profile, formData, file) => {
         const body = {
             "name": profile.name,
             "email": profile.email,
+            "file": file,
             "answers": formData,
         };
         return fetch(`${config.APP_URL}api/user-response`, getFetchParams('post', 'Bearer ' +localStorage.getItem('access_token'), body))

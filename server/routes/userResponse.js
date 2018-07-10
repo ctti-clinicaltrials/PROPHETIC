@@ -8,13 +8,13 @@ const router = express.Router();
 if (!process.env.NODE_ENV) require('dotenv').load();
 
 router.post('/', jwt.check(), (req, res) => {
-    console.log(req)
     res.set('Content-Type', 'application/json');
-    if(req.body.name && req.body.email && req.body.answers) {
+    if(req.body.name && req.body.email && req.body.file && req.body.answers) {
         const userResponse = new UserResponse({
             _id: new mongoose.Types.ObjectId(),
             name: req.body.name,
             email: req.body.email,
+            file: req.body.file,
             answers: req.body.answers
         });
         userResponse.save()
