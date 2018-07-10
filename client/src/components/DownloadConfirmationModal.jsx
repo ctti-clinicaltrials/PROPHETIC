@@ -25,26 +25,9 @@ class DownloadConfirmationModal extends Component {
         MainStore.toggleModal(id);
     };
 
-    downloadData(id) {
-        let formData = [];
+    downloadData(modalId) {
         let inputs = [this.q1, this.q2, this.q3];
-        const { userProfile } = AuthStore;
-        if(inputs.some(i => i.value.length <= 0)) {
-            inputs.forEach(t => {
-                let text = t.value.trim().length;
-                if((!text && !MainStore.validationErrors.has(t.id)) || (MainStore.validationErrors.has(t.id) && text)) {
-                    MainStore.setValidationErrors(t.id);
-                }
-            })
-        } else {
-            formData = inputs.map(i => {
-                return {
-                    question: i.labels[0].textContent, answer: i.value
-                }
-            });
-            MainStore.postUserResponse(userProfile, formData);
-            this.closeModal(id);
-        }
+        MainStore.postUserResponse(modalId, inputs);
     };
 
     handleInputChange = id => event => {

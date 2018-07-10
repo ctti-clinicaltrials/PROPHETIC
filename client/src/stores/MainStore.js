@@ -111,12 +111,30 @@ export class MainStore {
         }
     }
 
-    @action postUserResponse(profile, formData) {
-        api.postUserResponse(profile, formData)
-        .then(checkStatus)
-            .then(response => response.json())
-            .then(json => this.downloadDataset())
-            .catch(er => this.handleErrors(er))
+    @action postUserResponse(modalId, inputs) {
+        let formData = [];
+        const { userProfile } = AuthStore;
+        let file = this.datasets.find(d => d.id ===this.downloadQueue.keys().next().value).file;
+        if(inputs.some(i => i.value.length <= 0)) {
+            inputs.forEach(t => {
+                let text = t.value.trim().length;
+                if((!text && !this.validationErrors.has(t.id)) || (this.validationErrors.has(t.id) && text)) {
+                    this.setValidationErrors(t.id);
+                }
+            })
+        } else {
+            formData = inputs.map(i => {
+                return {
+                    question: i.labels[0].textContent, answer: i.value
+                }
+            });
+            this.toggleModal(modalId);
+            api.postUserResponse(userProfile, formData, file)
+                .then(checkStatus)
+                .then(response => response.json())
+                .then(json => this.downloadDataset())
+                .catch(er => this.handleErrors(er))
+        }
     }
 
     @action test() {

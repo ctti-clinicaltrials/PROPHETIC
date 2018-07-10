@@ -58,13 +58,13 @@ class DatasetList extends Component {
                             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                 <Typography className={classes.heading}>{d.file.name}</Typography>
                             </ExpansionPanelSummary>
-                            <ExpansionPanelDetails>
-                                {d.description &&
+                            {d.description &&
+                                <ExpansionPanelDetails>
                                     <Typography>
                                         {d.description}
                                     </Typography>
-                                }
-                            </ExpansionPanelDetails>
+                                </ExpansionPanelDetails>
+                            }
                             <ExpansionPanelDetails>
                                 <Typography>
                                     <b>Added by </b> {d.file.audit.created_by.full_name}
