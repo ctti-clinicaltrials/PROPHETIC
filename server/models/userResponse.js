@@ -5,7 +5,8 @@ const userResponseSchema = new mongoose.Schema({
     name: {type: String, required: true },
     email: {type: String, required: true },
     date: {type: Date, default: Date.now, required: true },
-    answers: {type: mongoose.Schema.Types.Mixed, required: true },
+    file: {type: mongoose.Schema.Types.Mixed, required: true },
+    answers: {type: mongoose.Schema.Types.Mixed, required: true }
 });
 
 module.exports = mongoose.model('UserResponse', userResponseSchema);
