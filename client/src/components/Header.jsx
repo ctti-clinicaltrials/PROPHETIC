@@ -23,7 +23,6 @@ const styles = {
         backgroundColor: Color.white
     },
     avatar: {
-        // margin: '16px 10px 10px',
         position: 'absolute',
         top: 33,
         right: 126
