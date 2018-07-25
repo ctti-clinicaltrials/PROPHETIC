@@ -33,6 +33,14 @@ export class MainStore {
         this.validationErrors = observable.map();
     }
 
+    @action uploadFile(file) {
+        api.uploadFile(file)
+            .then(checkStatus)
+            .then(response => response.json())
+            .then(json => console.log(json))
+            .catch(er => this.handleErrors(er))
+    }
+
     @action downloadDataset() {
         const id = this.downloadQueue.keys().next().value;
         api.downloadDataset(id, AuthStore.ddsAPIToken)

@@ -7,6 +7,17 @@ const api = {
         return fetch(`${config.APP_URL}api/status`, getFetchParams('get', 'Bearer ' +localStorage.getItem('access_token')))
     },
 
+    uploadFile: (file) => {
+        let data = new FormData();
+        data.append('file', file);
+        console.log(file)
+        // return fetch(`${config.APP_URL}api/files`, {
+        //     method: 'POST',
+        //     body: data
+        // })
+        return fetch(`${config.APP_URL}api/files`, getFetchParams('post', 'Bearer ' +localStorage.getItem('access_token'), data, true))
+    },
+
     downloadDataset: (id, token) => {
         return fetch(`${config.DDS_API_URL}files/${id}/url`, getFetchParams('get', token))
     },
@@ -20,7 +31,7 @@ const api = {
     },
 
     getAllDataSets: (token) => {
-        return fetch(`${config.DDS_API_URL}projects/${config.DDS_PROJECT_ID}/children`,getFetchParams('get', token))
+        return fetch(`${config.DDS_API_URL}projects/${config.DDS_PROJECT_ID}/children`, getFetchParams('get', token))
     },
 
     getDatasetMetadata: (id, token) => {

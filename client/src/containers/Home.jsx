@@ -4,9 +4,13 @@ import { observer } from 'mobx-react';
 import AuthStore from '../stores/AuthStore'
 import MainStore from '../stores/MainStore'
 import DatasetList from '../components/DatasetList.jsx'
+import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
+    input: {
+        display: 'none',
+    },
     root: {
         width: '100%',
     }
@@ -20,9 +24,35 @@ class Home extends Component {
         MainStore.getAllDataSets();
     }
 
+    fileInputChanged = (event) => {
+        const f = event.target.files[0];
+        MainStore.uploadFile(f);
+    }
+    handleClick = () => {
+
+        console.log('clicked')
+        this.setState(state => {
+            file: 1
+        });
+    }
+
     render() {
+        const { classes } = this.props;
         return (
             <div>
+                <input
+                    className={classes.input}
+                    id="outlined-button-file"
+                    multiple
+                    type="file"
+                    name="file"
+                    onChange={this.fileInputChanged}
+                />
+                <label htmlFor="outlined-button-file">
+                    <Button variant="outlined" component="span" onClick={this.handleClick}>
+                        Upload
+                    </Button>
+                </label>
                 <DatasetList />
             </div>
         );
