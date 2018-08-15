@@ -65,7 +65,7 @@ export class MainStore {
                             .then(checkStatus)
                             .then(response => response.json())
                             .then((json) => {
-                                // If description metadata is not defined just show the dataset without it
+                                // If metadata is not defined just show the dataset without it
                                 if(!json.results.length ) {
                                         mainStore.datasets.push({
                                             id: d.id,
@@ -76,7 +76,7 @@ export class MainStore {
                                     json.results.map(m => {
                                         if (m.object.id === d.id) {
                                             mainStore.datasets.push({
-                                                description: m.properties[0].value,
+                                                metadata: m.properties.map(p => p),
                                                 id: d.id,
                                                 file: d
                                             })
@@ -135,15 +135,6 @@ export class MainStore {
                 .then(json => this.downloadDataset())
                 .catch(er => this.handleErrors(er))
         }
-    }
-
-    @action test() {
-        api.test()
-            .then(checkStatus)
-            .then(response => response.json())
-            .then((json) => {
-                console.log(json)
-            }).catch(er => this.handleErrors(er))
     }
 
     @action setAnchorElement(anchorEl, i) {
