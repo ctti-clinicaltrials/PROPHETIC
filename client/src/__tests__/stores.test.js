@@ -37,6 +37,14 @@ describe('Main Store', () => {
         expect(MainStore.anchorElements.has('test')).toBe(false);
     });
 
+    it('@action setValidationErrors - should set a validation error to Map', () => {
+        expect(MainStore.validationErrors.has('test')).toBe(false);
+        MainStore.setValidationErrors('test');
+        expect(MainStore.validationErrors.has('test')).toBe(true);
+        MainStore.setValidationErrors('clearAll');
+        expect(MainStore.validationErrors.has('test')).toBe(false);
+    });
+
     it('@action toggleExpandedPanel - should set/delete panel ID to Map', () => {
         expect(MainStore.expandedPanels.has('test')).toBe(false);
         MainStore.toggleExpandedPanel('test');

@@ -22,12 +22,13 @@ const styles = theme => ({
 class DownloadConfirmationModal extends Component {
 
     closeModal = (id) =>  {
+        MainStore.setValidationErrors('clearAll');
         MainStore.toggleModal(id);
     };
 
     downloadData(modalId) {
         let inputs = [this.q1, this.q2, this.q3];
-        MainStore.postUserResponse(modalId, inputs);
+        if(!MainStore.validationErrors.size) MainStore.postUserResponse(modalId, inputs);
     };
 
     handleInputChange = id => event => {
@@ -38,7 +39,7 @@ class DownloadConfirmationModal extends Component {
     };
 
     render() {
-        let { modals } = MainStore;
+        let { modals, validationErrors } = MainStore;
 
         return (
             <Dialog
@@ -54,7 +55,7 @@ class DownloadConfirmationModal extends Component {
                     <TextField
                         inputRef={input => (this.q1 = input)}
                         required={true}
-                        error={MainStore.validationErrors.has('q1')}
+                        error={validationErrors.has('q1')}
                         onChange={this.handleInputChange('q1')}
                         autoFocus={true}
                         multiline={true}
@@ -67,7 +68,7 @@ class DownloadConfirmationModal extends Component {
                     <TextField
                         inputRef={input => (this.q2 = input)}
                         required={true}
-                        error={MainStore.validationErrors.has('q2')}
+                        error={validationErrors.has('q2')}
                         onChange={this.handleInputChange('q2')}
                         multiline={true}
                         rowsMax="4"
@@ -79,7 +80,7 @@ class DownloadConfirmationModal extends Component {
                     <TextField
                         inputRef={input => (this.q3 = input)}
                         required={true}
-                        error={MainStore.validationErrors.has('q3')}
+                        error={validationErrors.has('q3')}
                         onChange={this.handleInputChange('q3')}
                         multiline={true}
                         rowsMax="4"
