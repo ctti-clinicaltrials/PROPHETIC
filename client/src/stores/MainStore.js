@@ -144,10 +144,14 @@ export class MainStore {
     }
 
     @action setValidationErrors(id) {
-        if(!this.validationErrors.has(id)) {
-            this.validationErrors.set(id)
+        if(id === 'clearAll') {
+            this.validationErrors.clear();
         } else {
-            this.validationErrors.delete(id)
+            if (!this.validationErrors.has(id)) {
+                this.validationErrors.set(id)
+            } else {
+                this.validationErrors.delete(id)
+            }
         }
     }
 
