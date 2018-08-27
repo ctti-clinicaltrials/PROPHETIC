@@ -7,11 +7,9 @@ const bodyParser = require('body-parser');
 if (!process.env.NODE_ENV) require('dotenv').load();
 const dbConfig = require('./db');
 const express = require('express');
-const fetch = require('node-fetch');
 const helmet = require('helmet');
 const methodOverride = require('method-override');
 const morgan = require("morgan");
-const jwt = require('./middleware/jwtCheck');
 const mongoose = require('mongoose');
 const path = require('path');
 
@@ -33,16 +31,11 @@ app.use(express.static(path.resolve(__dirname, '../client/build')), cors(corsOpt
 mongoose.connect(dbConfig.DB).then( 'open',
     () => {console.log('Database is connected')},
     err => { console.log('Cannot connect to the database' +err)
-    });
+});
 
 app.use('/api/agent-token', agentToken);
 app.use('/api/user-response', userResponse);
 app.use('/api/files', files);
-
-app.get('/api/status', jwt.check(), (req, res) => {
-    res.set('Content-Type', 'application/json');
-    res.send('{"status":"ok"}');
-});
 
 // All remaining requests return the React app, so it can handle routing.
 app.get('/*', (request, response) => {

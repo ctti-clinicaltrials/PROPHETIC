@@ -58,12 +58,14 @@ class DatasetList extends Component {
                             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                 <Typography className={classes.heading}>{d.file.name}</Typography>
                             </ExpansionPanelSummary>
-                            {d.description &&
-                                <ExpansionPanelDetails>
-                                    <Typography>
-                                        {d.description}
-                                    </Typography>
-                                </ExpansionPanelDetails>
+                            {d.metadata &&
+                                d.metadata.map(m => {
+                                    return <ExpansionPanelDetails key={m.template_property.id}>
+                                        <Typography>
+                                            <span style={{fontWeight: 800}}>{m.template_property.label}</span> {m.value}
+                                        </Typography>
+                                    </ExpansionPanelDetails>
+                                })
                             }
                             <ExpansionPanelDetails>
                                 <Typography>
