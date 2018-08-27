@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
-import AuthStore from '../stores/AuthStore'
 import MainStore from '../stores/MainStore'
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -26,21 +25,36 @@ class DownloadConfirmationModal extends Component {
         MainStore.toggleModal(id);
     };
 
+
     downloadData(modalId) {
         let inputs = [this.q1, this.q2, this.q3];
-        if(!MainStore.validationErrors.size) MainStore.postUserResponse(modalId, inputs);
+        if(this.validateAllInputs()) {
+            MainStore.postUserResponse(modalId, inputs);
+        }
     };
 
-    handleInputChange = id => event => {
+    handleInputChange = (event) => {
+        let id = event.target.id;
         let text = event.target.value.trim().length;
         if((!text && !MainStore.validationErrors.has(id)) || (MainStore.validationErrors.has(id) && text)) {
             MainStore.setValidationErrors(id);
         }
     };
 
+    validateAllInputs = () => {
+        let inputs = [this.q1, this.q2, this.q3];
+        let { validationErrors } = MainStore;
+        inputs.forEach(t => {
+            let text = t.value.trim().length;
+            if((!text && !validationErrors.has(t.id)) || (validationErrors.has(t.id) && text)) {
+                MainStore.setValidationErrors(t.id);
+            }
+        });
+        return !MainStore.validationErrors.size && !inputs.some(i => i.value.trim().length <= 0)
+    };
+
     render() {
         let { modals, validationErrors } = MainStore;
-
         return (
             <Dialog
                 open={modals.has('dlq')}
@@ -56,7 +70,7 @@ class DownloadConfirmationModal extends Component {
                         inputRef={input => (this.q1 = input)}
                         required={true}
                         error={validationErrors.has('q1')}
-                        onChange={this.handleInputChange('q1')}
+                        onChange={this.handleInputChange}
                         autoFocus={true}
                         multiline={true}
                         rowsMax="4"
@@ -69,7 +83,7 @@ class DownloadConfirmationModal extends Component {
                         inputRef={input => (this.q2 = input)}
                         required={true}
                         error={validationErrors.has('q2')}
-                        onChange={this.handleInputChange('q2')}
+                        onChange={this.handleInputChange}
                         multiline={true}
                         rowsMax="4"
                         margin="normal"
@@ -81,7 +95,7 @@ class DownloadConfirmationModal extends Component {
                         inputRef={input => (this.q3 = input)}
                         required={true}
                         error={validationErrors.has('q3')}
-                        onChange={this.handleInputChange('q3')}
+                        onChange={this.handleInputChange}
                         multiline={true}
                         rowsMax="4"
                         margin="normal"
@@ -91,10 +105,16 @@ class DownloadConfirmationModal extends Component {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => this.closeModal('dlq')} color="primary">
+                    <Button
+                        onClick={() => this.closeModal('dlq')}
+                        color="primary"
+                    >
                         Cancel
                     </Button>
-                    <Button onClick={() => this.downloadData('dlq')} color="primary">
+                    <Button
+                        onClick={() => this.downloadData('dlq')}
+                        color="primary"
+                    >
                         Download
                     </Button>
                 </DialogActions>

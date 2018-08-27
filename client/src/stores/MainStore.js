@@ -115,26 +115,18 @@ export class MainStore {
         let formData = [];
         const { userProfile } = AuthStore;
         let file = this.datasets.find(d => d.id ===this.downloadQueue.keys().next().value).file;
-        if(inputs.some(i => i.value.length <= 0)) {
-            inputs.forEach(t => {
-                let text = t.value.trim().length;
-                if((!text && !this.validationErrors.has(t.id)) || (this.validationErrors.has(t.id) && text)) {
-                    this.setValidationErrors(t.id);
-                }
-            })
-        } else {
-            formData = inputs.map(i => {
-                return {
-                    question: i.labels[0].textContent, answer: i.value
-                }
-            });
-            this.toggleModal(modalId);
-            api.postUserResponse(userProfile, formData, file)
-                .then(checkStatus)
-                .then(response => response.json())
-                .then(json => this.downloadDataset())
-                .catch(er => this.handleErrors(er))
-        }
+        formData = inputs.map(i => {
+            let question = i.labels[0].textContent.replace(/[^\x00-\x7F]/g, ''); // Remove any unicode chars
+            return {
+                question: question, answer: i.value
+            }
+        });
+        this.toggleModal(modalId);
+        api.postUserResponse(userProfile, formData, file)
+            .then(checkStatus)
+            .then(response => response.json())
+            .then(this.downloadDataset())
+            .catch(er => this.handleErrors(er))
     }
 
     @action setAnchorElement(anchorEl, i) {
