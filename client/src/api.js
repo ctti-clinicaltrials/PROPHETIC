@@ -22,6 +22,10 @@ const api = {
         return fetch(`${config.DDS_API_URL}files/${id}/url`, getFetchParams('get', token))
     },
 
+    downloadFile: (id) => {
+        return fetch(`${config.APP_URL}api/files/download/${id}`, getFetchParams('get', 'Bearer ' +localStorage.getItem('access_token')))
+    },
+
     getDDSApiToken: () => {
         return fetch(`${config.APP_URL}api/agent-token`, getFetchParams('get', 'Bearer ' +localStorage.getItem('access_token')))
     },

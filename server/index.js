@@ -8,6 +8,7 @@ if (!process.env.NODE_ENV) require('dotenv').load();
 const dbConfig = require('./db');
 const express = require('express');
 const helmet = require('helmet');
+const jwt = require('./middleware/jwtCheck');
 const methodOverride = require('method-override');
 const morgan = require("morgan");
 const mongoose = require('mongoose');

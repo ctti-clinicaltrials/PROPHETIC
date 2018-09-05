@@ -27,14 +27,15 @@ class Home extends Component {
     fileInputChanged = (event) => {
         const f = event.target.files[0];
         MainStore.uploadFile(f);
-    }
-    handleClick = () => {
+    };
 
-        console.log('clicked')
-        this.setState(state => {
-            file: 1
-        });
-    }
+    download = () => {
+        MainStore.downloadFile();
+        // this.setState(state => {
+        //     file: 1
+        // });
+
+    };
 
     render() {
         const { classes } = this.props;
@@ -49,10 +50,13 @@ class Home extends Component {
                     onChange={this.fileInputChanged}
                 />
                 <label htmlFor="outlined-button-file">
-                    <Button variant="outlined" component="span" onClick={this.handleClick}>
+                    <Button variant="outlined" component="span">
                         Upload
                     </Button>
                 </label>
+                <Button variant="outlined" component="span" onClick={this.download}>
+                    Download
+                </Button>
                 <DatasetList />
             </div>
         );
