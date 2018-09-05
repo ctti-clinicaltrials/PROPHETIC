@@ -23,9 +23,9 @@ app.use(bodyParser.json());
 
 // Priority serve any static files.
 app.use(express.static(path.resolve(__dirname, '../client/build')), cors(corsOptions), helmet(), methodOverride('_method'), jwt.check(), (err, req, res, next) => {
-    if (err.name === 'UnauthorizedError') {
-        res.status(401).send('invalid token...');
-    }
+    // if (err.name === 'UnauthorizedError') {
+    //     res.status(401).send('invalid token...');
+    // }
 });
 
 // Connect to DB
