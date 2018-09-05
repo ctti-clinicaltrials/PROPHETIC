@@ -5,6 +5,7 @@ const multer = require('multer');
 const GridFsStorage = require('multer-gridfs-storage');
 const Grid = require('gridfs-stream');
 const dbConfig = require('../db');
+const jwt = require('../middleware/jwtCheck');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
@@ -47,13 +48,13 @@ const upload = multer({ storage: storage }).single('file');
 
 // @route POST /upload
 // @desc  Uploads file to DB
-router.post('/', upload, (req, res) => {
+router.post('/', jwt.check(), upload, (req, res) => {
     res.json({ file: req.file });
 });
 
 // @route GET /files
 // @desc  Display all files in JSON
-router.get('/', (req, res) => {
+router.get('/', jwt.check(), (req, res) => {
     gfs.files.find().toArray((err, files) => {
         return res.json(files);
     });
@@ -61,7 +62,7 @@ router.get('/', (req, res) => {
 
 // @route GET /files/download:id
 // @desc  download single file object
-router.get('/download/:id', (req, res) => {
+router.get('/download/:id', jwt.check(), (req, res) => {
     gfs.files.findOne({ _id: mongoose.mongo.ObjectId(req.params.id) }, (err, file) => {
         if (err || !file) {
             res.status(404).send('File not found');
@@ -95,7 +96,7 @@ router.get('/download/:id', (req, res) => {
 
 // @route GET /files/:id
 // @desc  Display single file object
-router.get('/:id', (req, res) => {
+router.get('/:id', jwt.check(), (req, res) => {
     gfs.files.findOne({ _id: mongoose.mongo.ObjectId(req.params.id) }, (err, file) => {
         if (!file || file.length === 0) {
             return res.status(404).json({
@@ -108,7 +109,7 @@ router.get('/:id', (req, res) => {
 
 // @route DELETE /files/:id
 // @desc  Delete file
-router.delete('/:id', (req, res) => {
+router.delete('/:id', jwt.check(), (req, res) => {
     // delete file
     conn.db.collection('uploads.files', {}, (err, files) => {
         files.remove({_id: mongoose.mongo.ObjectId(req.params.id)}, (err, res) => {

@@ -2,11 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const UserResponse = require('../models/userResponse');
 const error = require('../middleware/formatError');
+const jwt = require('../middleware/jwtCheck');
 const router = express.Router();
 
 if (!process.env.NODE_ENV) require('dotenv').load();
 
-router.post('/', (req, res) => {
+router.post('/', jwt.check(), (req, res) => {
     res.set('Content-Type', 'application/json');
     if(req.body.name && req.body.email && req.body.file && req.body.answers) {
         const userResponse = new UserResponse({

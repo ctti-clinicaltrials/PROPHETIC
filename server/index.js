@@ -8,7 +8,6 @@ if (!process.env.NODE_ENV) require('dotenv').load();
 const dbConfig = require('./db');
 const express = require('express');
 const helmet = require('helmet');
-const jwt = require('./middleware/jwtCheck');
 const methodOverride = require('method-override');
 const morgan = require("morgan");
 const mongoose = require('mongoose');
@@ -22,11 +21,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // Priority serve any static files.
-app.use(express.static(path.resolve(__dirname, '../client/build')), cors(corsOptions), helmet(), methodOverride('_method'), jwt.check(), (err, req, res, next) => {
-    // if (err.name === 'UnauthorizedError') {
-    //     res.status(401).send('invalid token...');
-    // }
-});
+app.use(express.static(path.resolve(__dirname, '../client/build')), cors(corsOptions), helmet(), methodOverride('_method'));
 
 // Connect to DB
 mongoose.connect(dbConfig.DB).then( 'open',
