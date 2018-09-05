@@ -1,10 +1,9 @@
 const express = require('express');
 const fetch = require('node-fetch');
-const jwt = require('../middleware/jwtCheck');
 if (!process.env.NODE_ENV) require('dotenv').load();
 const router = express.Router();
 
-router.get('/', jwt.check(), (req, res) => {
+router.get('/', (req, res) => {
     res.set('Content-Type', 'application/json');
     fetch(`${process.env.REACT_APP_DDS_API_URL}software_agents/api_token`, {
         method: 'POST',

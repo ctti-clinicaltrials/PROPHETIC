@@ -1,6 +1,6 @@
 import AuthStore from '../stores/AuthStore';
 
-export function getFetchParams(method, apiToken, body) {
+export function getFetchParams(method, apiToken, body, isFormData) {
     let obj = {
         method: method,
         headers: {
@@ -9,7 +9,11 @@ export function getFetchParams(method, apiToken, body) {
             'Authorization': apiToken ? apiToken : ''
         }
     };
-    if(body) obj.body = JSON.stringify(body);
+    if(body && isFormData) {
+        obj.body = body;
+        obj.headers = {'Authorization': apiToken ? apiToken : ''}
+    }
+    else if(body) obj.body = JSON.stringify(body);
     return obj;
 }
 

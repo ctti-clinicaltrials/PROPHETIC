@@ -33,6 +33,14 @@ export class MainStore {
         this.validationErrors = observable.map();
     }
 
+    @action uploadFile(file) {
+        api.uploadFile(file)
+            .then(checkStatus)
+            .then(response => response.json())
+            .then(json => console.log(json))
+            .catch(er => this.handleErrors(er))
+    }
+
     @action downloadDataset() {
         const id = this.downloadQueue.keys().next().value;
         api.downloadDataset(id, AuthStore.ddsAPIToken)
@@ -48,6 +56,64 @@ export class MainStore {
                     window.location.href = host + url;
                 }
                 this.queueDownload();
+            }).catch(ex => this.handleErrors(ex))
+    }
+
+    @action downloadFile() {
+        let id = "5b8457d0858e2a56ca844250";
+        api.downloadFile(id)
+            .then(checkStatus)
+            .then(response => {
+                console.log(response)
+                response.headers.forEach(h => console.log(h))
+                if (!response.ok) {
+                    throw Error(response.status+' '+response.statusText)
+                }
+
+                if (!response.body) {
+                    throw Error('ReadableStream not yet supported in this browser.')
+                }
+
+                // const contentLength = response.headers.get('content-length');
+                // if (!contentLength) {
+                //     throw Error('Content-Length response header unavailable');
+                // }
+
+                let total;
+                let loaded = 0;
+                let complete = Math.round(loaded/total*100)+'%';
+                function progress({loaded, total}) {
+                    complete = Math.round(loaded/total*100)+'%';
+                    console.log(complete)
+                }
+
+                return new Response(
+                    new ReadableStream({
+                        start(controller) {
+                            const reader = response.body.getReader();
+
+                            read();
+                            function read() {
+                                reader.read().then(({done, value}) => {
+                                    if (done) {
+                                        console.log('done')
+                                        controller.close();
+                                        return;
+                                    }
+                                    total = value.byteLength;
+                                    console.log(total)
+                                    loaded += value.byteLength;
+                                    progress({loaded, total})
+                                    controller.enqueue(value);
+                                    read();
+                                }).catch(error => {
+                                    console.error(error);
+                                    controller.error(error)
+                                })
+                            }
+                        }
+                    })
+                );
             }).catch(ex => this.handleErrors(ex))
     }
 
