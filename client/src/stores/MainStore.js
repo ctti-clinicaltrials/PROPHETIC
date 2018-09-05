@@ -60,7 +60,7 @@ export class MainStore {
     }
 
     @action downloadFile() {
-        let id = "5b8457d0858e2a56ca844250";
+        let id = "5b902eda7c492c0014ac0383";
         api.downloadFile(id)
             .then(checkStatus)
             .then(response => {
