@@ -74,17 +74,16 @@ export class MainStore {
                     throw Error('ReadableStream not yet supported in this browser.')
                 }
 
-                // const contentLength = response.headers.get('content-length');
-                // if (!contentLength) {
-                //     throw Error('Content-Length response header unavailable');
-                // }
+                const contentLength = response.headers.get('content-length');
+                if (!contentLength) {
+                    throw Error('Content-Length response header unavailable');
+                }
 
-                let total;
+                const total = parseInt(contentLength, 10);
                 let loaded = 0;
                 let complete = Math.round(loaded/total*100)+'%';
                 function progress({loaded, total}) {
                     complete = Math.round(loaded/total*100)+'%';
-                    console.log(complete)
                 }
 
                 return new Response(
@@ -100,10 +99,9 @@ export class MainStore {
                                         controller.close();
                                         return;
                                     }
-                                    total = value.byteLength;
-                                    console.log(total)
                                     loaded += value.byteLength;
                                     progress({loaded, total})
+                                    console.log(loaded)
                                     controller.enqueue(value);
                                     read();
                                 }).catch(error => {
