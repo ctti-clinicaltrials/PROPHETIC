@@ -30,7 +30,7 @@ class SocialSharing extends Component {
             return {
                 position: 'absolute',
                 top: this.getTopPosition(el),
-                right: 78,
+                right: 80,
                 cursor: 'pointer',
                 zIndex: 2000,
                 boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
@@ -39,13 +39,11 @@ class SocialSharing extends Component {
         } else {
             return {
                 position: 'absolute',
-                top: 33,
-                right: 74,
-                width: 40,
-                height: 40,
+                top: 30,
+                right: 72,
                 zIndex: 2000,
-                backgroundColor: MainStore.showSharingIcons ? Color.light_blue : Color.white,
-                color: MainStore.showSharingIcons ? Color.white : Color.grey,
+                backgroundColor: MainStore.showSharingIcons && Color.light_blue,
+                color: MainStore.showSharingIcons && Color.white,
                 borderRadius: '50%'
             }
         }
