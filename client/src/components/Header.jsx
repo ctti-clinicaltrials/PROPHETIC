@@ -32,11 +32,11 @@ const styles = {
     },
     logo: {
         maxWidth: 200,
-        marginBottom: -5,
+        marginBottom: -3,
     },
     logoCropped: {
         maxWidth: 64,
-        marginBottom: -5,
+        marginBottom: -3,
         marginTop: 5,
     },
     drawerButton: {
