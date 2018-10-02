@@ -11,6 +11,16 @@ import Home from '../containers/Home.jsx';
 import LeftNav from '../components/LeftNav.jsx';
 import Login from '../components/Login.jsx';
 
+const styles = {
+    innerGrid1: {
+        padding: 0
+    },
+    innerGrid2: {
+        padding: '20px 0px',
+        marginBottom: 40
+    },
+};
+
 const handleAuthentication = (nextState, replace) => {
     if (/access_token|id_token|error/.test(nextState.location.hash)) {
         AuthStore.handleAuthentication();
@@ -40,17 +50,18 @@ export default () => (
         <div>
             <Grid container spacing={16} justify="center" >
                 <Route component={Header} />
-                <Grid item xs={12} style={{padding: 0}}>
+                <Grid item xs={12} style={styles.innerGrid1}>
                     <Route component={IndeterminateLoader} />
                     <DownloadConfirmationModal component={DownloadConfirmationModal}/>
                 </Grid>
             </Grid>
             {AuthStore.isAuthenticated() && <Route component={LeftNav} />}
             <Grid container spacing={16} justify="center">
-                <Grid item xs={11} s={10} md={10} lg={8} style={{padding: '20px 0px'}}>
+                <Grid item xs={11} s={10} md={10} lg={8} style={styles.innerGrid2}>
                     <Switch>
                         <LoginRoute path="/login" component={Login} />
                         <PrivateRoute exact path="/" component={Home} />
+                        <PrivateRoute exact path="/trial-planning" component={Graph} />
                         <Redirect to="/" />
                     </Switch>
                 </Grid>

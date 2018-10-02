@@ -8,7 +8,7 @@ const api = {
     },
 
     downloadDataset: (id, token) => {
-        return fetch(`${config.DDS_API_URL}/files/${id}/url`, getFetchParams('get', token))
+        return fetch(`${config.DDS_API_URL}files/${id}/url`, getFetchParams('get', token))
     },
 
     getDDSApiToken: () => {
@@ -16,7 +16,7 @@ const api = {
     },
 
     getProjects: (token) => {
-        return fetch(`${config.DDS_API_URL}/projects?per_page=1000`, getFetchParams('get', token))
+        return fetch(`${config.DDS_API_URL}projects?per_page=1000`, getFetchParams('get', token))
     },
 
     getAllDataSets: (token) => {
@@ -27,13 +27,14 @@ const api = {
         return fetch(`${config.DDS_API_URL}meta/dds-file/${id}`,getFetchParams('get', token))
     },
 
-    postUserSession: (profile) => {
-        // const body = {
-        //     "name": profile.name,
-        //     "email": profile.email,
-        //     "login_time": new Date().getTime(),
-        // };
-        // return fetch(`https://morning-dusk-94993.herokuapp.com/api/usersessions`, getFetchParams('post', 'Bearer ' +localStorage.getItem('access_token'), body))
+    postUserResponse: (profile, formData, file) => {
+        const body = {
+            "name": profile.name,
+            "email": profile.email,
+            "file": file,
+            "answers": formData,
+        };
+        return fetch(`${config.APP_URL}api/user-response`, getFetchParams('post', 'Bearer ' +localStorage.getItem('access_token'), body))
     }
 };
 

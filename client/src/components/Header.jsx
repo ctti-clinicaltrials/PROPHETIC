@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import AuthStore from '../stores/AuthStore';
-import MainStore from '../stores/MainStore'
+import MainStore from '../stores/MainStore';
+import HeaderDropdownMenu from './HeaderDropdownMenu';
 import CTTI_logo from '../images/CTTI_logo.png';
+import CTTI_logo_crop from '../images/CTTI_logo_crop.png';
 import { Color } from '../theme/theme';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
 import { createMuiTheme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import { Menu as MenuIcon, MoreVert } from '@material-ui/icons'
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import SocialSharing from "./SocialSharing";
 
 const theme = createMuiTheme();
 
@@ -23,21 +23,25 @@ const styles = {
         backgroundColor: Color.white
     },
     avatar: {
-        margin: '16px 10px 10px',
+        position: 'absolute',
+        top: 33,
+        right: 126
     },
     flex: {
         flex: 1,
     },
     logo: {
         maxWidth: 200,
-        marginBottom: -5,
+        marginBottom: -3,
+    },
+    logoCropped: {
+        maxWidth: 64,
+        marginBottom: -3,
+        marginTop: 5,
     },
     drawerButton: {
         marginRight: 10,
         marginTop: 6
-    },
-    loginBtn: {
-        marginTop: 8
     },
     menuButton: {
         marginTop: 6
@@ -50,70 +54,47 @@ const styles = {
 @observer
 class Header extends Component {
 
-    handleLogout = () => AuthStore.logout();
-
-    initiateLogin = () => AuthStore.login();
-
-    menu = (props) => (
-        AuthStore.isAuthenticated() ?
-            <Menu id="simple-menu"
-                anchorEl={MainStore.anchorElements.get('headerMenu')}
-                open={MainStore.anchorElements.has('headerMenu')}
-                onClose={(e) => this.openMenu(e, 'headerMenu')}
-            >
-                <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                <MenuItem onClick={this.handleClose}>My account</MenuItem>
-                <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
-            </Menu> :
-            <Button variant="raised"
-                    color="secondary"
-                    onClick={this.initiateLogin}
-                    style={styles.loginBtn}>
-                Login
-            </Button>
-    );
-
-    openMenu = (event, i) => {
-        MainStore.setAnchorElement(event.currentTarget, i)
-    };
+    openMenu = (event, i) => MainStore.setAnchorElement(event.currentTarget, i);
 
     toggleDrawer = (key) => MainStore.toggleDrawer(key);
 
     render() {
         const { userProfile } = AuthStore;
         const { classes } = this.props;
-        const open = MainStore.anchorElements.has('headerMenu');
 
         return (
             <AppBar position="static"
                     style={styles.appBar}>
                 <Toolbar style={styles.toolbar}>
-                    {AuthStore.isAuthenticated() &&
-                    <IconButton className={classes.drawerButton}
-                        aria-label="Menu"
-                        onClick={() => this.toggleDrawer('mainNavDrawer')}>
-                        <MenuIcon />
-                    </IconButton>}
+                    {/*{AuthStore.isAuthenticated() &&*/}
+                    {/*<IconButton className={classes.drawerButton}*/}
+                        {/*aria-label="Menu"*/}
+                        {/*onClick={() => this.toggleDrawer('mainNavDrawer')}>*/}
+                        {/*<MenuIcon />*/}
+                    {/*</IconButton>}*/}
                     <Typography variant="title"
                                 color="inherit"
                                 className={classes.flex}>
-                       <img src={CTTI_logo}
+                       <img src={window.innerWidth >= 520 ? CTTI_logo : CTTI_logo_crop}
                             alt="CTTI logo"
-                            style={styles.logo}
+                            style={window.innerWidth >= 520 ? styles.logo : styles.logoCropped}
                        />
                     </Typography>
                         {userProfile &&
                             <Avatar alt="your profile avatar" src={userProfile.picture} className={classes.avatar} />
                         }
                         {AuthStore.isAuthenticated() &&
+                            <SocialSharing />
+                        }
+                        {AuthStore.isAuthenticated() &&
                             <IconButton className={classes.menuButton}
-                                aria-owns={open ? 'menu-appbar' : null}
+                                aria-owns={MainStore.anchorElements.has('headerMenu') ? 'menu-appbar' : null}
                                 aria-haspopup="true"
                                 onClick={(e) => this.openMenu(e, 'headerMenu')}>
                                 <MoreVert />
                             </IconButton>
                         }
-                        {this.menu()}
+                        <HeaderDropdownMenu />
                 </Toolbar>
             </AppBar>
         );

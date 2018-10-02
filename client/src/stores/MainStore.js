@@ -15,6 +15,8 @@ export class MainStore {
     @observable loading;
     @observable openNav;
     @observable modals;
+    @observable showSharingIcons;
+    @observable validationErrors;
 
     constructor() {
         this.anchorElements = observable.map();
@@ -27,6 +29,8 @@ export class MainStore {
         this.loading = false;
         this.openNav = false;
         this.modals = observable.map();
+        this.showSharingIcons = false;
+        this.validationErrors = observable.map();
     }
 
     @action downloadDataset() {
@@ -43,6 +47,7 @@ export class MainStore {
                 } else { // if browser blocks popups use location.href instead
                     window.location.href = host + url;
                 }
+                this.queueDownload();
             }).catch(ex => this.handleErrors(ex))
     }
 
@@ -60,7 +65,7 @@ export class MainStore {
                             .then(checkStatus)
                             .then(response => response.json())
                             .then((json) => {
-                                // If description metadata is not defined just show the dataset without it
+                                // If metadata is not defined just show the dataset without it
                                 if(!json.results.length ) {
                                         mainStore.datasets.push({
                                             id: d.id,
@@ -71,7 +76,7 @@ export class MainStore {
                                     json.results.map(m => {
                                         if (m.object.id === d.id) {
                                             mainStore.datasets.push({
-                                                description: m.properties[0].value,
+                                                metadata: m.properties.map(p => p),
                                                 id: d.id,
                                                 file: d
                                             })
@@ -106,19 +111,40 @@ export class MainStore {
         }
     }
 
-    @action test() {
-        api.test()
+    @action postUserResponse(modalId, inputs) {
+        let formData = [];
+        const { userProfile } = AuthStore;
+        let file = this.datasets.find(d => d.id ===this.downloadQueue.keys().next().value).file;
+        formData = inputs.map(i => {
+            let question = i.labels[0].textContent.replace(/[^\x00-\x7F]/g, ''); // Remove any unicode chars
+            return {
+                question: question, answer: i.value
+            }
+        });
+        this.toggleModal(modalId);
+        api.postUserResponse(userProfile, formData, file)
             .then(checkStatus)
             .then(response => response.json())
-            .then((json) => {
-                console.log(json)
-            }).catch(er => this.handleErrors(er))
+            .then(this.downloadDataset())
+            .catch(er => this.handleErrors(er))
     }
 
     @action setAnchorElement(anchorEl, i) {
         let a = this.anchorElements;
         !a.has(i) ? a.set(i, anchorEl) : a.delete(i);
         this.anchorElements = a;
+    }
+
+    @action setValidationErrors(id) {
+        if(id === 'clearAll') {
+            this.validationErrors.clear();
+        } else {
+            if (!this.validationErrors.has(id)) {
+                this.validationErrors.set(id)
+            } else {
+                this.validationErrors.delete(id)
+            }
+        }
     }
 
     @action toggleDrawer(key) {
@@ -144,6 +170,10 @@ export class MainStore {
         } else {
             this.modals.set(id)
         }
+    }
+
+    @action toggleSharing() {
+        this.showSharingIcons = !this.showSharingIcons;
     }
 
     @action queueDownload(id) {

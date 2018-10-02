@@ -37,6 +37,14 @@ describe('Main Store', () => {
         expect(MainStore.anchorElements.has('test')).toBe(false);
     });
 
+    it('@action setValidationErrors - should set a validation error to Map', () => {
+        expect(MainStore.validationErrors.has('test')).toBe(false);
+        MainStore.setValidationErrors('test');
+        expect(MainStore.validationErrors.has('test')).toBe(true);
+        MainStore.setValidationErrors('clearAll');
+        expect(MainStore.validationErrors.has('test')).toBe(false);
+    });
+
     it('@action toggleExpandedPanel - should set/delete panel ID to Map', () => {
         expect(MainStore.expandedPanels.has('test')).toBe(false);
         MainStore.toggleExpandedPanel('test');
@@ -69,6 +77,14 @@ describe('Main Store', () => {
         MainStore.toggleDrawer('test');
         expect(MainStore.drawers.has('test')).toBe(false);
         expect(MainStore.drawers.size).toBe(0);
+    });
+
+    it('@action toggleSharing - should toggle sharing icon visible state from true to false', () => {
+        expect(MainStore.showSharingIcons).toBe(false);
+        MainStore.toggleSharing();
+        expect(MainStore.showSharingIcons).toBe(true);
+        MainStore.toggleSharing();
+        expect(MainStore.showSharingIcons).toBe(false);
     });
 
     it('@action waitForToken - should set a counter and try function again', () => {

@@ -16,8 +16,7 @@ router.get('/', jwt.check(), (req, res) => {
             'agent_key': process.env.REACT_APP_AGENT_KEY,
             'user_key': process.env.REACT_APP_AGENT_USER_KEY
         })
-    }).then(res => res.json())
-        .then((json) => res.send(json))
+    }).then(res => res.json()).then((json) => res.send(json))
         .catch((er) => res.send(er))
 });
 

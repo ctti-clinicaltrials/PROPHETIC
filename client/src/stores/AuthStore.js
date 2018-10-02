@@ -44,23 +44,14 @@ export class AuthStore {
     @action getDDSApiToken() {
         api.getDDSApiToken()
             .then(response => response.json())
-            .then((json) => {
-                this.ddsAPIToken = json.api_token;
-                api.getProjects(this.ddsAPIToken)
-                    .then(response => response.json())
-                    .then(json => console.log(json.results))
-                    .catch(ex => MainStore.handleErrors(ex))
-            })
+            .then(json => this.ddsAPIToken = json.api_token)
             .catch(er => MainStore.handleErrors(er))
     }
 
     @action getProfile() {
         const accessToken = this.getAccessToken();
         this.auth0.client.userInfo(accessToken, (err, profile) => {
-            if (profile) {
-                this.userProfile = profile;
-                this.postUserSession(this.userProfile);
-            }
+            if (profile) this.userProfile = profile;
         });
     }
 
@@ -90,10 +81,6 @@ export class AuthStore {
         localStorage.removeItem('id_token');
         localStorage.removeItem('expires_at');
         window.location.assign(`${config.AUTH0_URL}v2/logout?returnTo=${config.REDIRECT_URI}`);
-    }
-
-    @action postUserSession(profile) {
-        api.postUserSession(profile);
     }
 
     @action setSession(authResult) {
