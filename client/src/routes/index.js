@@ -61,6 +61,7 @@ export default () => (
                     <Switch>
                         <LoginRoute path="/login" component={Login} />
                         <PrivateRoute exact path="/" component={Home} />
+                        <PrivateRoute exact path="/trial-planning" component={Graph} />
                         <Redirect to="/" />
                     </Switch>
                 </Grid>

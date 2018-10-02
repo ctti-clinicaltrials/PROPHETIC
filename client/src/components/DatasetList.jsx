@@ -2,16 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 import MainStore from '../stores/MainStore';
+import { formatDate } from '../util/baseUtils'
 import { Color } from '../theme/theme';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Description from '@material-ui/icons/Description';
 import Divider from '@material-ui/core/Divider';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import FileDownload from '@material-ui/icons/FileDownload';
+import CloudDownload from '@material-ui/icons/CloudDownload';
 import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
@@ -24,8 +26,14 @@ const styles = theme => ({
         fontSize: theme.typography.pxToRem(15),
         fontWeight: theme.typography.fontWeightRegular,
     },
+    headingText: {
+        paddingTop: 5, margin: 10
+    },
     rightIcon: {
         marginLeft: theme.spacing.unit,
+    },
+    leftIcon: {
+        margin: '13px 10px 10px -4px'
     },
     root: {
         width: '100%',
@@ -56,27 +64,33 @@ class DatasetList extends Component {
                                         onChange={() => this.expandPanel(d.id)}
                                         className={expandedPanels.has(d.id) ? classes.expandedPanel : ''}>
                             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                                <Typography className={classes.heading}>{d.file.name}</Typography>
+                                <Typography className={`${classes.heading} ${classes.leftIcon}`}>
+                                    <Description color="primary" />
+                                </Typography>
+                                <Typography className={`${classes.heading} ${classes.headingText}`}>
+                                    {d.file.name}
+                                </Typography>
                             </ExpansionPanelSummary>
                             {d.metadata &&
                                 d.metadata.map(m => {
                                     return <ExpansionPanelDetails key={m.template_property.id}>
                                         <Typography>
-                                            <span style={{fontWeight: 800}}>{m.template_property.label}</span> {m.value}
+                                            <span style={{fontWeight: 800}}>{m.template_property.label}:</span>
+                                            {m.value}
                                         </Typography>
                                     </ExpansionPanelDetails>
                                 })
                             }
                             <ExpansionPanelDetails>
                                 <Typography>
-                                    <b>Added by </b> {d.file.audit.created_by.full_name}
+                                    <b>Added on: </b> {formatDate(d.file.audit.created_on)}
                                 </Typography>
                             </ExpansionPanelDetails>
                             <Divider />
                             <ExpansionPanelActions>
                                 <Button size="small" color="primary" onClick={() => this.downloadDataset(d.file.id)}>
                                     Download Data
-                                    <FileDownload className={classes.rightIcon} />
+                                    <CloudDownload className={classes.rightIcon} />
                                 </Button>
                             </ExpansionPanelActions>
                         </ExpansionPanel>
