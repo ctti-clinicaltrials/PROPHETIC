@@ -12,6 +12,7 @@ class Colors {
         this.white = '#fff';
         this.coral = '#ec3e37';
         this.red = '#b71417';
+        this.light_red = '#F44336';
         this.maroon = '#680001';
         this.gray = '#57585c';
         this.dark_turquoise = '#016879';
