@@ -3,6 +3,7 @@ import api from '../api';
 import AuthStore from './AuthStore';
 import { checkStatus } from '../util/fetchUtil';
 import { generateUniqueKey } from '../util/baseUtils';
+import EmailValidator from 'email-validator';
 
 export class MainStore {
     @observable anchorElements;
@@ -16,6 +17,7 @@ export class MainStore {
     @observable openNav;
     @observable modals;
     @observable showSharingIcons;
+    @observable surveyAffiliations;
     @observable validationErrors;
 
     constructor() {
@@ -30,7 +32,19 @@ export class MainStore {
         this.openNav = false;
         this.modals = observable.map();
         this.showSharingIcons = false;
+        this.surveyAffiliations = observable.map();
         this.validationErrors = observable.map();
+
+        this.organizationTypes = [
+            "Academic Medical Center",
+            "Non-academic Clinical Research Site",
+            "Clinical Research Organization",
+            "Institutional Review Board",
+            "Industry - Pharmaceutical",
+            "Industry - Device",
+            "Industry - Other",
+            "Government (FDA, NIH, VA)"
+        ]
     }
 
     @action downloadDataset() {
@@ -39,9 +53,9 @@ export class MainStore {
             .then(checkStatus)
             .then(response => response.json())
             .then((json) => {
-                let host = json.host;
-                let url = json.url;
-                let win = window.open(host + url, '_blank');
+                const host = json.host;
+                const url = json.url;
+                const win = window.open(host + url, '_blank');
                 if (win) {
                     win.focus();
                 } else { // if browser blocks popups use location.href instead
@@ -111,17 +125,22 @@ export class MainStore {
         }
     }
 
-    @action postUserResponse(modalId, inputs) {
-        let formData = [];
-        const { userProfile } = AuthStore;
-        let file = this.datasets.find(d => d.id ===this.downloadQueue.keys().next().value).file;
-        formData = inputs.map(i => {
-            let question = i.labels[0].textContent.replace(/[^\x00-\x7F]/g, ''); // Remove any unicode chars
-            return {
-                question: question, answer: i.value
-            }
+    @action formatFormData(inputs) {
+        let formData = inputs.map(i => {
+            let key = i.labels[0].textContent.replace(/[^\x00-\x7F]/g, '').slice(0, -1);
+            return {[key]:i.value}
         });
-        this.toggleModal(modalId);
+        let affiliations = [...this.surveyAffiliations.keys()].filter((k) => k !== 'other');
+        if(this.surveyAffiliations.has('other')) {
+            affiliations.push(`other: ${inputs.filter((i) => i.id === 'other')[0].value}`)
+        }
+        return [...formData, {affiliations: [...affiliations]}];
+    }
+
+    @action postUserResponse(inputs) {
+        const { userProfile } = AuthStore;
+        const file = this.datasets.find(d => d.id ===this.downloadQueue.keys().next().value).file;
+        const formData = this.formatFormData(inputs);
         api.postUserResponse(userProfile, formData, file)
             .then(checkStatus)
             .then(response => response.json())
@@ -133,6 +152,21 @@ export class MainStore {
         let a = this.anchorElements;
         !a.has(i) ? a.set(i, anchorEl) : a.delete(i);
         this.anchorElements = a;
+    }
+
+    @action setSurveyAffiliations(id) {
+        if(id === 'clearAll') {
+            this.surveyAffiliations.clear();
+        } else {
+            if (!this.surveyAffiliations.has(id)) {
+                this.surveyAffiliations.set(id)
+            } else {
+                this.surveyAffiliations.delete(id);
+                if (id === 'other') {
+                    this.setValidationErrors(id)
+                }
+            }
+        }
     }
 
     @action setValidationErrors(id) {
@@ -174,6 +208,30 @@ export class MainStore {
 
     @action toggleSharing() {
         this.showSharingIcons = !this.showSharingIcons;
+    }
+
+    @action validateTextInputs(inputs) {
+        inputs.forEach(t => {
+            let text = t.value.trim();
+            if(t.id === 'email' &&
+                !EmailValidator.validate(text)
+            ) {
+                this.setValidationErrors(t.id);
+            }
+            if((t.id !== 'email' || t.id === 'email' &&
+                EmailValidator.validate(t.value.trim())) &&
+                ((text.length && (this.validationErrors.has(t.id))) ||
+                (!text.length && !this.validationErrors.has(t.id)))
+            ) {
+                this.setValidationErrors(t.id);
+            }
+        });
+        if(!this.surveyAffiliations.size > 0 && !this.validationErrors.has('checkboxes')) {
+            this.setValidationErrors('checkboxes');
+        }
+        return !this.validationErrors.size &&
+            !inputs.some(i => i.value.trim().length <= 0) &&
+            !!this.surveyAffiliations.size > 0
     }
 
     @action queueDownload(id) {
