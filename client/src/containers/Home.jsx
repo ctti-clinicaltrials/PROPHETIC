@@ -15,7 +15,6 @@ const styles = theme => ({
 @observer
 class Home extends Component {
     componentDidMount() {
-        AuthStore.getProfile();
         AuthStore.getDDSApiToken();
         MainStore.getAllDataSets();
     }
