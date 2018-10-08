@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import AuthStore from '../stores/AuthStore';
-import Graph from '../containers/Graph.jsx';
 import DownloadConfirmationModal from '../components/DownloadConfirmationModal.jsx';
 import Footer from '../components/Footer.jsx';
 import Header from '../components/Header.jsx';
@@ -10,6 +10,9 @@ import Grid from '@material-ui/core/Grid';
 import Home from '../containers/Home.jsx';
 import LeftNav from '../components/LeftNav.jsx';
 import Login from '../components/Login.jsx';
+import TrialPlanningView from "../containers/TrialPlanningView";
+
+import FilterCloud from "../components/FilterCloud";
 
 const styles = {
     innerGrid1: {
@@ -47,28 +50,25 @@ const LoginRoute = ({ component: Component, ...rest }) => {
 
 export default () => (
     <Router>
-        <div>
-            <Grid container spacing={16} justify="center" >
+        <React.Fragment>
+            <CssBaseline />
+            <Grid container spacing={16} justify="center">
                 <Route component={Header} />
                 <Grid item xs={12} style={styles.innerGrid1}>
                     <Route component={IndeterminateLoader} />
                     <DownloadConfirmationModal component={DownloadConfirmationModal}/>
                 </Grid>
-            </Grid>
-            {AuthStore.isAuthenticated() && <Route component={LeftNav} />}
-            <Grid container spacing={16} justify="center">
-                <Grid item xs={11} s={10} md={10} lg={8} style={styles.innerGrid2}>
+                {AuthStore.isAuthenticated() && <Route path="/trial-planning" component={FilterCloud} />}
                     <Switch>
-                        <LoginRoute path="/login" component={Login} />
-                        <PrivateRoute exact path="/" component={Home} />
-                        <PrivateRoute exact path="/trial-planning" component={Graph} />
-                        <Redirect to="/" />
+                        <PrivateRoute exact path="/trial-planning" component={TrialPlanningView} />
+                        <Grid item xs={11} s={10} md={10} lg={8} style={styles.innerGrid2}>
+                            <LoginRoute path="/login" component={Login} />
+                            <PrivateRoute exact path="/" component={Home} />
+                            <Redirect to="/" />
+                        </Grid>
                     </Switch>
-                </Grid>
-            </Grid>
-            <Grid container spacing={16} justify="center" >
                 <Route component={Footer} />
             </Grid>
-        </div>
+        </React.Fragment>
     </Router>
 );
