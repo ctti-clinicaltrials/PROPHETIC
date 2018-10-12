@@ -23,7 +23,7 @@ const styles = theme => ({
         display: 'flex'
     },
     content: {
-        margin: '10px 16px 10px 10px',
+        margin: '10px 10px 10px 0px',
         flexGrow: 1,
         alignSelf: 'start',
         padding: theme.spacing.unit * 3,
@@ -65,7 +65,7 @@ class Graph extends Component {
             }
         };
         return (
-            <Paper className={classes.content}>
+            <Paper className={classes.content} square>
                 <Chart height={400}
                        data={data}
                        scale={cols}

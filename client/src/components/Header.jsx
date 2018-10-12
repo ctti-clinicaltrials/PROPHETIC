@@ -72,7 +72,7 @@ class Header extends Component {
                         {/*onClick={() => this.toggleDrawer('mainNavDrawer')}>*/}
                         {/*<MenuIcon />*/}
                     {/*</IconButton>}*/}
-                    <Typography variant="title"
+                    <Typography variant="h6"
                                 color="inherit"
                                 className={classes.flex}>
                        <img src={window.innerWidth >= 520 ? CTTI_logo : CTTI_logo_crop}

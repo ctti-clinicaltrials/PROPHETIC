@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AuthStore from '../stores/AuthStore';
 import MainStore from '../stores/MainStore';
 import Graph from '../components/Graph';
-import Exclusions from '../components/Exclusions';
+import ExclusionControls from '../components/Exclusions';
 import Paper from '@material-ui/core/Paper';
 import {Slider} from 'material-ui-slider';
 import TextField from '@material-ui/core/TextField';
@@ -31,7 +31,7 @@ class TrialPlanningView extends Component {
 
         return (
             <div className={classes.root}>
-                <Exclusions />
+                <ExclusionControls />
                 <Graph />
             </div>
         );

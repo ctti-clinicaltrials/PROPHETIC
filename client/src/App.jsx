@@ -7,7 +7,13 @@ import AuthStore from './stores/AuthStore';
 import './styles/index.css';
 
 const theme = createMuiTheme({
-    palette: palette
+    palette: palette,
+    typography: {
+        useNextVariants: true,
+    },
+    disabledTextFieldColor:{
+        color: 'red',
+    }
 });
 
 @observer

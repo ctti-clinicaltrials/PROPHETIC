@@ -58,15 +58,15 @@ export default () => (
                     <Route component={IndeterminateLoader} />
                     <DownloadConfirmationModal component={DownloadConfirmationModal}/>
                 </Grid>
-                {AuthStore.isAuthenticated() && <Route path="/trial-planning" component={FilterCloud} />}
-                    <Switch>
-                        <PrivateRoute exact path="/trial-planning" component={TrialPlanningView} />
-                        <Grid item xs={11} s={10} md={10} lg={8} style={styles.innerGrid2}>
-                            <LoginRoute path="/login" component={Login} />
-                            <PrivateRoute exact path="/" component={Home} />
-                            <Redirect to="/" />
-                        </Grid>
-                    </Switch>
+                <PrivateRoute path="/trial-planning" component={FilterCloud} />
+                <Switch>
+                    <PrivateRoute exact path="/trial-planning" component={TrialPlanningView} />
+                    <Grid item xs={11} s={10} md={10} lg={8} style={styles.innerGrid2}>
+                        <LoginRoute path="/login" component={Login} />
+                        <PrivateRoute exact path="/" component={Home} />
+                        <Redirect to="/" />
+                    </Grid>
+                </Switch>
                 <Route component={Footer} />
             </Grid>
         </React.Fragment>

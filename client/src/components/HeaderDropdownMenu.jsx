@@ -45,7 +45,7 @@ class HeaderDropdownMenu extends Component {
                     <MenuItem onClick={() => this.openLink('cp')}>Citation Policy</MenuItem>
                     <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
                 </Menu> :
-                <Button variant="raised"
+                <Button variant="contained"
                         color="secondary"
                         onClick={this.initiateLogin}
                         style={styles.loginBtn}>
