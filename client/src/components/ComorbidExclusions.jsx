@@ -76,33 +76,33 @@ class ComorbidExclusions extends Component {
 
         return (
             <ExpansionPanel>
-                {/*<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>*/}
-                    {/*<Typography className={classes.heading}>Comorbid Conditions</Typography>*/}
-                {/*</ExpansionPanelSummary>*/}
-                {/*<ExpansionPanelDetails>*/}
-                    {/*<FormControl component="fieldset">*/}
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography className={classes.heading}>Comorbid Conditions</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                    <FormControl component="fieldset">
                         {/*<FormGroup>*/}
-                            {/*<FormControlLabel*/}
-                                {/*control={*/}
-                                    {/*<Switch*/}
-                                        {/*// checked={this.state.gilad}*/}
-                                        {/*// onChange={this.handleChange('gilad')}*/}
-                                        {/*value="> 24 hours Prior Antibacterial Therapy"*/}
-                                    {/*/>*/}
-                                {/*}*/}
-                                {/*label="> 24 hours Prior Antibacterial Therapy"*/}
-                            {/*/>*/}
-                            {/*<Divider/>*/}
-                            {/*<FormControlLabel*/}
-                                {/*control={*/}
-                                    {/*<Switch*/}
-                                        {/*// checked={this.state.jason}*/}
-                                        {/*// onChange={this.handleChange('Participation in other clinical trial')}*/}
-                                        {/*value="Participation in other clinical trial"*/}
-                                    {/*/>*/}
-                                {/*}*/}
-                                {/*label="Participation in other clinical trial"*/}
-                            {/*/>*/}
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        // checked={this.state.gilad}
+                                        // onChange={this.handleChange('gilad')}
+                                        value="> 24 hours Prior Antibacterial Therapy"
+                                    />
+                                }
+                                label="> 24 hours Prior Antibacterial Therapy"
+                            />
+                            <Divider/>
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        // checked={this.state.jason}
+                                        // onChange={this.handleChange('Participation in other clinical trial')}
+                                        value="Participation in other clinical trial"
+                                    />
+                                }
+                                label="Participation in other clinical trial"
+                            />
                             {/*<Divider/>*/}
                             {/*<FormControlLabel*/}
                                 {/*control={*/}
@@ -215,8 +215,8 @@ class ComorbidExclusions extends Component {
                                 {/*</RadioGroup>*/}
                             {/*</Collapse>*/}
                         {/*</FormGroup>*/}
-                    {/*</FormControl>*/}
-                {/*</ExpansionPanelDetails>*/}
+                    </FormControl>
+                </ExpansionPanelDetails>
             </ExpansionPanel>
         );
     }

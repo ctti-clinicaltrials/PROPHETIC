@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AuthStore from '../stores/AuthStore';
@@ -50,7 +50,7 @@ const LoginRoute = ({ component: Component, ...rest }) => {
 
 export default () => (
     <Router>
-        <React.Fragment>
+        <Fragment>
             <CssBaseline />
             <Grid container spacing={16} justify="center">
                 <Route component={Header} />
@@ -61,14 +61,16 @@ export default () => (
                 <PrivateRoute path="/trial-planning" component={FilterCloud} />
                 <Switch>
                     <PrivateRoute exact path="/trial-planning" component={TrialPlanningView} />
-                    <Grid item xs={11} s={10} md={10} lg={8} style={styles.innerGrid2}>
-                        <LoginRoute path="/login" component={Login} />
-                        <PrivateRoute exact path="/" component={Home} />
-                        <Redirect to="/" />
-                    </Grid>
+                    <Fragment>
+                        <Grid item xs={11} s={10} md={10} lg={8} style={styles.innerGrid2}>
+                            <LoginRoute path="/login" component={Login} />
+                            <PrivateRoute exact path="/" component={Home} />
+                            <Redirect to="/" />
+                        </Grid>
+                    </Fragment>
                 </Switch>
-                <Route component={Footer} />
+            <Route component={Footer} />
             </Grid>
-        </React.Fragment>
+        </Fragment>
     </Router>
 );

@@ -5,48 +5,54 @@ import { Color } from '../theme/theme';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Chip from '@material-ui/core/Chip';
+import Collapse from "@material-ui/core/Collapse";
 
 const styles = theme => ({
-    paper: {
+    chip: { marginRight: 8 },
+    wrapperInner: {
         display: 'flex',
         backgroundColor: Color.white,
         minWidth: '100%',
         minHeight: 48,
-        padding: 8,
+        padding: '8px 20px',
         zIndex: 2,
         overflowX: 'auto',
+    },
+    wrapper: {
+        overflowX: 'auto',
+        minWidth: '100%'
     }
 });
 
 @observer
 class FilterCloud extends Component {
 
-    state = {
-        chips: new Array(30).fill( Math.random()*Math.random(), 0, 30)
+    deleteChip = (i) => {
+        const exclusion = i[0];
+        MainStore.deleteExclusion(exclusion)
     };
-
-    handleDelete = (i) => {
-        console.log(i)
-        const chips = this.state.chips.filter(c => c !== i);
-        this.setState({
-            chips: chips
-        })
-    }
 
     render() {
         const { classes } = this.props;
-        const { chips } = this.state;
-        const renderedChips = chips.map((i) =>
-            <Chip key={i}
-                onDelete={() => this.handleDelete(i)}
-                label="This is an exclusion"
-                color="primary"
-                variant="outlined"
-            />
-        );
+        const { exclusions } = MainStore;
+
         return (
-            <Paper className={`${classes.paper} chipContainer`}>
-                {renderedChips}
+            <Paper className={`${classes.wrapper} chipContainer`}>
+                <Collapse in={!!exclusions.size}
+                          classes={{wrapper: classes.wrapper, wrapperInner: `${classes.wrapperInner} chipContainer`}}
+                >
+                    {
+                        exclusions.entries().map((i) =>
+                            <Chip key={i}
+                                  className={classes.chip}
+                                  onDelete={() => this.deleteChip(i)}
+                                  label={`${i[0]}`}
+                                  color="primary"
+                                  variant="outlined"
+                            />
+                        )
+                    }
+                </Collapse>
             </Paper>
         );
     }
