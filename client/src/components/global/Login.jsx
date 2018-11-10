@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import AuthStore from '../stores/AuthStore';
-import MainStore from '../stores/MainStore';
+import AuthStore from '../../stores/AuthStore';
+import MainStore from '../../stores/MainStore';
 import Button from '@material-ui/core/Button';
 
 @observer

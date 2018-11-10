@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
-import MainStore from '../stores/MainStore';
-import { Color } from '../theme/theme';
+import MainStore from '../../stores/MainStore';
+import { Color } from '../../theme/theme';
 import AppBar from '@material-ui/core/AppBar';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import { KeyboardBackspace } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
-
 
 const styles = {
     appBar: {

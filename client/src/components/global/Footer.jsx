@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import cyan from '@material-ui/core/colors/cyan';
-import { Color } from '../theme/theme';
+import { Color } from '../../theme/theme';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import {withStyles} from '@material-ui/core/styles';

@@ -1,18 +1,17 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AuthStore from '../stores/AuthStore';
-import DownloadConfirmationModal from '../components/DownloadConfirmationModal.jsx';
-import Footer from '../components/Footer.jsx';
-import Header from '../components/Header.jsx';
-import IndeterminateLoader from '../components/IndeterminateLoader.jsx';
+import DownloadConfirmationModal from '../components/dataSharing/DownloadConfirmationModal.jsx';
+import FilterCloud from "../components/trialPlanning/FilterCloud";
+import Footer from '../components/global/Footer.jsx';
 import Grid from '@material-ui/core/Grid';
+import Header from '../components/global/Header.jsx';
 import Home from '../containers/Home.jsx';
-import LeftNav from '../components/LeftNav.jsx';
-import Login from '../components/Login.jsx';
-import TrialPlanningView from "../containers/TrialPlanningView";
-
-import FilterCloud from "../components/FilterCloud";
+import IndeterminateLoader from '../components/global/IndeterminateLoader.jsx';
+import LeftNav from '../components/global/LeftNav.jsx';
+import Login from '../components/global/Login.jsx';
+import TrialPlanningView from "../containers/TrialPlanning";
 
 const styles = {
     innerGrid1: {
@@ -50,7 +49,7 @@ const LoginRoute = ({ component: Component, ...rest }) => {
 
 export default () => (
     <Router>
-        <React.Fragment>
+        <Fragment>
             <CssBaseline />
             <Grid container spacing={16} justify="center">
                 <Route component={Header} />
@@ -58,17 +57,19 @@ export default () => (
                     <Route component={IndeterminateLoader} />
                     <DownloadConfirmationModal component={DownloadConfirmationModal}/>
                 </Grid>
-                {AuthStore.isAuthenticated() && <Route path="/trial-planning" component={FilterCloud} />}
-                    <Switch>
-                        <PrivateRoute exact path="/trial-planning" component={TrialPlanningView} />
+                <PrivateRoute path="/trial-planning" component={FilterCloud} />
+                <Switch>
+                    <PrivateRoute exact path="/trial-planning" component={TrialPlanningView} />
+                    <Fragment>
                         <Grid item xs={11} s={10} md={10} lg={8} style={styles.innerGrid2}>
                             <LoginRoute path="/login" component={Login} />
-                            <PrivateRoute exact path="/" component={Home} />
-                            <Redirect to="/" />
+                            <PrivateRoute exact path="/data-sharing" component={Home} />
+                            <Redirect to="/data-sharing" />
                         </Grid>
-                    </Switch>
-                <Route component={Footer} />
+                    </Fragment>
+                </Switch>
+            <Route component={Footer} />
             </Grid>
-        </React.Fragment>
+        </Fragment>
     </Router>
 );

@@ -17,13 +17,14 @@ import {
 import DataSet from "@antv/data-set";
 import {withStyles} from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
 
 const styles = theme => ({
     root: {
         display: 'flex'
     },
     content: {
-        margin: '10px 16px 10px 10px',
+        margin: '10px 10px 10px 0px',
         flexGrow: 1,
         alignSelf: 'start',
         padding: theme.spacing.unit * 3,
@@ -66,6 +67,9 @@ class Graph extends Component {
         };
         return (
             <Paper className={classes.content}>
+                <Typography variant="h5" gutterBottom>
+                    Trial Planning
+                </Typography>
                 <Chart height={400}
                        data={data}
                        scale={cols}

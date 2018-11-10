@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
-import { Color } from '../theme/theme'
-import MainStore from '../stores/MainStore'
+import { Color } from '../../theme/theme'
+import MainStore from '../../stores/MainStore'
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import Dialog from '@material-ui/core/Dialog';
@@ -102,7 +102,9 @@ class DownloadConfirmationModal extends Component {
                 <DialogTitle id="form-dialog-title">Survey</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        To download this data please answer a few questions first.
+                        To download this data please answer a few questions. We gather this information to gain
+                        insights about how our data sharing program is being used. Your information will not be shared
+                        with anyone and we will not send unrequested email correspondence to you.
                     </DialogContentText>
                     <TextField
                         inputRef={input => (this.name = input)}
@@ -177,7 +179,7 @@ class DownloadConfirmationModal extends Component {
                         </FormControl>
                         {open &&
                             <Paper className={classes.paper} elevation={2}>
-                                <Typography component="p" style={{color: Color.white}}>
+                                <Typography variant="h6" style={{color: Color.white}}>
                                     Please fix the errors highlighted in red above.
                                 </Typography>
                             </Paper>

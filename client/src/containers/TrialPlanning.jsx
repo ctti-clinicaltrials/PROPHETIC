@@ -3,14 +3,10 @@ import PropTypes from 'prop-types';
 import {observer} from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
 import AuthStore from '../stores/AuthStore';
-import MainStore from '../stores/MainStore';
-import Graph from '../components/Graph';
-import Exclusions from '../components/Exclusions';
-import Paper from '@material-ui/core/Paper';
-import {Slider} from 'material-ui-slider';
-import TextField from '@material-ui/core/TextField';
+import Graph from '../components/trialPlanning/Graph';
+import ExclusionControls from '../components/trialPlanning/Exclusions';
 
-const styles = theme => ({
+const styles = () => ({
     root: {
         display: 'flex',
         width:'100%',
@@ -19,7 +15,7 @@ const styles = theme => ({
 });
 
 @observer
-class TrialPlanningView extends Component {
+class TrialPlanning extends Component {
 
     componentDidMount() {
         AuthStore.getProfile();
@@ -31,15 +27,15 @@ class TrialPlanningView extends Component {
 
         return (
             <div className={classes.root}>
-                <Exclusions />
+                <ExclusionControls />
                 <Graph />
             </div>
         );
     }
 }
 
-TrialPlanningView.propTypes = {
+TrialPlanning.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TrialPlanningView);
+export default withStyles(styles)(TrialPlanning);

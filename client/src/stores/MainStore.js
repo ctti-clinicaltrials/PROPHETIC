@@ -10,6 +10,7 @@ export class MainStore {
     @observable datasets;
     @observable downloadQueue;
     @observable errors;
+    @observable exclusions;
     @observable expandedPanels;
     @observable counter;
     @observable drawers;
@@ -26,6 +27,7 @@ export class MainStore {
         this.datasets = [];
         this.downloadQueue = observable.map();
         this.errors = observable.map();
+        this.exclusions = observable.map();
         this.expandedPanels = observable.map();
         this.drawers = observable.map();
         this.loading = false;
@@ -45,6 +47,10 @@ export class MainStore {
             "Industry - Other",
             "Government (FDA, NIH, VA)"
         ]
+    }
+
+    @action deleteExclusion(exclusion) {
+        this.exclusions.delete(exclusion)
     }
 
     @action downloadDataset() {
@@ -68,7 +74,7 @@ export class MainStore {
     @action getAllDataSets(cid) {
         mainStore.toggleLoading();
         const token = AuthStore.ddsAPIToken;
-        if(token) {
+        if(token && !mainStore.datasets.length) {
             api.getAllDataSets(token)
                 .then(checkStatus)
                 .then(response => response.json())
@@ -154,6 +160,11 @@ export class MainStore {
         this.anchorElements = a;
     }
 
+    @action setExclusions(exclusion, value) {
+        this.exclusions.set(exclusion, value)
+        console.log(this.exclusions)
+    }
+
     @action setSurveyAffiliations(id) {
         if(id === 'clearAll') {
             this.surveyAffiliations.clear();
@@ -185,6 +196,14 @@ export class MainStore {
         !this.drawers.has(key) ? this.drawers.set(key, true) : this.drawers.delete(key);
     }
 
+    @action toggleExclusion(input, value) {
+        if(!this.exclusions.has(input)) {
+            this.setExclusions(input, value);
+        } else {
+            this.deleteExclusion(input, value);
+        }
+    }
+
     @action toggleExpandedPanel(id) {
         if(this.expandedPanels.has(id)) {
             this.expandedPanels.delete(id);
@@ -214,7 +233,8 @@ export class MainStore {
         inputs.forEach(t => {
             let text = t.value.trim();
             if(t.id === 'email' &&
-                !EmailValidator.validate(text)
+                !EmailValidator.validate(text) &&
+                !this.validationErrors.has(t.id)
             ) {
                 this.setValidationErrors(t.id);
             }
