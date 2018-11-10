@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {observer} from "mobx-react";
 import { withStyles } from '@material-ui/core/styles';
-import { Color } from '../theme/theme'
+import { Color } from '../../theme/theme'
 import Paper from '@material-ui/core/Paper';
 import {Slider} from "material-ui-slider";
 import GeneralExclusions from "./GeneralExclusions";

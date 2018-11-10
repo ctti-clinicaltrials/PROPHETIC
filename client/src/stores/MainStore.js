@@ -74,7 +74,7 @@ export class MainStore {
     @action getAllDataSets(cid) {
         mainStore.toggleLoading();
         const token = AuthStore.ddsAPIToken;
-        if(token) {
+        if(token && !mainStore.datasets.length) {
             api.getAllDataSets(token)
                 .then(checkStatus)
                 .then(response => response.json())
@@ -233,7 +233,8 @@ export class MainStore {
         inputs.forEach(t => {
             let text = t.value.trim();
             if(t.id === 'email' &&
-                !EmailValidator.validate(text)
+                !EmailValidator.validate(text) &&
+                !this.validationErrors.has(t.id)
             ) {
                 this.setValidationErrors(t.id);
             }

@@ -2,16 +2,16 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {observer} from "mobx-react";
 import {withStyles} from '@material-ui/core/styles';
-import {Exc} from '../exclusions';
+import {Exc} from '../../exclusions';
 import Collapse from '@material-ui/core/Collapse';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Switch from '@material-ui/core/Switch';
 import TextField from "@material-ui/core/TextField";
-import {Color} from "../theme/theme";
-import MainStore from "../stores/MainStore";
+import {Color} from "../../theme/theme";
+import MainStore from "../../stores/MainStore";
 
-const styles = theme => ({
+const styles = () => ({
     wrapper: {
         margin: '8px 0px',
         padding: '0px 14px'
@@ -24,7 +24,7 @@ const styles = theme => ({
 class MaxAge extends Component {
 
     exclusionToggle = (input) => {
-        MainStore.toggleExclusion(input, 100)
+        MainStore.toggleExclusion(input, 100);
     };
 
     handleChange = e => {
@@ -33,8 +33,7 @@ class MaxAge extends Component {
     };
 
     render() {
-        const {classes} = this.props;
-        const {exclusions} = MainStore;
+        const { classes, exclusions} = this.props;
         const error = isNaN(exclusions.get(Exc.maxAge)) || exclusions.get(Exc.maxAge) < 18;
 
         return (
@@ -71,6 +70,7 @@ class MaxAge extends Component {
 
 MaxAge.propTypes = {
     classes: PropTypes.object.isRequired,
+    exclusions: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(MaxAge)

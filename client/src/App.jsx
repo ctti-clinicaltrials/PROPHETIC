@@ -13,7 +13,7 @@ const theme = createMuiTheme({
     },
     disabledTextFieldColor:{
         color: 'red',
-    }
+    },
 });
 
 @observer

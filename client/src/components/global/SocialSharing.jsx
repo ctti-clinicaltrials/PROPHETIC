@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import MainStore from '../stores/MainStore'
-import { Color } from '../theme/theme';
+import MainStore from '../../stores/MainStore'
+import { Color } from '../../theme/theme';
 import IconButton from '@material-ui/core/IconButton';
 import Share from '@material-ui/icons/Share';
 import Tooltip from '@material-ui/core/Tooltip';

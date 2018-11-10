@@ -1,24 +1,21 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import AuthStore from '../stores/AuthStore';
-import MainStore from '../stores/MainStore';
+import AuthStore from '../../stores/AuthStore';
+import MainStore from '../../stores/MainStore';
 import HeaderDropdownMenu from './HeaderDropdownMenu';
-import CTTI_logo from '../images/CTTI_logo.png';
-import CTTI_logo_crop from '../images/CTTI_logo_crop.png';
-import { Color } from '../theme/theme';
+import CTTI_logo from '../../images/CTTI_logo.png';
+import CTTI_logo_crop from '../../images/CTTI_logo_crop.png';
+import { Color } from '../../theme/theme';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
-import { createMuiTheme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import { Menu as MenuIcon, MoreVert } from '@material-ui/icons'
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import SocialSharing from "./SocialSharing";
 
-const theme = createMuiTheme();
-
-const styles = {
+const styles = theme => ({
     appBar: {
         backgroundColor: Color.white
     },
@@ -49,7 +46,7 @@ const styles = {
     toolbar: {
         zIndex: theme.zIndex.drawer + 1
     }
-};
+});
 
 @observer
 class Header extends Component {
@@ -64,8 +61,8 @@ class Header extends Component {
 
         return (
             <AppBar position="static"
-                    style={styles.appBar}>
-                <Toolbar style={styles.toolbar}>
+                    className={classes.appBar}>
+                <Toolbar className={classes.toolbar}>
                     {/*{AuthStore.isAuthenticated() &&*/}
                     {/*<IconButton className={classes.drawerButton}*/}
                         {/*aria-label="Menu"*/}
@@ -77,7 +74,7 @@ class Header extends Component {
                                 className={classes.flex}>
                        <img src={window.innerWidth >= 520 ? CTTI_logo : CTTI_logo_crop}
                             alt="CTTI logo"
-                            style={window.innerWidth >= 520 ? styles.logo : styles.logoCropped}
+                            className={window.innerWidth >= 520 ? classes.logo : classes.logoCropped}
                        />
                     </Typography>
                         {userProfile &&

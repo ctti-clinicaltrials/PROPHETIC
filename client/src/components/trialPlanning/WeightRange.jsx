@@ -1,18 +1,18 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {observer} from "mobx-react";
-import { Exc } from '../exclusions';
+import MainStore from "../../stores/MainStore";
+import { Exc } from '../../exclusions';
 import {withStyles} from '@material-ui/core/styles';
 import Collapse from '@material-ui/core/Collapse';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Switch from '@material-ui/core/Switch';
 import TextField from "@material-ui/core/TextField";
-import {Color} from "../theme/theme";
+import {Color} from "../../theme/theme";
 import {Slider} from "material-ui-slider";
-import MainStore from "../stores/MainStore";
 
-const styles = theme => ({
+const styles =  () => ({
     wrapper: {
         margin: '8px 0px',
         padding: '0px 14px'
@@ -50,8 +50,7 @@ class WeightRange extends Component {
 
 
     render() {
-        const {classes} = this.props;
-        const { exclusions } = MainStore;
+        const { classes, exclusions } = this.props;
 
         return (
             <span>
@@ -98,6 +97,7 @@ class WeightRange extends Component {
 
 WeightRange.propTypes = {
     classes: PropTypes.object.isRequired,
+    exclusions: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(WeightRange)

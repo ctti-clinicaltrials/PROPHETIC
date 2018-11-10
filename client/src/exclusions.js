@@ -22,7 +22,7 @@ export const Exc = Object.freeze({
     cystFib: 'Cystic Fibrosis',
     sevHepDysfunction: 'Severe Hepatic Dysfunction',
     seizure: 'Seizure Disorder',
-    invMechVent: 'Invasive Mechanical Ventilation', // Todo: come back and fix the rest opf these !!!!!!!!!
+    invMechVent: 'Invasive Mechanical Ventilation', // Todo: come back and fix the rest of these !!!!!!!!!
 });
 
 // export default {

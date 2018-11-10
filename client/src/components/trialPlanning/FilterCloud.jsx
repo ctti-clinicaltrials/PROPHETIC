@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import MainStore from '../stores/MainStore';
-import { Color } from '../theme/theme';
+import MainStore from '../../stores/MainStore';
+import { Color } from '../../theme/theme';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Chip from '@material-ui/core/Chip';
