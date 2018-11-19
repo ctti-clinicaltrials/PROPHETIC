@@ -5,6 +5,8 @@ import { checkStatus } from '../util/fetchUtil';
 import { generateUniqueKey } from '../util/baseUtils';
 import EmailValidator from 'email-validator';
 
+import { data } from '../fake_data'
+
 export class MainStore {
     @observable anchorElements;
     @observable datasets;
@@ -20,6 +22,9 @@ export class MainStore {
     @observable showSharingIcons;
     @observable surveyAffiliations;
     @observable validationErrors;
+
+    @observable data
+    @observable graphData
 
     constructor() {
         this.anchorElements = observable.map();
@@ -37,6 +42,12 @@ export class MainStore {
         this.surveyAffiliations = observable.map();
         this.validationErrors = observable.map();
 
+        this.data = data;
+        this.graphData = [{
+            action: 'all patients',
+            pv: data.length
+        }];
+
         this.organizationTypes = [
             "Academic Medical Center",
             "Non-academic Clinical Research Site",
@@ -50,7 +61,8 @@ export class MainStore {
     }
 
     @action deleteExclusion(exclusion) {
-        this.exclusions.delete(exclusion)
+        this.exclusions.delete(exclusion);
+        // this.setGraphData(exclusion, false);
     }
 
     @action downloadDataset() {
@@ -160,10 +172,74 @@ export class MainStore {
         this.anchorElements = a;
     }
 
-    @action setExclusions(exclusion, value) {
-        this.exclusions.set(exclusion, value)
-        console.log(this.exclusions)
+    @action setExclusions(exclusion, value, excType) {
+        console.log(exclusion + value) // Todo: need to fix this for ranges
+        // this.exclusions.set(exclusion, value);
+        let pv;
+        if(typeof value === "boolean") {
+            pv = this.data.reduce((prev, cur) => prev + (cur[exclusion] ? 1 : 0), 0)
+        } else {
+            pv = data.filter((d) => {
+                return d[exclusion] >= value.min && d[exclusion] <= value.max;
+            }).length
+        }
+        this.exclusions.set(
+            exclusion,
+            {
+                action: exclusion,
+                pv: pv,
+                range: typeof value !== "boolean" && value
+            }
+        );
+        // this.filterDataBool(exclusion);
+        this.data = this.data.filter(d => d[exclusion] === true)
+        console.log(this.exclusions.values())
+        // this.graphData = [this.graphData[0], ...this.exclusions.values()]
+        this.graphData = [this.graphData[0], ...this.exclusions.values().sort((a, b) => b.pv - a.pv)]
+        // this.graphData = [this.graphData[0], ...this.exclusions.values().sort((a,b) => a.pv < b.pv ? 1 : -1)];
+
+
+        console.log(this.graphData)
+        // this.setGraphData(exclusion, true);
     }
+
+    filterDataBool(exclusion) {
+        return this.data.filter(d => d[exclusion] === true)
+    }
+
+    // @action setGraphData(e, add) {
+    //     // Todo: Just make the value of exclusions (Map()) the same structure as the graph needs and then get graph data via Map.values()
+    //     // this.exclusions.set(
+    //     //      exclusion,
+    //     //      {
+    //     //          action: exclusion,
+    //     //          pv: this.data.reduce((prev, cur) => prev + (cur[e] ? add : 0), 0)
+    //     //      }
+    //     // )
+    //     //
+    //     //
+    //     //
+    //     let exc = [];
+    //     this.exclusions.forEach((val, key) => {
+    //         exc.push({[key]: val });
+    //     })
+    //     console.log(exc)
+    //     let excData = exc.map((ex) => {
+    //         return {
+    //             action: e,
+    //             pv: this.data.reduce((prev, cur) => prev + (cur[e] ? add : 0), 0)
+    //         }
+    //     })
+
+        // this.graphData = [
+        //     {action: 'all patients',
+        //      pv: this.data.length
+        //     },
+        //     ...excData
+        // ]
+        // return [data, ...this.newData]
+    // }
+
 
     @action setSurveyAffiliations(id) {
         if(id === 'clearAll') {

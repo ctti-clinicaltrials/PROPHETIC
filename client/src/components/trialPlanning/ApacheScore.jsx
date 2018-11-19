@@ -11,7 +11,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import TextField from "@material-ui/core/TextField";
 
-
 const styles = theme => ({
     wrapper: {
         margin: '8px 0px',
@@ -29,18 +28,18 @@ const styles = theme => ({
 class ApacheScore extends Component {
 
     exclusionToggle = (input) => {
-        MainStore.toggleExclusion(input, {minApacheScore: 0, maxApacheScore: 71})
+        MainStore.toggleExclusion(input, {min: 0, max: 71})
     };
 
     getApacheRange = () => {
         const { exclusions } = MainStore;
-        let apacheRange = {minApacheScore: 0, maxApacheScore: 71};
-        if(exclusions.has(Exc.apache)) apacheRange = exclusions.get(Exc.apache);
+        let apacheRange = {min: 0, max: 71};
+        if(exclusions.has(Exc.apache)) apacheRange = exclusions.get(Exc.apache).range;
         return apacheRange;
     };
 
     setSliderRange = val => {
-        MainStore.setExclusions(Exc.apache, {minApacheScore: val[0], maxApacheScore: val[1]})
+        MainStore.setExclusions(Exc.apache, {min: val[0], max: val[1]})
     };
 
     render() {
@@ -60,7 +59,7 @@ class ApacheScore extends Component {
                 />
                 <Collapse in={exclusions.has(Exc.apache)} classes={{wrapper: classes.wrapper}}>
                         <Slider color="#bf4040"
-                                value={[this.getApacheRange().minApacheScore, this.getApacheRange().maxApacheScore]}
+                                value={[this.getApacheRange().min, this.getApacheRange().max]}
                                 range
                                 max={71}
                                 onChangeComplete={this.setSliderRange}
@@ -68,9 +67,8 @@ class ApacheScore extends Component {
                         />
                         <TextField
                             disabled={true}
-                            value={`${this.getApacheRange().minApacheScore} - ${this.getApacheRange().maxApacheScore}`}
+                            value={`${this.getApacheRange().min} - ${this.getApacheRange().max}`}
                             style={{width: 91, marginLeft: 10, marginTop: 7}}
-                            onChange={this.validateInput}
                             InputProps={{
                                 disableUnderline: true,
                                 classes: {
