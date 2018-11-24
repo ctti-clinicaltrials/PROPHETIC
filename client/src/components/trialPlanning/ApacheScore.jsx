@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {observer} from "mobx-react";
 import { withStyles } from '@material-ui/core/styles';
 import MainStore from "../../stores/MainStore";
-import {Exc} from "../../exclusions";
+import { Exc } from "../../exclusions";
 import { Color } from '../../theme/theme'
 import {Slider} from "material-ui-slider";
 import Collapse from '@material-ui/core/Collapse';
@@ -39,6 +39,7 @@ class ApacheScore extends Component {
     };
 
     setSliderRange = val => {
+        console.log(val)
         MainStore.setExclusions(Exc.apache, {min: val[0], max: val[1]})
     };
 

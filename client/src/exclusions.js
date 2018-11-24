@@ -1,7 +1,7 @@
 export const Exc = Object.freeze({
     antibac: 'Antibacterial Therapy',
     apache: 'Apache Score',
-    maxAge: 'Maximum Age',
+    age: 'Maximum Age',
     weight: 'Weight Range',
     prevTrial: 'Other Clinical Trial Participation',
     chf: 'Congestive Heart Failure',
@@ -26,36 +26,3 @@ export const Exc = Object.freeze({
     seizure: 'Seizure Disorder',
     invMechVent: 'Invasive Mechanical Ventilation', // Todo: come back and fix the rest of these !!!!!!!!!
 });
-
-// export default {
-//     antibacterialTherapy: false,
-//     minApacheScore: 0,
-//     maxApacheScore: 71,
-//     maxAge: 100,
-//     "Minimum Weight": 0,
-//     "Maximum Weight": 250,
-//     trialParticipation: false,
-//     CHF: false,
-//     NYHAClassIV: false,
-//     HIV: false,
-//     CD4Count: null,
-//     currentHematologicOncologic: false,
-//     lungCancer: false,
-//     immunocompromised: false,
-//     stemCellTransplant: false,
-//     solidOrganTransplant: false,
-//     receivingDialysis: false,
-//     chronicKidneyDisease: false,
-//     eGFR50: false,
-//     eGFR30: false,
-//     eGFR10: false,
-//     interstitialLungDisease: false,
-//     cysticFibrosis: false,
-//     severeHepaticDysfunction: false,
-//     seizureDisorder: false,
-//     invasiveMechanicalVentilation: false,
-//     invasiveMechanicalVentilation48hr: false,
-//     chemotherapyPast30Days: false,
-//     highDoseCorticosteroids: false,
-// };
-

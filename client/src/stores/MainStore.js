@@ -60,9 +60,9 @@ export class MainStore {
         ]
     }
 
-    @action deleteExclusion(exclusion) {
+    @action deleteExclusion(exclusion, value) {
         this.exclusions.delete(exclusion);
-        // this.setGraphData(exclusion, false);
+        this.data = this.filterData(exclusion, value, false);
     }
 
     @action downloadDataset() {
@@ -172,74 +172,64 @@ export class MainStore {
         this.anchorElements = a;
     }
 
-    @action setExclusions(exclusion, value, excType) {
-        console.log(exclusion + value) // Todo: need to fix this for ranges
-        // this.exclusions.set(exclusion, value);
-        let pv;
-        if(typeof value === "boolean") {
-            pv = this.data.reduce((prev, cur) => prev + (cur[exclusion] ? 1 : 0), 0)
+    @action setExclusions(exclusion, value) {
+        if(typeof value === 'boolean') {
+            this.data = this.filterData(exclusion, value);
         } else {
-            pv = data.filter((d) => {
-                return d[exclusion] >= value.min && d[exclusion] <= value.max;
-            }).length
+            this.data = this.filterData(exclusion, value, false);
         }
-        this.exclusions.set(
+        this.exclusions.set( // Todo: Need to toggle the exclusion if it's a range and still get the correct PV value. Currently if it's a range I'm setting the exclusion twice which causes issues
             exclusion,
             {
                 action: exclusion,
-                pv: pv,
-                range: typeof value !== "boolean" && value
+                pv: this.data.length, // This length is wrong for ranges...
+                range: typeof value !== 'boolean' && value
             }
         );
-        // this.filterDataBool(exclusion);
-        this.data = this.data.filter(d => d[exclusion] === true)
+        this.setGraphData();
+    }
+
+    filterData(exclusion, value, remove = true) {
+        let newData = [];
+        if(remove) { // If removing items just filter the existing this.data array
+            if (typeof value === 'boolean') newData = this.data.filter(d => d[exclusion] === true);
+            else newData = this.data.filter((d) => d[exclusion] >= value.min && d[exclusion] <= value.max);
+        } else { // If adding items back in replace this.data by filtering original data array ???
+            let filters = this.exclusions.values();
+            if(filters.length) { // If no filters just return original data array
+                this.data = data;
+                for (let f of filters) {
+                    let filtered;
+                    if (typeof f.range === 'boolean') filtered = [...this.data.filter(d => d[f.action] === true)];
+                    if (typeof f.range !== 'boolean') {
+                        let range = typeof value !== 'boolean' ? value : f.range; // TODO: this will fail with multiple ranges
+                        filtered = [...this.data.filter((d) => d[f.action] >= range.min && d[f.action] <= range.max)];
+                        // filtered = this.data.filter((d) => d[f.action] >= range.min && d[f.action] <= range.max);
+                    }
+                    this.data = filtered;
+                    this.exclusions.set(
+                        f.action,
+                        {
+                            action: f.action,
+                            pv:  filtered.length,
+                            range: typeof f.range !== 'boolean' && f.range
+                        }
+                    );
+                    this.setGraphData();
+                }
+                return this.data;
+            } else {
+                this.setGraphData();
+                newData = data;
+            }
+        }
+        return newData
+    }
+
+    @action setGraphData() {
         console.log(this.exclusions.values())
-        // this.graphData = [this.graphData[0], ...this.exclusions.values()]
-        this.graphData = [this.graphData[0], ...this.exclusions.values().sort((a, b) => b.pv - a.pv)]
-        // this.graphData = [this.graphData[0], ...this.exclusions.values().sort((a,b) => a.pv < b.pv ? 1 : -1)];
-
-
-        console.log(this.graphData)
-        // this.setGraphData(exclusion, true);
+        this.graphData = [this.graphData[0], ...this.exclusions.values().sort((a, b) => b.pv - a.pv)];
     }
-
-    filterDataBool(exclusion) {
-        return this.data.filter(d => d[exclusion] === true)
-    }
-
-    // @action setGraphData(e, add) {
-    //     // Todo: Just make the value of exclusions (Map()) the same structure as the graph needs and then get graph data via Map.values()
-    //     // this.exclusions.set(
-    //     //      exclusion,
-    //     //      {
-    //     //          action: exclusion,
-    //     //          pv: this.data.reduce((prev, cur) => prev + (cur[e] ? add : 0), 0)
-    //     //      }
-    //     // )
-    //     //
-    //     //
-    //     //
-    //     let exc = [];
-    //     this.exclusions.forEach((val, key) => {
-    //         exc.push({[key]: val });
-    //     })
-    //     console.log(exc)
-    //     let excData = exc.map((ex) => {
-    //         return {
-    //             action: e,
-    //             pv: this.data.reduce((prev, cur) => prev + (cur[e] ? add : 0), 0)
-    //         }
-    //     })
-
-        // this.graphData = [
-        //     {action: 'all patients',
-        //      pv: this.data.length
-        //     },
-        //     ...excData
-        // ]
-        // return [data, ...this.newData]
-    // }
-
 
     @action setSurveyAffiliations(id) {
         if(id === 'clearAll') {
@@ -272,7 +262,7 @@ export class MainStore {
         !this.drawers.has(key) ? this.drawers.set(key, true) : this.drawers.delete(key);
     }
 
-    @action toggleExclusion(input, value) {
+    @action toggleExclusion(input, value) { // Todo: refactor this to set exclusions and pv value. This method is redundant
         if(!this.exclusions.has(input)) {
             this.setExclusions(input, value);
         } else {
