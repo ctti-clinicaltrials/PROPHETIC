@@ -18,6 +18,7 @@ import Typography from '@material-ui/core/Typography';
 import AuthStore from "../../stores/AuthStore";
 
 const styles = theme => ({
+    boldHeadline: {textDecoration: 'underline'},
     expandedPanel: {
         margin: '10px -10px',
         borderLeft: `solid 4px ${Color.light_blue}`,
@@ -79,7 +80,8 @@ class DatasetList extends Component {
                                 d.metadata.map(m => {
                                     return <ExpansionPanelDetails key={m.template_property.id}>
                                         <Typography>
-                                            <span style={{fontWeight: 800}}>{m.template_property.label}:</span>
+                                            <b className={classes.boldHeadline}>{m.template_property.label}</b>
+                                            <br/>
                                             {m.value}
                                         </Typography>
                                     </ExpansionPanelDetails>
@@ -87,7 +89,8 @@ class DatasetList extends Component {
                             }
                             <ExpansionPanelDetails>
                                 <Typography>
-                                    <b>Added on: </b> {formatDate(d.file.audit.created_on)}
+                                    <b className={classes.boldHeadline}>Added on </b><br/>
+                                    {formatDate(d.file.audit.created_on)}
                                 </Typography>
                             </ExpansionPanelDetails>
                             <Divider />
