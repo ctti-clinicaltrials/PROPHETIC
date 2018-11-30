@@ -5,11 +5,55 @@ import { checkStatus } from '../util/fetchUtil';
 import { generateUniqueKey } from '../util/baseUtils';
 import EmailValidator from 'email-validator';
 
+// import { data } from '../fake_data';
+const data = [{
+        "guid": "41713026-4134-411b-b177-a969fa71029c",
+        "HIV Positive": true,
+        "Other Clinical Trial Participation": false,
+        "prior_antibacterial_therapy": false,
+        "Maximum Age": 84,
+        "Apache Score": 27,
+        "weight range": 68,
+        "Congestive Heart Failure": false,
+        "chf_at_rest": false,
+        "NYHA Class IV or CHF Symptoms at Rest": false,
+        "cd4_count": 62
+    },
+    {
+        "guid": "38831ee7-71cf-41fa-8268-87d8b99026d3",
+        "HIV Positive": true,
+        "Other Clinical Trial Participation": false,
+        "prior_antibacterial_therapy": false,
+        "Maximum Age": 27,
+        "Apache Score": 62,
+        "weight range": 138,
+        "Congestive Heart Failure": true,
+        "chf_at_rest": true,
+        "NYHA Class IV or CHF Symptoms at Rest": true,
+        "cd4_count": 617
+    },
+    {
+        "guid": "5f713e7a-452f-42b6-8573-cda64ac0b003",
+        "HIV Positive": true,
+        "Other Clinical Trial Participation": true,
+        "prior_antibacterial_therapy": false,
+        "Maximum Age": 58,
+        "Apache Score": 27,
+        "weight range": 30,
+        "Congestive Heart Failure": false,
+        "chf_at_rest": false,
+        "NYHA Class IV or CHF Symptoms at Rest": true,
+        "cd4_count": 39
+    },
+    ];
+
+
 export class MainStore {
     @observable anchorElements;
     @observable datasets;
     @observable downloadQueue;
     @observable errors;
+    @observable exclusions;
     @observable expandedPanels;
     @observable counter;
     @observable drawers;
@@ -20,12 +64,16 @@ export class MainStore {
     @observable surveyAffiliations;
     @observable validationErrors;
 
+    @observable data
+    @observable graphData
+
     constructor() {
         this.anchorElements = observable.map();
         this.counter = observable.map();
         this.datasets = [];
         this.downloadQueue = observable.map();
         this.errors = observable.map();
+        this.exclusions = observable.map();
         this.expandedPanels = observable.map();
         this.drawers = observable.map();
         this.loading = false;
@@ -34,6 +82,12 @@ export class MainStore {
         this.showSharingIcons = false;
         this.surveyAffiliations = observable.map();
         this.validationErrors = observable.map();
+
+        this.data = data;
+        this.graphData = [{
+            action: 'all patients',
+            pv: data.length
+        }];
 
         this.organizationTypes = [
             "Academic Medical Center",
@@ -45,6 +99,11 @@ export class MainStore {
             "Industry - Other",
             "Government (FDA, NIH, VA)"
         ]
+    }
+
+    @action deleteExclusion(exclusion, value) {
+        this.exclusions.delete(exclusion);
+        this.data = this.filterData(exclusion, value, false);
     }
 
     @action downloadDataset() {
@@ -68,7 +127,7 @@ export class MainStore {
     @action getAllDataSets(cid) {
         mainStore.toggleLoading();
         const token = AuthStore.ddsAPIToken;
-        if(token) {
+        if(token && !mainStore.datasets.length) {
             api.getAllDataSets(token)
                 .then(checkStatus)
                 .then(response => response.json())
@@ -154,6 +213,65 @@ export class MainStore {
         this.anchorElements = a;
     }
 
+    @action setExclusions(exclusion, value) {
+        if(typeof value === 'boolean') {
+            this.data = this.filterData(exclusion, value);
+        } else {
+            this.data = this.filterData(exclusion, value, false);
+        }
+        this.exclusions.set( // Todo: Need to toggle the exclusion if it's a range and still get the correct PV value. Currently if it's a range I'm setting the exclusion twice which causes issues
+            exclusion,
+            {
+                action: exclusion,
+                pv: this.data.length, // This length is wrong for ranges...
+                range: typeof value !== 'boolean' && value
+            }
+        );
+        this.setGraphData();
+    }
+
+    filterData(exclusion, value, remove = true) {
+        let newData = [];
+        if(remove) { // If removing items just filter the existing this.data array
+            if (typeof value === 'boolean') newData = this.data.filter(d => d[exclusion] === true);
+            else newData = this.data.filter((d) => d[exclusion] >= value.min && d[exclusion] <= value.max);
+        } else { // If adding items back in replace this.data by filtering original data array ???
+            let filters = this.exclusions.values();
+            if(filters.length) { // If no filters just return original data array
+                this.data = data;
+                for (let f of filters) {
+                    let filtered;
+                    if (typeof f.range === 'boolean') filtered = [...this.data.filter(d => d[f.action] === true)];
+                    if (typeof f.range !== 'boolean') {
+                        let range = typeof value !== 'boolean' ? value : f.range; // TODO: this will fail with multiple ranges
+                        filtered = [...this.data.filter((d) => d[f.action] >= range.min && d[f.action] <= range.max)];
+                        // filtered = this.data.filter((d) => d[f.action] >= range.min && d[f.action] <= range.max);
+                    }
+                    this.data = filtered;
+                    this.exclusions.set(
+                        f.action,
+                        {
+                            action: f.action,
+                            pv:  filtered.length,
+                            range: typeof f.range !== 'boolean' && f.range
+                        }
+                    );
+                    this.setGraphData();
+                }
+                return this.data;
+            } else {
+                this.setGraphData();
+                newData = data;
+            }
+        }
+        return newData
+    }
+
+    @action setGraphData() {
+        console.log(this.exclusions.values())
+        this.graphData = [this.graphData[0], ...this.exclusions.values().sort((a, b) => b.pv - a.pv)];
+    }
+
     @action setSurveyAffiliations(id) {
         if(id === 'clearAll') {
             this.surveyAffiliations.clear();
@@ -185,6 +303,14 @@ export class MainStore {
         !this.drawers.has(key) ? this.drawers.set(key, true) : this.drawers.delete(key);
     }
 
+    @action toggleExclusion(input, value) { // Todo: refactor this to set exclusions and pv value. This method is redundant
+        if(!this.exclusions.has(input)) {
+            this.setExclusions(input, value);
+        } else {
+            this.deleteExclusion(input, value);
+        }
+    }
+
     @action toggleExpandedPanel(id) {
         if(this.expandedPanels.has(id)) {
             this.expandedPanels.delete(id);
@@ -214,7 +340,8 @@ export class MainStore {
         inputs.forEach(t => {
             let text = t.value.trim();
             if(t.id === 'email' &&
-                !EmailValidator.validate(text)
+                !EmailValidator.validate(text) &&
+                !this.validationErrors.has(t.id)
             ) {
                 this.setValidationErrors(t.id);
             }

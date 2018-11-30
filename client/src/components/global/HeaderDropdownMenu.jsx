@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import AuthStore from '../stores/AuthStore';
-import MainStore from '../stores/MainStore'
+import AuthStore from '../../stores/AuthStore';
+import MainStore from '../../stores/MainStore';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import { Link } from 'react-router-dom';
+import PropTypes from "prop-types";
 
 const styles = {
     loginBtn: {
@@ -34,18 +36,21 @@ class HeaderDropdownMenu extends Component {
     openMenu = (event, i) => MainStore.setAnchorElement(event.currentTarget, i);
 
     render() {
+        const { anchorElements } = MainStore;
         return (
             AuthStore.isAuthenticated() ?
                 <Menu id="simple-menu"
-                      anchorEl={MainStore.anchorElements.get('headerMenu')}
-                      open={MainStore.anchorElements.has('headerMenu')}
+                      anchorEl={anchorElements.get('headerMenu')}
+                      open={anchorElements.has('headerMenu')}
                       onClose={(e) => this.openMenu(e, 'headerMenu')}
                 >
+                    {/*<MenuItem onClick={() => this.openLink()}><Link style={{textDecoration: 'none', color: '#212121'}} to="/trial-planning">Trial Planning App</Link></MenuItem> //TODO Fix these styles. Use classes eventually.*/}
+                    <MenuItem onClick={() => this.openLink()}><Link style={{textDecoration: 'none', color: '#212121'}} to="/">Downloadable Data</Link></MenuItem>
                     <MenuItem onClick={() => this.openLink('cu')}>Contact Us</MenuItem>
                     <MenuItem onClick={() => this.openLink('cp')}>Citation Policy</MenuItem>
                     <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
                 </Menu> :
-                <Button variant="raised"
+                <Button variant="contained"
                         color="secondary"
                         onClick={this.initiateLogin}
                         style={styles.loginBtn}>
@@ -54,5 +59,15 @@ class HeaderDropdownMenu extends Component {
         );
     }
 }
+
+HeaderDropdownMenu.defaultProps = {
+    classes: {},
+    anchorElements: {}
+};
+
+HeaderDropdownMenu.propTypes = {
+    classes: PropTypes.object.isRequired,
+    anchorElements: PropTypes.object.isRequired
+};
 
 export default withStyles(styles)(HeaderDropdownMenu);

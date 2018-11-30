@@ -15,10 +15,6 @@ const api = {
         return fetch(`${config.APP_URL}api/agent-token`, getFetchParams('get', 'Bearer ' +localStorage.getItem('access_token')))
     },
 
-    getProjects: (token) => {
-        return fetch(`${config.DDS_API_URL}projects?per_page=1000`, getFetchParams('get', token))
-    },
-
     getAllDataSets: (token) => {
         return fetch(`${config.DDS_API_URL}projects/${config.DDS_PROJECT_ID}/children`,getFetchParams('get', token))
     },

@@ -4,3 +4,8 @@ body {
   font-family: 'Roboto', sans-serif;
   background-color: #eceff1;
 }
+
+.chipContainer::-webkit-scrollbar {
+  display: none;
+  z-index: 10;
+}
