@@ -104,11 +104,3 @@ class Login extends Component {
 }
 
 export default withStyles(styles)(Login);
-{/*<div>*/}
-{/*{!loading ?*/}
-{/*<Button variant="raised" color="secondary" onClick={this.login}>*/}
-{/*Login*/}
-{/*</Button>*/}
-{/*: null*/}
-{/*}*/}
-{/*</div>*/}
