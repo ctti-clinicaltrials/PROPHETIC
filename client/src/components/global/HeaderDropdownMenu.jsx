@@ -44,7 +44,7 @@ class HeaderDropdownMenu extends Component {
                       open={anchorElements.has('headerMenu')}
                       onClose={(e) => this.openMenu(e, 'headerMenu')}
                 >
-                    <MenuItem onClick={() => this.openLink()}><Link style={{textDecoration: 'none', color: '#212121'}} to="/trial-planning">Trial Planning App</Link></MenuItem> //TODO Fix these styles. Use classes eventually.
+                    {/*<MenuItem onClick={() => this.openLink()}><Link style={{textDecoration: 'none', color: '#212121'}} to="/trial-planning">Trial Planning App</Link></MenuItem> //TODO Fix these styles. Use classes eventually.*/}
                     <MenuItem onClick={() => this.openLink()}><Link style={{textDecoration: 'none', color: '#212121'}} to="/">Downloadable Data</Link></MenuItem>
                     <MenuItem onClick={() => this.openLink('cu')}>Contact Us</MenuItem>
                     <MenuItem onClick={() => this.openLink('cp')}>Citation Policy</MenuItem>
