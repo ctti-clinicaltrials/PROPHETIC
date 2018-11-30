@@ -5,7 +5,48 @@ import { checkStatus } from '../util/fetchUtil';
 import { generateUniqueKey } from '../util/baseUtils';
 import EmailValidator from 'email-validator';
 
-import { data } from '../fake_data'
+// import { data } from '../fake_data';
+const data = [{
+        "guid": "41713026-4134-411b-b177-a969fa71029c",
+        "HIV Positive": true,
+        "Other Clinical Trial Participation": false,
+        "prior_antibacterial_therapy": false,
+        "Maximum Age": 84,
+        "Apache Score": 27,
+        "weight range": 68,
+        "Congestive Heart Failure": false,
+        "chf_at_rest": false,
+        "NYHA Class IV or CHF Symptoms at Rest": false,
+        "cd4_count": 62
+    },
+    {
+        "guid": "38831ee7-71cf-41fa-8268-87d8b99026d3",
+        "HIV Positive": true,
+        "Other Clinical Trial Participation": false,
+        "prior_antibacterial_therapy": false,
+        "Maximum Age": 27,
+        "Apache Score": 62,
+        "weight range": 138,
+        "Congestive Heart Failure": true,
+        "chf_at_rest": true,
+        "NYHA Class IV or CHF Symptoms at Rest": true,
+        "cd4_count": 617
+    },
+    {
+        "guid": "5f713e7a-452f-42b6-8573-cda64ac0b003",
+        "HIV Positive": true,
+        "Other Clinical Trial Participation": true,
+        "prior_antibacterial_therapy": false,
+        "Maximum Age": 58,
+        "Apache Score": 27,
+        "weight range": 30,
+        "Congestive Heart Failure": false,
+        "chf_at_rest": false,
+        "NYHA Class IV or CHF Symptoms at Rest": true,
+        "cd4_count": 39
+    },
+    ];
+
 
 export class MainStore {
     @observable anchorElements;
