@@ -31,12 +31,10 @@ const styles = {
     },
     media: {
         maxWidth: 600,
-        height: 320,
         objectFit: 'cover',
     },
     paper: {
-        borderTop: `40px solid ${Color.medium_blue}`,
-        boxShadow: 'none'
+        boxShadow: 'none',
     },
     progress: {
         position: 'absolute',
