@@ -5,6 +5,8 @@ import { checkStatus } from '../util/fetchUtil';
 import { generateUniqueKey } from '../util/baseUtils';
 import EmailValidator from 'email-validator';
 
+import { data } from '../fake_data'
+
 export class MainStore {
     @observable anchorElements;
     @observable datasets;
@@ -20,6 +22,9 @@ export class MainStore {
     @observable showSharingIcons;
     @observable surveyAffiliations;
     @observable validationErrors;
+
+    @observable data
+    @observable graphData
 
     constructor() {
         this.anchorElements = observable.map();
@@ -37,6 +42,12 @@ export class MainStore {
         this.surveyAffiliations = observable.map();
         this.validationErrors = observable.map();
 
+        this.data = data;
+        this.graphData = [{
+            action: 'all patients',
+            pv: data.length
+        }];
+
         this.organizationTypes = [
             "Academic Medical Center",
             "Non-academic Clinical Research Site",
@@ -49,8 +60,9 @@ export class MainStore {
         ]
     }
 
-    @action deleteExclusion(exclusion) {
-        this.exclusions.delete(exclusion)
+    @action deleteExclusion(exclusion, value) {
+        this.exclusions.delete(exclusion);
+        this.data = this.filterData(exclusion, value, false);
     }
 
     @action downloadDataset() {
@@ -161,8 +173,62 @@ export class MainStore {
     }
 
     @action setExclusions(exclusion, value) {
-        this.exclusions.set(exclusion, value)
-        console.log(this.exclusions)
+        if(typeof value === 'boolean') {
+            this.data = this.filterData(exclusion, value);
+        } else {
+            this.data = this.filterData(exclusion, value, false);
+        }
+        this.exclusions.set( // Todo: Need to toggle the exclusion if it's a range and still get the correct PV value. Currently if it's a range I'm setting the exclusion twice which causes issues
+            exclusion,
+            {
+                action: exclusion,
+                pv: this.data.length, // This length is wrong for ranges...
+                range: typeof value !== 'boolean' && value
+            }
+        );
+        this.setGraphData();
+    }
+
+    filterData(exclusion, value, remove = true) {
+        let newData = [];
+        if(remove) { // If removing items just filter the existing this.data array
+            if (typeof value === 'boolean') newData = this.data.filter(d => d[exclusion] === true);
+            else newData = this.data.filter((d) => d[exclusion] >= value.min && d[exclusion] <= value.max);
+        } else { // If adding items back in replace this.data by filtering original data array ???
+            let filters = this.exclusions.values();
+            if(filters.length) { // If no filters just return original data array
+                this.data = data;
+                for (let f of filters) {
+                    let filtered;
+                    if (typeof f.range === 'boolean') filtered = [...this.data.filter(d => d[f.action] === true)];
+                    if (typeof f.range !== 'boolean') {
+                        let range = typeof value !== 'boolean' ? value : f.range; // TODO: this will fail with multiple ranges
+                        filtered = [...this.data.filter((d) => d[f.action] >= range.min && d[f.action] <= range.max)];
+                        // filtered = this.data.filter((d) => d[f.action] >= range.min && d[f.action] <= range.max);
+                    }
+                    this.data = filtered;
+                    this.exclusions.set(
+                        f.action,
+                        {
+                            action: f.action,
+                            pv:  filtered.length,
+                            range: typeof f.range !== 'boolean' && f.range
+                        }
+                    );
+                    this.setGraphData();
+                }
+                return this.data;
+            } else {
+                this.setGraphData();
+                newData = data;
+            }
+        }
+        return newData
+    }
+
+    @action setGraphData() {
+        console.log(this.exclusions.values())
+        this.graphData = [this.graphData[0], ...this.exclusions.values().sort((a, b) => b.pv - a.pv)];
     }
 
     @action setSurveyAffiliations(id) {
@@ -196,7 +262,7 @@ export class MainStore {
         !this.drawers.has(key) ? this.drawers.set(key, true) : this.drawers.delete(key);
     }
 
-    @action toggleExclusion(input, value) {
+    @action toggleExclusion(input, value) { // Todo: refactor this to set exclusions and pv value. This method is redundant
         if(!this.exclusions.has(input)) {
             this.setExclusions(input, value);
         } else {

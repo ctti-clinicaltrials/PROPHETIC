@@ -24,31 +24,32 @@ const styles = () => ({
 class MaxAge extends Component {
 
     exclusionToggle = (input) => {
-        MainStore.toggleExclusion(input, 100);
+        MainStore.toggleExclusion(input, {min: 18, max: 100});
     };
 
     handleChange = e => {
         let value = parseInt(e.target.value, 10);
-        MainStore.setExclusions(Exc.maxAge, value);
+        MainStore.setExclusions(Exc.age, {min: 18, max: value});
+        // MainStore.setExclusions(Exc.age, value);
     };
 
     render() {
         const { classes, exclusions} = this.props;
-        const error = isNaN(exclusions.get(Exc.maxAge)) || exclusions.get(Exc.maxAge) < 18;
+        const error = exclusions.has(Exc.age) && (isNaN(exclusions.get(Exc.age).range.max) || exclusions.get(Exc.age).range.max < 18);
 
         return (
             <span>
                 <FormControlLabel
                     control={
                         <Switch
-                            checked={exclusions.has(Exc.maxAge)}
-                            onChange={() => this.exclusionToggle(Exc.maxAge)}
+                            checked={exclusions.has(Exc.age)}
+                            onChange={() => this.exclusionToggle(Exc.age)}
                             value="Set Maximum Age Limit"
                         />
                     }
                     label="Set Maximum Age Limit"
                 />
-                <Collapse in={exclusions.has(Exc.maxAge)} classes={{wrapper: classes.wrapper}}>
+                <Collapse in={exclusions.has(Exc.age)} classes={{wrapper: classes.wrapper}}>
                 <TextField
                     error={error}
                     fullWidth={true}

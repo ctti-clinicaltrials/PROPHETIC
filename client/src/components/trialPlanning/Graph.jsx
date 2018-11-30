@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {observer} from "mobx-react";
 import {
     G2,
     Chart,
@@ -18,6 +19,7 @@ import DataSet from "@antv/data-set";
 import {withStyles} from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
+import MainStore from "../../stores/MainStore";
 
 const styles = theme => ({
     root: {
@@ -33,26 +35,22 @@ const styles = theme => ({
     },
 });
 
+@observer
 class Graph extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [
-                { action: 'one', pv: 50000 },
-                { action: 'two', pv: 35000 },
-                { action: 'three', pv: 25000 },
-                { action: 'four', pv: 15000 },
-                { action: 'five', pv: 8000 }
-            ]
+            // data: MainStore.graphData
         }
     }
 
     render() {
-
         const { Text } = Guide;
         const { DataView } = DataSet;
         const { classes } = this.props;
-        const dv = new DataView().source(this.state.data);
+        let { graphData } = MainStore
+        graphData = graphData.slice() || [{action: 'all', pv: 100}]
+        const dv = new DataView().source(graphData);
         dv.transform({
             type: 'percent',
             field: 'pv',
@@ -94,7 +92,8 @@ class Graph extends Component {
                                     position={{
                                         action: obj.action,
                                         percent: 'median'}}
-                                    content={parseInt(obj.percent * 100) + '%'}
+                                    // content={parseInt(obj.percent * 100) + '%'}
+                                    content={`${obj.pv} patients`} // Todo: Fix this to percent ?????
                                     style={{
                                         fill: '#fff',
                                         fontSize: '12',
