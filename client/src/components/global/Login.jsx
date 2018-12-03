@@ -20,7 +20,7 @@ const styles = {
         flex: '1 0 auto',
         alignItems: 'flex-end',
         justifyContent: 'center',
-        borderBottom: `2px solid ${Color.medium_blue}`,
+        border: `1px solid ${Color.medium_blue}`,
         position: 'relative',
     },
     cardContent: {
@@ -30,11 +30,13 @@ const styles = {
         color: Color.white,
     },
     media: {
+        minHeight: 300,
         maxWidth: 600,
         objectFit: 'cover',
     },
     paper: {
         boxShadow: 'none',
+        border: `1px solid ${Color.medium_blue}`,
     },
     progress: {
         position: 'absolute',
