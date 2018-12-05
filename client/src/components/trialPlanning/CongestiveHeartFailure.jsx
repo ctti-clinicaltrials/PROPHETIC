@@ -19,17 +19,10 @@ const styles = () => ({
 @observer
 class CongestiveHeartFailure extends Component {
 
-    exclusionToggle = (input) => {
-        const { exclusions } = this.props;
-        MainStore.toggleExclusion(input, !exclusions.has(input));
-        if(input === Exc.chf && exclusions.has(Exc.nyha)) {
-            MainStore.toggleExclusion(Exc.nyha, !exclusions.has(Exc.nyha));
-        }
-    };
+    exclusionToggle = (input) => MainStore.toggleExclusion(input, false);
 
     render() {
         const { classes, exclusions } = this.props;
-
         return (
             <span>
                 <FormControlLabel
