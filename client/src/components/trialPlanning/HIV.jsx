@@ -19,22 +19,26 @@ const styles = () => ({
 @observer
 class HIV extends Component {
 
-    exclusionToggle = (input) => {
-        const { exclusions } = this.props;
-        if(input === Exc.HIV && exclusions.has(Exc.HIV)) {
-            if(exclusions.has(Exc.CD4400)) MainStore.deleteExclusion(Exc.CD4400);
-            if(exclusions.has(Exc.CD4200)) MainStore.deleteExclusion(Exc.CD4200);
-        }
-        MainStore.toggleExclusion(input, !exclusions.has(input));
+    state = {
+       radio: null
     };
 
-    radioToggle = (r1, r2) => {
-        MainStore.toggleExclusion(r1, true);
-        MainStore.deleteExclusion(r2);
+    exclusionToggle = (exc) => {
+        const { exclusions } = this.props;
+        if(exclusions.has(Exc.CD4Count)) this.setState({radio: null});
+        MainStore.toggleExclusion(exc, false);
+    };
+
+    radioToggle = (radio) => {
+        let max = radio === Exc.CD4200 ? 200 : 400;
+        this.setState({radio: radio});
+        MainStore.deleteExclusions(Exc.CD4Count, false);
+        if(radio !== null) MainStore.toggleExclusion(Exc.CD4Count, {min: 0, max: max});
     };
 
     render() {
         const { classes, exclusions } = this.props;
+        const { radio } = this.state;
 
         return (
             <span>
@@ -52,8 +56,19 @@ class HIV extends Component {
                     <FormControlLabel
                         control={
                             <Radio
-                                checked={exclusions.has(Exc.CD4200)}
-                                onChange={() => this.radioToggle(Exc.CD4200, Exc.CD4400)}
+                                checked={exclusions.has(Exc.HIV) && !exclusions.has(Exc.CD4Count) && radio === null}
+                                onChange={() => this.radioToggle(null)}
+                                value="Any CD4 Count"
+                            />
+                        }
+                        label="Any CD4 Count"
+                    />
+                    <br/>
+                    <FormControlLabel
+                        control={
+                            <Radio
+                                checked={exclusions.has(Exc.HIV) && exclusions.has(Exc.CD4Count) && radio === Exc.CD4200}
+                                onChange={() => this.radioToggle(Exc.CD4200)}
                                 value="CD4200"
                             />
                         }
@@ -63,8 +78,8 @@ class HIV extends Component {
                     <FormControlLabel
                      control={
                          <Radio
-                             checked={exclusions.has(Exc.CD4400)}
-                             onChange={() => this.radioToggle(Exc.CD4400, Exc.CD4200)}
+                             checked={exclusions.has(Exc.HIV) && exclusions.has(Exc.CD4Count) && radio === Exc.CD4400}
+                             onChange={() => this.radioToggle(Exc.CD4400)}
                              value="CD4400"
                          />
                      }

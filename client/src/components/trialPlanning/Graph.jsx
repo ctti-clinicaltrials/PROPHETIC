@@ -20,6 +20,7 @@ import {withStyles} from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import MainStore from "../../stores/MainStore";
+import {Color} from "../../theme/theme";
 
 const styles = theme => ({
     root: {
@@ -95,11 +96,12 @@ class Graph extends Component {
                                     // content={parseInt(obj.percent * 100) + '%'}
                                     content={`${obj.pv} patients`} // Todo: Fix this to percent ?????
                                     style={{
-                                        fill: '#fff',
+                                        fill: '#212121',
                                         fontSize: '12',
+                                        fontWeight: 'bold',
                                         textAlign: 'center',
-                                        shadowBlur: 2,
-                                        shadowColor: 'rgba(0, 0, 0, .45)'}}
+                                        shadowBlur: 3,
+                                        shadowColor: '#E0E0E0'}}
                                 />
                             )
                         })}
@@ -116,12 +118,16 @@ class Graph extends Component {
                               };
                           }]}
                     >
-                        <Label content={['action*pv',(action, pv) => {
-                            return action + ' ' + pv;
-                        }]}
+                        <Label content={['action*pv', (action, pv) => action + ' ' + pv]}
                                offset={35}
-                               labeLine={{lineWidth: 1,
-                                   stroke: 'rgba(0, 0, 0, 0.15)'}}
+                               labeLine={{lineWidth: 1, stroke: 'rgba(0, 0, 0, 0.15)'}}
+                               textStyle={{
+                                   textAlign: 'left',
+                                   fill: Color.gray,
+                                   fontSize: '12',
+                                   fontWeight: 'bold',
+                                   textBaseline: 'top'
+                               }}
                         />
                     </Geom>
                 </Chart>

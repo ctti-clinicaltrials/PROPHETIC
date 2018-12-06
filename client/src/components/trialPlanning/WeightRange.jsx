@@ -11,6 +11,7 @@ import Switch from '@material-ui/core/Switch';
 import TextField from "@material-ui/core/TextField";
 import {Color} from "../../theme/theme";
 import {Slider} from "material-ui-slider";
+import debounce from "lodash.debounce";
 
 const styles =  () => ({
     wrapper: {
@@ -33,21 +34,18 @@ const styles =  () => ({
 @observer
 class WeightRange extends Component {
 
-    exclusionToggle = (input) => {
-        MainStore.toggleExclusion(input, {minWeight: 0, maxWeight: 250})
-    };
+    waitForInput = debounce(value => MainStore.setExclusions(Exc.weight, {min: value[0], max: value[1]}), 280);
+
+    exclusionToggle = (input) => MainStore.toggleExclusion(input, {min: 0, max: 250});
 
     getWeightRange = () => {
         const { exclusions } = MainStore;
-        let weightRange = {minWeight: 0, maxWeight: 250};
-        if(exclusions.has(Exc.weight)) weightRange = exclusions.get(Exc.weight);
+        let weightRange = {min: 0, max: 250};
+        if(exclusions.has(Exc.weight)) weightRange = exclusions.get(Exc.weight).range;
         return weightRange;
     };
 
-    setSliderRange = val => {
-        MainStore.setExclusions(Exc.weight, {minWeight: val[0], maxWeight: val[1]})
-    };
-
+    setSliderRange = value => this.waitForInput(value);
 
     render() {
         const { classes, exclusions } = this.props;
@@ -67,7 +65,7 @@ class WeightRange extends Component {
                 <Collapse in={exclusions.has(Exc.weight)} classes={{wrapper: classes.wrapper}}>
                     <div>
                         <Slider color="#bf4040"
-                                value={[this.getWeightRange().minWeight, this.getWeightRange().maxWeight]}
+                                value={[this.getWeightRange().min, this.getWeightRange().max]}
                                 range
                                 max={250}
                                 onChangeComplete={this.setSliderRange}
@@ -80,7 +78,7 @@ class WeightRange extends Component {
                         />
                         <TextField
                             disabled={true}
-                            value={`${this.getWeightRange().minWeight} - ${this.getWeightRange().maxWeight}`}
+                            value={`${this.getWeightRange().min} - ${this.getWeightRange().max}`}
                             className={classes.textField}
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">Kg</InputAdornment>,

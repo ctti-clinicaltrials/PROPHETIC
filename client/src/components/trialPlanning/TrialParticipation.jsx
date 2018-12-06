@@ -9,10 +9,7 @@ import MainStore from "../../stores/MainStore";
 @observer
 class TrialParticipation extends Component {
 
-    exclusionToggle = (input) => {
-        const { exclusions } = this.props;
-        MainStore.toggleExclusion(input, !exclusions.has(Exc.prevTrial))
-    };
+    exclusionToggle = (exc) => MainStore.toggleExclusion(exc, false);
 
     render() {
         const { exclusions } = this.props;

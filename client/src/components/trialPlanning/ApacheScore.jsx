@@ -10,6 +10,7 @@ import Collapse from '@material-ui/core/Collapse';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import TextField from "@material-ui/core/TextField";
+import debounce from "lodash.debounce";
 
 const styles = theme => ({
     wrapper: {
@@ -27,9 +28,9 @@ const styles = theme => ({
 @observer
 class ApacheScore extends Component {
 
-    exclusionToggle = (input) => {
-        MainStore.toggleExclusion(input, {min: 0, max: 71})
-    };
+    waitForInput = debounce(value => MainStore.setExclusions(Exc.apache, {min: value[0], max: value[1]}), 280);
+
+    exclusionToggle = (input) => MainStore.toggleExclusion(input, {min: 0, max: 71});
 
     getApacheRange = () => {
         const { exclusions } = MainStore;
@@ -38,10 +39,7 @@ class ApacheScore extends Component {
         return apacheRange;
     };
 
-    setSliderRange = val => {
-        console.log(val)
-        MainStore.setExclusions(Exc.apache, {min: val[0], max: val[1]})
-    };
+    setSliderRange = value => this.waitForInput(value);
 
     render() {
         const { classes, exclusions } = this.props;
