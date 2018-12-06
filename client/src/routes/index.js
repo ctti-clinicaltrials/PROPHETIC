@@ -10,6 +10,7 @@ import Header from '../components/global/Header.jsx';
 import Home from '../containers/Home.jsx';
 import IndeterminateLoader from '../components/global/IndeterminateLoader.jsx';
 import Login from '../components/global/Login.jsx';
+import NoMatch from '../components/global/NoMatch.jsx';
 import TrialPlanningView from "../containers/TrialPlanning";
 
 const styles = {
@@ -22,13 +23,15 @@ const styles = {
     },
 };
 
-const handleAuthentication = (nextState, replace) => {
+const handleAuthentication = (nextState) => {
     if (/access_token|id_token|error/.test(nextState.location.hash)) {
         AuthStore.handleAuthentication();
     }
 };
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
+    let redirectURL = `/${window.location.pathname.split('/').filter(i => i.trim() !== '')[0]}`;
+    AuthStore.setRedirectURL(redirectURL);
     return <Route {...rest} render={(props) =>
         AuthStore.isAuthenticated() ? (
             <Component {...props}/>
@@ -39,14 +42,9 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 };
 
 const LoginRoute = ({ component: Component, ...rest }) => {
-    const redirectUrl = localStorage.getItem('redirectUrl') ? localStorage.getItem('redirectUrl') : '/';
     return <Route {...rest} render={(props) => {
         handleAuthentication(props);
-        return !AuthStore.isAuthenticated() ? (
-            <Component {...props} />
-        ) : (
-            <Redirect to={redirectUrl}/>
-        )
+        return <Component {...props} />
     }}/>
 };
 
@@ -67,7 +65,8 @@ export default () => (
                         <Grid item xs={11} s={10} md={10} lg={8} style={styles.innerGrid2}>
                             <LoginRoute path="/login" component={Login} />
                             <PrivateRoute exact path="/data-sharing" component={Home} />
-                            <Redirect to="/data-sharing" />
+                            <Redirect to={AuthStore.isAuthenticated() ? '/data-sharing' : '/login'}/>
+                            {/*<Route component={NoMatch}/>*/}
                         </Grid>
                     </Fragment>
                 </Switch>
