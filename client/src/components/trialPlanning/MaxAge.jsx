@@ -1,15 +1,16 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {observer} from "mobx-react";
+import {observer} from 'mobx-react';
 import {withStyles} from '@material-ui/core/styles';
 import {Exc} from '../../exclusions';
 import Collapse from '@material-ui/core/Collapse';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Switch from '@material-ui/core/Switch';
-import TextField from "@material-ui/core/TextField";
-import {Color} from "../../theme/theme";
-import MainStore from "../../stores/MainStore";
+import TextField from '@material-ui/core/TextField';
+import {Color} from '../../theme/theme';
+import MainStore from '../../stores/MainStore';
+import debounce from 'lodash.debounce';
 
 const styles = () => ({
     wrapper: {
@@ -23,18 +24,17 @@ const styles = () => ({
 @observer
 class MaxAge extends Component {
 
-    exclusionToggle = (input) => {
-        MainStore.toggleExclusion(input, {min: 18, max: 100});
-    };
+    waitForInput = debounce(value => MainStore.setExclusions(Exc.age, {min: 18, max: value}), 280);
+
+    exclusionToggle = (input) => MainStore.toggleExclusion(input, {min: 18, max: 100});
 
     handleChange = e => {
-        let value = parseInt(e.target.value, 10);
-        MainStore.setExclusions(Exc.age, {min: 18, max: value});
-        // MainStore.setExclusions(Exc.age, value);
+        MainStore.setInputValue(Exc.age, e.target.value);
+        this.waitForInput(parseInt(e.target.value, 10));
     };
 
     render() {
-        const { classes, exclusions} = this.props;
+        const { classes, exclusions, inputValues } = this.props;
         const error = exclusions.has(Exc.age) && (isNaN(exclusions.get(Exc.age).range.max) || exclusions.get(Exc.age).range.max < 18);
 
         return (
@@ -55,7 +55,7 @@ class MaxAge extends Component {
                     fullWidth={true}
                     variant="outlined"
                     label="Maximum Age"
-                    defaultValue={100}
+                    value={inputValues.has(Exc.age) ? inputValues.get(Exc.age) : 100}
                     onChange={this.handleChange}
                     helperText={error && "Must be greater than or equal to 18"}
                     InputProps={{

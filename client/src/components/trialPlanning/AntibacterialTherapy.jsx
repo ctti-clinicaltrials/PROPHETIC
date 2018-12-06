@@ -9,10 +9,7 @@ import Switch from '@material-ui/core/Switch';
 @observer
 class AntibacterialTherapy extends Component {
 
-    exclusionToggle = (input) => {
-        const { exclusions } = this.props;
-        MainStore.toggleExclusion(input, !exclusions.has(Exc.antibac))
-    };
+    exclusionToggle = (input) => MainStore.toggleExclusion(input, false);
 
     render() {
         const { exclusions } = this.props;

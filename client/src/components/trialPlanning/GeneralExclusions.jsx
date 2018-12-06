@@ -31,12 +31,12 @@ class GeneralExclusions extends Component {
 
     render() {
         const { classes } = this.props;
-        const { exclusions } = MainStore;
+        const { exclusions, inputValues } = MainStore;
 
         return (
             <ExpansionPanel defaultExpanded>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography className={classes.heading}>General Exclusions</Typography>
+                    <Typography className={classes.heading}>General</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     <FormControl component="fieldset">
@@ -45,7 +45,7 @@ class GeneralExclusions extends Component {
                             <Divider/>
                             <TrialParticipation exclusions={exclusions} />
                             <Divider />
-                            <MaxAge exclusions={exclusions} />
+                            <MaxAge exclusions={exclusions} inputValues={inputValues}/>
                             <Divider />
                             <WeightRange exclusions={exclusions} />
                             <Divider />

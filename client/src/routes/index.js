@@ -9,7 +9,6 @@ import Grid from '@material-ui/core/Grid';
 import Header from '../components/global/Header.jsx';
 import Home from '../containers/Home.jsx';
 import IndeterminateLoader from '../components/global/IndeterminateLoader.jsx';
-import LeftNav from '../components/global/LeftNav.jsx';
 import Login from '../components/global/Login.jsx';
 import TrialPlanningView from "../containers/TrialPlanning";
 
@@ -43,7 +42,11 @@ const LoginRoute = ({ component: Component, ...rest }) => {
     const redirectUrl = localStorage.getItem('redirectUrl') ? localStorage.getItem('redirectUrl') : '/';
     return <Route {...rest} render={(props) => {
         handleAuthentication(props);
-        return !AuthStore.isAuthenticated() ? <Component {...props} /> : <Redirect to={redirectUrl}/>
+        return !AuthStore.isAuthenticated() ? (
+            <Component {...props} />
+        ) : (
+            <Redirect to={redirectUrl}/>
+        )
     }}/>
 };
 
