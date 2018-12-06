@@ -4,9 +4,6 @@ import AuthStore from './AuthStore';
 import { checkStatus } from '../util/fetchUtil';
 import { generateUniqueKey } from '../util/baseUtils';
 import EmailValidator from 'email-validator';
-
-import { data } from '../fake_data'; // Todo: remove this for release
-// import { data } from '../fake_data_small';
 import { Exc } from "../exclusions";
 
 
@@ -47,10 +44,11 @@ export class MainStore {
         this.surveyAffiliations = observable.map();
         this.validationErrors = observable.map();
 
-        this.data = data;
+        this.data = [];
+        this.originalData = [];
         this.graphData = [{
             action: 'All Patients',
-            pv: data.length
+            pv: this.data.length
         }];
 
         this.organizationTypes = [
@@ -103,7 +101,7 @@ export class MainStore {
         } else { // If adding items back in replace this.data by filtering original data array ???
             let filters = this.exclusions.values();
             if(filters.length) { // If no filters just return original data array
-                this.data = data;
+                this.data = this.originalData;
                 for (let f of filters) {
                     let filtered;
                     if (typeof f.range === 'boolean') filtered = [...this.data.filter(d => d[f.action] === true)];
@@ -115,7 +113,7 @@ export class MainStore {
                 return this.data;
             } else {
                 this.setGraphData();
-                newData = data;
+                newData = this.originalData;
             }
         }
         return newData
@@ -176,6 +174,22 @@ export class MainStore {
             mainStore.toggleLoading();
             mainStore.waitForToken(mainStore.getAllDataSets, [counterId], 1000, counterId);
         }
+    }
+
+    @action getTrialData() {
+        this.loading = true;
+        api.getTrialData()
+            .then(checkStatus)
+            .then(response => response.json())
+            .then((json) => {
+                this.data = json.trialdata;
+                this.originalData = json.trialdata;
+                this.graphData = [{
+                    action: 'All Patients',
+                    pv: this.data.length
+                }];
+                this.loading = false;
+            }).catch(er => this.handleErrors(er))
     }
 
     @action handleErrors(er) {

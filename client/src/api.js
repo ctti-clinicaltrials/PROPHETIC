@@ -31,6 +31,10 @@ const api = {
             "answers": formData,
         };
         return fetch(`${config.APP_URL}api/user-response`, getFetchParams('post', 'Bearer ' +localStorage.getItem('access_token'), body))
+    },
+
+    getTrialData: () => {
+        return fetch(`${config.APP_URL}api/trial-data`, getFetchParams('get', 'Bearer ' +localStorage.getItem('access_token')))
     }
 };
 

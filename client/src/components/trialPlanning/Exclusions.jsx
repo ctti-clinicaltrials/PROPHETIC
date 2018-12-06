@@ -5,15 +5,15 @@ import { withStyles } from '@material-ui/core/styles';
 import ComorbidExclusions from "./ComorbidExclusions";
 import GeneralExclusions from "./GeneralExclusions";
 
-
-const styles = theme => ({
+const styles = () => ({
     paper: {
         flexGrow: 1,
         maxWidth: 400,
-        height: 'calc(100vh + 30px)',
-        padding: '10px 10px 10px 24px',
+        maxHeight: 'calc(100vh + 30px)',
+        padding: '10px 10px 98px 24px',
+        marginTop: 5,
         overflow: 'scroll',
-        marginBottom: -40
+        marginBottom: -40,
     }
 });
 

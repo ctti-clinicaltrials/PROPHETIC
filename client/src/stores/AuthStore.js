@@ -76,11 +76,15 @@ export class AuthStore {
     }
 
     @action logout(er) {
-        if(!er) localStorage.removeItem('redirectUrl');
+        if(!er) localStorage.removeItem('redirect_url');
         localStorage.removeItem('access_token');
         localStorage.removeItem('id_token');
         localStorage.removeItem('expires_at');
         window.location.assign(`${config.AUTH0_URL}v2/logout?returnTo=${config.REDIRECT_URI}`);
+    }
+
+    @action setRedirectURL(redirectURL) {
+        if(redirectURL !== ('/login' || '/ctti.auth0.comv2')) localStorage.setItem('redirect_url', redirectURL);
     }
 
     @action setSession(authResult) {
@@ -88,7 +92,7 @@ export class AuthStore {
         localStorage.setItem('access_token', authResult.accessToken);
         localStorage.setItem('id_token', authResult.idToken);
         localStorage.setItem('expires_at', expiresAt);
-        const redirectUrl = localStorage.getItem('redirectUrl') ? localStorage.getItem('redirectUrl') : '/';
+        const redirectUrl = localStorage.getItem('redirect_url') ? localStorage.getItem('redirect_url') : '/data-sharing';
         window.location.assign(redirectUrl);
         MainStore.toggleLoading();
     }

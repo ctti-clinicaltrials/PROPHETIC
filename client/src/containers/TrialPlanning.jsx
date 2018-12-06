@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AuthStore from '../stores/AuthStore';
 import Graph from '../components/trialPlanning/Graph';
 import ExclusionControls from '../components/trialPlanning/Exclusions';
+import MainStore from "../stores/MainStore";
 
 const styles = () => ({
     root: {
@@ -20,6 +21,7 @@ class TrialPlanning extends Component {
     componentDidMount() {
         AuthStore.getProfile();
         AuthStore.getDDSApiToken();
+        MainStore.getTrialData();
     }
 
     render() {
