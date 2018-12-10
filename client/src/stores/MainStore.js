@@ -48,7 +48,8 @@ export class MainStore {
         this.originalData = [];
         this.graphData = [{
             action: 'All Patients',
-            pv: this.data.length
+            pv: this.data.length,
+            range: false
         }];
 
         this.organizationTypes = [
@@ -184,9 +185,10 @@ export class MainStore {
             .then((json) => {
                 this.data = json.trialdata;
                 this.originalData = json.trialdata;
-                this.graphData = [{
+                this.graphData = [{ // Set original graph data "All Patients"
                     action: 'All Patients',
-                    pv: this.data.length
+                    pv: this.data.length,
+                    range: false
                 }];
                 this.loading = false;
             }).catch(er => this.handleErrors(er))

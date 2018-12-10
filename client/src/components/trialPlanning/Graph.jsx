@@ -44,7 +44,7 @@ class Graph extends Component {
         const { DataView } = DataSet;
         const { classes } = this.props;
         let { graphData, loading } = MainStore;
-        graphData = graphData.slice() || [{action: 'all', pv: 100}];
+        graphData = graphData.slice() || [{action: 'All Patients', pv: 100, range: false}];
         const dv = new DataView().source(graphData);
         dv.transform({
             type: 'percent',
@@ -78,7 +78,7 @@ class Graph extends Component {
                         <Coord type='rect'
                                transpose scale={[1, -1]}
                         />
-                        <Legend/>
+                        <Legend clickable={false} />
                         <Guide>
                             {data.map((obj) => {
                                 return (
@@ -90,6 +90,7 @@ class Graph extends Component {
                                             percent: 'median'
                                         }}
                                         // content={parseInt(obj.percent * 100) + '%'}
+                                        // content={`${obj.action } ${obj.pv} patients`} // Todo: Fix this to percent ?????
                                         content={`${obj.pv} patients`} // Todo: Fix this to percent ?????
                                         style={{
                                             fill: '#212121',
@@ -110,7 +111,7 @@ class Graph extends Component {
                               tooltip={['action*pv*percent', (action, pv, percent) => {
                                   return {
                                       name: action,
-                                      percent: parseInt(percent * 100) + '%',
+                                      // percent: parseInt(percent * 100) + '%',
                                       pv: pv
                                   };
                               }]}
