@@ -17,6 +17,12 @@ import Typography from "@material-ui/core/Typography";
 import MainStore from "../../stores/MainStore";
 import {Color} from "../../theme/theme";
 
+import CloudDownload from '@material-ui/icons/CloudDownload';
+import Print from '@material-ui/icons/Print';
+import IconButton from '@material-ui/core/IconButton';
+
+import saveAs from 'file-saver';
+
 const styles = theme => ({
     root: {
         display: 'flex'
@@ -38,6 +44,13 @@ const styles = theme => ({
 
 @observer
 class Graph extends Component {
+
+    saveGraph = () => {
+        const canvas = document.getElementById("canvas_2");
+        canvas.toBlob((blob) => {
+            saveAs(blob, "graph.png");
+        });
+    }
 
     render() {
         const { Text } = Guide;
@@ -62,6 +75,12 @@ class Graph extends Component {
             <Paper className={classes.content}>
                 <Typography variant="h5" gutterBottom>
                     Trial Planning
+                    <IconButton style={{float: 'right', marginTop: -8}} onClick={() => this.saveGraph()}>
+                        <CloudDownload />
+                    </IconButton>
+                    <IconButton style={{float: 'right', marginTop: -8}}>
+                        <Print />
+                    </IconButton>
                 </Typography>
                 { loading ? <CircularProgress color="secondary" size={80} className={classes.progress} /> :
                     <Chart height={400}
@@ -73,12 +92,12 @@ class Graph extends Component {
                         <Tooltip showTitle={false}
                                  itemTpl='<li data-index={index} style="margin-bottom:4px;">
                                         <span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}<br/>
-                                        <span style="padding-left: 16px">group：{pv}</span><br/><span style="padding-left: 16px">amount：{percent}</span><br/>
+                                        <span style="padding-left: 16px">group：{pv}</span><br/><span style="padding-left: 16px"></span><br/>
                                       </li>'/>
                         <Coord type='rect'
                                transpose scale={[1, -1]}
                         />
-                        <Legend clickable={false} />
+                        <Legend clickable={false}/>
                         <Guide>
                             {data.map((obj) => {
                                 return (

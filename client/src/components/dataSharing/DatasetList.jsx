@@ -15,7 +15,6 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import CloudDownload from '@material-ui/icons/CloudDownload';
 import Typography from '@material-ui/core/Typography';
-import AuthStore from "../../stores/AuthStore";
 
 const styles = theme => ({
     boldHeadline: {textDecoration: 'underline'},
