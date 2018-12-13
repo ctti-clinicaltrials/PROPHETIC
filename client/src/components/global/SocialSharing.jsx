@@ -8,8 +8,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import {
     FacebookShareButton,
     FacebookIcon,
-    GooglePlusShareButton,
-    GooglePlusIcon,
+    LinkedinShareButton,
+    LinkedinIcon,
     TwitterShareButton,
     TwitterIcon
 } from 'react-share';
@@ -20,9 +20,9 @@ class SocialSharing extends Component {
     toggleSharing = () => MainStore.toggleSharing();
 
     getTopPosition = (el) => {
-        if(el === 'fb') return 80;
-        if(el === 'tw') return 119;
-        if(el === 'gp') return 158;
+        if(el === 'fb') return 85;
+        if(el === 'tw') return 124;
+        if(el === 'li') return 163;
     };
 
     getIconCss = (btn, el) => {
@@ -52,7 +52,7 @@ class SocialSharing extends Component {
     render() {
         const { showSharingIcons } = MainStore;
         const shareQuote = `Check out the Clinical Trials Transformation Initiative`;
-        const shareUrl = `https://www.ctti-clinicaltrials.org/`;
+        const shareUrl = `data.ctti-clinicaltrials.org`;
 
         return (
             <div>
@@ -77,12 +77,13 @@ class SocialSharing extends Component {
                         >
                             <TwitterIcon size={32} round />
                         </TwitterShareButton>
-                        <GooglePlusShareButton
-                            url={shareUrl}
-                            style={this.getIconCss('share','gp')}
-                        >
-                            <GooglePlusIcon size={32} round />
-                        </GooglePlusShareButton>
+                         <LinkedinShareButton
+                             url={shareUrl}
+                             quote={shareQuote}
+                             style={this.getIconCss('share','li')}
+                         >
+                            <LinkedinIcon size={32} round />
+                        </LinkedinShareButton>
                     </span>
                 }
             </div>

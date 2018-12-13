@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {observer} from "mobx-react";
+import {withStyles} from "@material-ui/core/styles";
 import {
     Chart,
     Geom,
@@ -9,19 +10,16 @@ import {
     Legend,
     Guide,
 } from "bizcharts";
-import CircularProgress from '@material-ui/core/CircularProgress';
-import DataSet from "@antv/data-set";
-import {withStyles} from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import MainStore from "../../stores/MainStore";
 import {Color} from "../../theme/theme";
+import MainStore from "../../stores/MainStore";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Help from '@material-ui/icons/Help';
+import DataSet from "@antv/data-set";
+import DownloadGraph from "./DownloadGraph";
+import Paper from "@material-ui/core/Paper";
+import HelpTooltip from "@material-ui/core/Tooltip";
+import Typography from "@material-ui/core/Typography";
 
-import CloudDownload from '@material-ui/icons/CloudDownload';
-import Print from '@material-ui/icons/Print';
-import IconButton from '@material-ui/core/IconButton';
-
-import saveAs from 'file-saver';
 
 const styles = theme => ({
     root: {
@@ -35,6 +33,10 @@ const styles = theme => ({
         height: '92vh',
         overflow: 'auto',
     },
+    helpTooltip: {
+        marginBottom: -3,
+        marginLeft: 10
+    },
     progress: {
         position: 'absolute',
         top: '30%',
@@ -44,13 +46,6 @@ const styles = theme => ({
 
 @observer
 class Graph extends Component {
-
-    saveGraph = () => {
-        const canvas = document.getElementById("canvas_2");
-        canvas.toBlob((blob) => {
-            saveAs(blob, "graph.png");
-        });
-    }
 
     render() {
         const { Text } = Guide;
@@ -75,12 +70,13 @@ class Graph extends Component {
             <Paper className={classes.content}>
                 <Typography variant="h5" gutterBottom>
                     Trial Planning
-                    <IconButton style={{float: 'right', marginTop: -8}} onClick={() => this.saveGraph()}>
-                        <CloudDownload />
-                    </IconButton>
-                    <IconButton style={{float: 'right', marginTop: -8}}>
-                        <Print />
-                    </IconButton>
+                    <HelpTooltip title="An interactive funnel chart for assistance planning efficient trials. Use the exclusions on the left to change the outcome of the remaining study population in the graph. E.g. you can create a graph showing the population with a max age of 56 years old between 80 and 100 kilograms in body weight, diagnosed as HIV positive with Congestive Heart Failure.">
+                        <Help className={classes.helpTooltip}
+                              color="disabled"
+                              fontSize="small"
+                        />
+                    </HelpTooltip>
+                    <DownloadGraph />
                 </Typography>
                 { loading ? <CircularProgress color="secondary" size={80} className={classes.progress} /> :
                     <Chart height={400}

@@ -42,7 +42,7 @@ const styles = theme => ({
         marginTop: 6
     },
     menuButton: {
-        marginTop: 6
+        marginTop: 3
     },
     toolbar: {
         zIndex: theme.zIndex.drawer + 1
