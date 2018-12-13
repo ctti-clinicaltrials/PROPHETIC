@@ -6,10 +6,9 @@ import { generateUniqueKey } from '../util/baseUtils';
 import EmailValidator from 'email-validator';
 import { Exc } from "../exclusions";
 
-
 export class MainStore {
     @observable anchorElements;
-    @observable data
+    @observable data;
     @observable datasets;
     @observable downloadQueue;
     @observable errors;
@@ -17,7 +16,7 @@ export class MainStore {
     @observable expandedPanels;
     @observable counter;
     @observable drawers;
-    @observable graphData
+    @observable graphData;
     @observable inputValues;
     @observable loading;
     @observable openNav;

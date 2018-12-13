@@ -1,6 +1,7 @@
 import {observable} from 'mobx-react';
 import * as fake from "../util/testData";
 import { sleep, respondOK }  from "../util/testUtil";
+import {action} from "mobx";
 
 describe('Main Store', () => {
 
@@ -13,11 +14,72 @@ describe('Main Store', () => {
         MainStore.api = api;
     });
 
+    it('@action setExclusions - should set an exclusion to Map()', () => {
+        MainStore.data = [{'HIV': true},{'HIV': false}];
+        expect(MainStore.data.some(d => d['HIV'] === false)).toBe(true);
+        expect(MainStore.exclusions.has('HIV')).toBe(false);
+        MainStore.setExclusions('HIV', true);
+        expect(MainStore.exclusions.has('HIV')).toBe(true);
+        MainStore.deleteExclusions('HIV', false);
+    });
+
+    it('@action deleteExclusions - should remove an exclusion from Map()', () => {
+        expect(MainStore.exclusions.has('HIV')).toBe(false);
+        MainStore.exclusions.set('HIV', true);
+        expect(MainStore.exclusions.has('HIV')).toBe(true);
+        MainStore.deleteExclusions('HIV', false);
+        expect(MainStore.exclusions.has('HIV')).toBe(false);
+    });
+
+    it('@action toggleExclusion - should add/remove an exclusion from Map()', () => {
+        expect(MainStore.exclusions.has('HIV')).toBe(false);
+        MainStore.toggleExclusion('HIV', true);
+        expect(MainStore.exclusions.has('HIV')).toBe(true);
+        MainStore.toggleExclusion('HIV', false);
+        expect(MainStore.exclusions.has('HIV')).toBe(false);
+    });
+
+    it('@action setInputValue - should set/remove an input value to Map()', () => {
+        expect(MainStore.inputValues.has('HIV')).toBe(false);
+        MainStore.setInputValue('HIV', 'test');
+        expect(MainStore.inputValues.has('HIV')).toBe(true);
+        expect(MainStore.inputValues.get('HIV')).toBe('test');
+        MainStore.setInputValue('HIV', 'test', true);
+        expect(MainStore.inputValues.has('HIV')).toBe(false);
+    });
+
+    it('@action setGraphData - should add an object to graphData. The object should have an action property', () => {
+        MainStore.graphData = [{
+            action: 'All Patients',
+            pv: 200,
+            range: false
+        }];
+        expect(MainStore.graphData.some(d => d['action'] === 'HIV')).toBe(false);
+        expect(MainStore.graphData.some(d => d['action'] === 'All Patients')).toBe(true);
+        MainStore.exclusions.set('HIV', { action: 'HIV', pv: 200, range: false });
+        MainStore.setGraphData();
+        expect(MainStore.graphData.some(d => d['action'] === 'HIV')).toBe(true);
+    });
+
+    it('@action filterData - should filter out value that is false', () => {
+        MainStore.data = [{'HIV': true},{'HIV': false}];
+        expect(MainStore.data.some(d => d['HIV'] === false)).toBe(true);
+        MainStore.data = MainStore.filterData('HIV', false);
+        expect(MainStore.data.some(d => d['HIV'] === false)).toBe(false);
+    });
+
+    it('@action setCookieConsent - should set an item in localStorage', () => {
+        MainStore.data = [{'HIV': true},{'HIV': false}];
+        expect(MainStore.data.some(d => d['HIV'] === false)).toBe(true);
+        MainStore.data = MainStore.filterData('HIV', false);
+        expect(MainStore.data.some(d => d['HIV'] === false)).toBe(false);
+    });
+
     it('@action handleErrors - should throw an error', () => {
         expect(MainStore.errors.has(404)).toBe(false);
         MainStore.handleErrors({response: {
-            status: 404
-        }});
+                status: 404
+            }});
         expect(MainStore.errors.has(404)).toBe(true);
     });
 
