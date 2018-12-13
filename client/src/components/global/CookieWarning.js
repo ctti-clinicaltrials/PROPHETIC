@@ -17,6 +17,10 @@ const styles = () => ({
 
 @observer
 class CookieWarning extends Component {
+    componentDidMount() {
+        MainStore.checkCookieConsent();
+    };
+
     setCookieConsent = () => {
         MainStore.setCookieConsent();
     };
