@@ -9,6 +9,7 @@ import { Exc } from "../exclusions";
 
 export class MainStore {
     @observable anchorElements;
+    @observable data
     @observable datasets;
     @observable downloadQueue;
     @observable errors;
@@ -16,6 +17,7 @@ export class MainStore {
     @observable expandedPanels;
     @observable counter;
     @observable drawers;
+    @observable graphData
     @observable inputValues;
     @observable loading;
     @observable openNav;
@@ -24,35 +26,31 @@ export class MainStore {
     @observable showSharingIcons;
     @observable surveyAffiliations;
     @observable validationErrors;
-
-    @observable data
-    @observable graphData
-
+    
     constructor() {
         this.anchorElements = observable.map();
         this.counter = observable.map();
+        this.data = [];
         this.datasets = [];
         this.downloadQueue = observable.map();
         this.errors = observable.map();
         this.exclusions = observable.map();
         this.expandedPanels = observable.map();
         this.drawers = observable.map();
-        this.inputValues = observable.map();
-        this.loading = false;
-        this.openNav = false;
-        this.modals = observable.map();
-        this.showCookieConsent = !localStorage.getItem('cookie_consent');
-        this.showSharingIcons = false;
-        this.surveyAffiliations = observable.map();
-        this.validationErrors = observable.map();
-
-        this.data = [];
-        this.originalData = [];
         this.graphData = [{
             action: 'All Patients',
             pv: this.data.length,
             range: false
         }];
+        this.inputValues = observable.map();
+        this.loading = false;
+        this.openNav = false;
+        this.originalData = [];
+        this.modals = observable.map();
+        this.showCookieConsent = true;
+        this.showSharingIcons = false;
+        this.surveyAffiliations = observable.map();
+        this.validationErrors = observable.map();
 
         this.organizationTypes = [
             "Academic Medical Center",
