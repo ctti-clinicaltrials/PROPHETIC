@@ -54,7 +54,7 @@ class HeaderDropdownMenu extends Component {
                         color="secondary"
                         onClick={this.initiateLogin}
                         style={styles.loginBtn}>
-                    Login
+                    Log In
                 </Button>
         );
     }

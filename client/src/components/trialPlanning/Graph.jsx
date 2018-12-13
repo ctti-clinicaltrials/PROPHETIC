@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {observer} from "mobx-react";
+import {withStyles} from "@material-ui/core/styles";
 import {
     Chart,
     Geom,
@@ -9,13 +10,16 @@ import {
     Legend,
     Guide,
 } from "bizcharts";
-import CircularProgress from '@material-ui/core/CircularProgress';
-import DataSet from "@antv/data-set";
-import {withStyles} from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import MainStore from "../../stores/MainStore";
 import {Color} from "../../theme/theme";
+import MainStore from "../../stores/MainStore";
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Help from '@material-ui/icons/Help';
+import DataSet from "@antv/data-set";
+import DownloadGraph from "./DownloadGraph";
+import Paper from "@material-ui/core/Paper";
+import HelpTooltip from "@material-ui/core/Tooltip";
+import Typography from "@material-ui/core/Typography";
+
 
 const styles = theme => ({
     root: {
@@ -28,6 +32,10 @@ const styles = theme => ({
         padding: theme.spacing.unit * 3,
         height: '92vh',
         overflow: 'auto',
+    },
+    helpTooltip: {
+        marginBottom: -3,
+        marginLeft: 10
     },
     progress: {
         position: 'absolute',
@@ -44,7 +52,7 @@ class Graph extends Component {
         const { DataView } = DataSet;
         const { classes } = this.props;
         let { graphData, loading } = MainStore;
-        graphData = graphData.slice() || [{action: 'all', pv: 100}];
+        graphData = graphData.slice() || [{action: 'All Patients', pv: 100, range: false}];
         const dv = new DataView().source(graphData);
         dv.transform({
             type: 'percent',
@@ -62,6 +70,13 @@ class Graph extends Component {
             <Paper className={classes.content}>
                 <Typography variant="h5" gutterBottom>
                     Trial Planning
+                    <HelpTooltip title="An interactive funnel chart for assistance planning efficient trials. Use the exclusions on the left to change the outcome of the remaining study population in the graph. E.g. you can create a graph showing the population with a max age of 56 years old between 80 and 100 kilograms in body weight, diagnosed as HIV positive with Congestive Heart Failure.">
+                        <Help className={classes.helpTooltip}
+                              color="disabled"
+                              fontSize="small"
+                        />
+                    </HelpTooltip>
+                    <DownloadGraph />
                 </Typography>
                 { loading ? <CircularProgress color="secondary" size={80} className={classes.progress} /> :
                     <Chart height={400}
@@ -73,12 +88,12 @@ class Graph extends Component {
                         <Tooltip showTitle={false}
                                  itemTpl='<li data-index={index} style="margin-bottom:4px;">
                                         <span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}<br/>
-                                        <span style="padding-left: 16px">group：{pv}</span><br/><span style="padding-left: 16px">amount：{percent}</span><br/>
+                                        <span style="padding-left: 16px">group：{pv}</span><br/><span style="padding-left: 16px"></span><br/>
                                       </li>'/>
                         <Coord type='rect'
                                transpose scale={[1, -1]}
                         />
-                        <Legend/>
+                        <Legend clickable={false}/>
                         <Guide>
                             {data.map((obj) => {
                                 return (
@@ -90,6 +105,7 @@ class Graph extends Component {
                                             percent: 'median'
                                         }}
                                         // content={parseInt(obj.percent * 100) + '%'}
+                                        // content={`${obj.action } ${obj.pv} patients`} // Todo: Fix this to percent ?????
                                         content={`${obj.pv} patients`} // Todo: Fix this to percent ?????
                                         style={{
                                             fill: '#212121',
@@ -110,7 +126,7 @@ class Graph extends Component {
                               tooltip={['action*pv*percent', (action, pv, percent) => {
                                   return {
                                       name: action,
-                                      percent: parseInt(percent * 100) + '%',
+                                      // percent: parseInt(percent * 100) + '%',
                                       pv: pv
                                   };
                               }]}

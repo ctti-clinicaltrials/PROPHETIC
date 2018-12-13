@@ -20,6 +20,7 @@ export class MainStore {
     @observable loading;
     @observable openNav;
     @observable modals;
+    @observable showCookieConsent;
     @observable showSharingIcons;
     @observable surveyAffiliations;
     @observable validationErrors;
@@ -40,6 +41,7 @@ export class MainStore {
         this.loading = false;
         this.openNav = false;
         this.modals = observable.map();
+        this.showCookieConsent = !localStorage.getItem('cookie_consent');
         this.showSharingIcons = false;
         this.surveyAffiliations = observable.map();
         this.validationErrors = observable.map();
@@ -48,7 +50,8 @@ export class MainStore {
         this.originalData = [];
         this.graphData = [{
             action: 'All Patients',
-            pv: this.data.length
+            pv: this.data.length,
+            range: false
         }];
 
         this.organizationTypes = [
@@ -184,9 +187,10 @@ export class MainStore {
             .then((json) => {
                 this.data = json.trialdata;
                 this.originalData = json.trialdata;
-                this.graphData = [{
+                this.graphData = [{ // Set original graph data "All Patients"
                     action: 'All Patients',
-                    pv: this.data.length
+                    pv: this.data.length,
+                    range: false
                 }];
                 this.loading = false;
             }).catch(er => this.handleErrors(er))
@@ -230,6 +234,11 @@ export class MainStore {
         let a = this.anchorElements;
         !a.has(i) ? a.set(i, anchorEl) : a.delete(i);
         this.anchorElements = a;
+    }
+
+    @action setCookieConsent() {
+        localStorage.setItem('cookie_consent', 'false');
+        this.showCookieConsent = !localStorage.getItem('cookie_consent');
     }
 
     @action setExclusions(exclusion, value) {
