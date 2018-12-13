@@ -64,6 +64,10 @@ export class MainStore {
         ]
     }
 
+    @action checkCookieConsent() {
+        this.showCookieConsent = !localStorage.getItem('cookie_consent');
+    }
+
     @action deleteExclusions(exc, value) {
         let toDelete = [{e: exc, v: value}];
         let related = [];
