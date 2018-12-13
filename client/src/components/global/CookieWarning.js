@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {observer} from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from "react-router";
 import MainStore from "../../stores/MainStore";
 import SnackbarContent from "@material-ui/core/SnackbarContent";
 import Button from "@material-ui/core/Button";
@@ -26,7 +27,7 @@ class CookieWarning extends Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, location } = this.props;
         const { showCookieConsent } = MainStore;
         const action = (
             <Button variant="outlined" color="secondary" size="small" onClick={this.setCookieConsent}>
@@ -34,7 +35,7 @@ class CookieWarning extends Component {
             </Button>
         );
         return (
-            showCookieConsent &&
+            showCookieConsent && location.pathname !== '/login' &&
             <SnackbarContent message="This site uses cookies to improve your experience.
                              By using this site you agree to our use of cookies.
                              You are free to manage this via your browser settings at any time
@@ -48,6 +49,7 @@ class CookieWarning extends Component {
 
 CookieWarning.propTypes = {
     classes: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(CookieWarning);
+export default withRouter(withStyles(styles)(CookieWarning));
