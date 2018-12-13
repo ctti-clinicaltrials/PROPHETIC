@@ -10,14 +10,15 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
-import { Menu as MenuIcon, MoreVert } from '@material-ui/icons'
+import { MoreVert } from '@material-ui/icons'
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import SocialSharing from "./SocialSharing";
 
 const styles = theme => ({
     appBar: {
-        backgroundColor: Color.white
+        backgroundColor: Color.white,
+        minHeight: 105
     },
     avatar: {
         position: 'absolute',
@@ -41,7 +42,7 @@ const styles = theme => ({
         marginTop: 6
     },
     menuButton: {
-        marginTop: 6
+        marginTop: 3
     },
     toolbar: {
         zIndex: theme.zIndex.drawer + 1

@@ -6,6 +6,7 @@ import { formatDate } from '../../util/baseUtils'
 import { Color } from '../../theme/theme';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import CloudDownload from '@material-ui/icons/CloudDownload';
 import Description from '@material-ui/icons/Description';
 import Divider from '@material-ui/core/Divider';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -13,16 +14,16 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import CloudDownload from '@material-ui/icons/CloudDownload';
+import Help from '@material-ui/icons/Help';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
-import AuthStore from "../../stores/AuthStore";
 
 const styles = theme => ({
     boldHeadline: {textDecoration: 'underline'},
     expandedPanel: {
         margin: '10px -10px',
         borderLeft: `solid 4px ${Color.light_blue}`,
-        borderRadius: `4px 0px 0px 4px`
+        borderRadius: `4px 0px 0px 4px`,
     },
     heading: {
         fontSize: theme.typography.pxToRem(15),
@@ -30,6 +31,10 @@ const styles = theme => ({
     },
     headingText: {
         paddingTop: 5
+    },
+    helpTooltip: {
+        marginBottom: -3,
+        marginLeft: 10
     },
     rightIcon: {
         marginLeft: theme.spacing.unit,
@@ -39,6 +44,9 @@ const styles = theme => ({
     },
     root: {
         width: '100%',
+        '&::before' :{
+            backgroundColor: Color.light_grey
+        },
     },
 });
 
@@ -61,13 +69,19 @@ class DatasetList extends Component {
             <div>
                 <Typography variant="h5" gutterBottom>
                     Downloadable Data
+                    <Tooltip title="Data that the Clinical Trials Transformation Initiative has made available for public download. You will be asked for your name, email address and to answer a few short questions before downloading data.">
+                        <Help className={classes.helpTooltip}
+                              color="disabled"
+                              fontSize="small"
+                        />
+                    </Tooltip>
                 </Typography>
                 {datasets && datasets.map((d) => {
                     return (
                         <ExpansionPanel key={d.id}
                                         expanded={expandedPanels.has(d.id)}
                                         onChange={() => this.expandPanel(d.id)}
-                                        className={expandedPanels.has(d.id) ? classes.expandedPanel : ''}>
+                                        className={expandedPanels.has(d.id) ? classes.expandedPanel : classes.root}>
                             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                 <Typography className={`${classes.heading} ${classes.leftIcon}`}>
                                     <Description color="primary" />

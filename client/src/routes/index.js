@@ -9,9 +9,9 @@ import Grid from '@material-ui/core/Grid';
 import Header from '../components/global/Header.jsx';
 import Home from '../containers/Home.jsx';
 import IndeterminateLoader from '../components/global/IndeterminateLoader.jsx';
-import LeftNav from '../components/global/LeftNav.jsx';
 import Login from '../components/global/Login.jsx';
 import TrialPlanningView from "../containers/TrialPlanning";
+import CookieWarning from "../components/global/CookieWarning";
 
 const styles = {
     innerGrid1: {
@@ -23,13 +23,15 @@ const styles = {
     },
 };
 
-const handleAuthentication = (nextState, replace) => {
+const handleAuthentication = (nextState) => {
     if (/access_token|id_token|error/.test(nextState.location.hash)) {
         AuthStore.handleAuthentication();
     }
 };
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
+    let redirectURL = `/${window.location.pathname.split('/').filter(i => i.trim() !== '')[0]}`;
+    AuthStore.setRedirectURL(redirectURL);
     return <Route {...rest} render={(props) =>
         AuthStore.isAuthenticated() ? (
             <Component {...props}/>
@@ -40,10 +42,9 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 };
 
 const LoginRoute = ({ component: Component, ...rest }) => {
-    const redirectUrl = localStorage.getItem('redirectUrl') ? localStorage.getItem('redirectUrl') : '/';
     return <Route {...rest} render={(props) => {
         handleAuthentication(props);
-        return !AuthStore.isAuthenticated() ? <Component {...props} /> : <Redirect to={redirectUrl}/>
+        return <Component {...props} />
     }}/>
 };
 
@@ -57,17 +58,18 @@ export default () => (
                     <Route component={IndeterminateLoader} />
                     <DownloadConfirmationModal component={DownloadConfirmationModal}/>
                 </Grid>
-                <PrivateRoute path="/trial-planning" component={FilterCloud} />
+                {/*<PrivateRoute path="/trial-planning" component={FilterCloud} />*/}
                 <Switch>
-                    <PrivateRoute exact path="/trial-planning" component={TrialPlanningView} />
+                    {/*<PrivateRoute exact path="/trial-planning" component={TrialPlanningView} />*/}
                     <Fragment>
                         <Grid item xs={11} s={10} md={10} lg={8} style={styles.innerGrid2}>
                             <LoginRoute path="/login" component={Login} />
                             <PrivateRoute exact path="/data-sharing" component={Home} />
-                            <Redirect to="/data-sharing" />
+                            <Redirect to={AuthStore.isAuthenticated() ? '/data-sharing' : '/login'}/>
                         </Grid>
                     </Fragment>
                 </Switch>
+                <CookieWarning />
             <Route component={Footer} />
             </Grid>
         </Fragment>

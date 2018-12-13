@@ -4,52 +4,12 @@ import AuthStore from './AuthStore';
 import { checkStatus } from '../util/fetchUtil';
 import { generateUniqueKey } from '../util/baseUtils';
 import EmailValidator from 'email-validator';
-
-// import { data } from '../fake_data';
-const data = [{
-        "guid": "41713026-4134-411b-b177-a969fa71029c",
-        "HIV Positive": true,
-        "Other Clinical Trial Participation": false,
-        "prior_antibacterial_therapy": false,
-        "Maximum Age": 84,
-        "Apache Score": 27,
-        "weight range": 68,
-        "Congestive Heart Failure": false,
-        "chf_at_rest": false,
-        "NYHA Class IV or CHF Symptoms at Rest": false,
-        "cd4_count": 62
-    },
-    {
-        "guid": "38831ee7-71cf-41fa-8268-87d8b99026d3",
-        "HIV Positive": true,
-        "Other Clinical Trial Participation": false,
-        "prior_antibacterial_therapy": false,
-        "Maximum Age": 27,
-        "Apache Score": 62,
-        "weight range": 138,
-        "Congestive Heart Failure": true,
-        "chf_at_rest": true,
-        "NYHA Class IV or CHF Symptoms at Rest": true,
-        "cd4_count": 617
-    },
-    {
-        "guid": "5f713e7a-452f-42b6-8573-cda64ac0b003",
-        "HIV Positive": true,
-        "Other Clinical Trial Participation": true,
-        "prior_antibacterial_therapy": false,
-        "Maximum Age": 58,
-        "Apache Score": 27,
-        "weight range": 30,
-        "Congestive Heart Failure": false,
-        "chf_at_rest": false,
-        "NYHA Class IV or CHF Symptoms at Rest": true,
-        "cd4_count": 39
-    },
-    ];
+import { Exc } from "../exclusions";
 
 
 export class MainStore {
     @observable anchorElements;
+    @observable data
     @observable datasets;
     @observable downloadQueue;
     @observable errors;
@@ -57,37 +17,40 @@ export class MainStore {
     @observable expandedPanels;
     @observable counter;
     @observable drawers;
+    @observable graphData
+    @observable inputValues;
     @observable loading;
     @observable openNav;
     @observable modals;
+    @observable showCookieConsent;
     @observable showSharingIcons;
     @observable surveyAffiliations;
     @observable validationErrors;
-
-    @observable data
-    @observable graphData
-
+    
     constructor() {
         this.anchorElements = observable.map();
         this.counter = observable.map();
+        this.data = [];
         this.datasets = [];
         this.downloadQueue = observable.map();
         this.errors = observable.map();
         this.exclusions = observable.map();
         this.expandedPanels = observable.map();
         this.drawers = observable.map();
+        this.graphData = [{
+            action: 'All Patients',
+            pv: this.data.length,
+            range: false
+        }];
+        this.inputValues = observable.map();
         this.loading = false;
         this.openNav = false;
+        this.originalData = [];
         this.modals = observable.map();
+        this.showCookieConsent = true;
         this.showSharingIcons = false;
         this.surveyAffiliations = observable.map();
         this.validationErrors = observable.map();
-
-        this.data = data;
-        this.graphData = [{
-            action: 'all patients',
-            pv: data.length
-        }];
 
         this.organizationTypes = [
             "Academic Medical Center",
@@ -101,9 +64,16 @@ export class MainStore {
         ]
     }
 
-    @action deleteExclusion(exclusion, value) {
-        this.exclusions.delete(exclusion);
-        this.data = this.filterData(exclusion, value, false);
+    @action deleteExclusions(exc, value) {
+        let toDelete = [{e: exc, v: value}];
+        let related = [];
+        if(exc === Exc.HIV) related = [{e: Exc.CD4Count, v: false}];
+        if(exc === Exc.chf) related = [{e: Exc.nyha, v: false}];
+        toDelete.push(...related);
+        toDelete.forEach(i => {
+            this.exclusions.delete(i.e);
+            this.data = this.filterData(i.e, i.v, false);
+        });
     }
 
     @action downloadDataset() {
@@ -122,6 +92,44 @@ export class MainStore {
                 }
                 this.queueDownload();
             }).catch(ex => this.handleErrors(ex))
+    }
+
+    filterData(exclusion, value, remove = true) {
+        let newData = [];
+        if(remove) { // If removing items just filter the existing this.data array
+            if (typeof value === 'boolean') newData = this.data.filter(d => d[exclusion] === true);
+            else newData = this.data.filter((d) => d[exclusion] >= value.min && d[exclusion] <= value.max);
+        } else { // If adding items back in replace this.data by filtering original data array ???
+            let filters = this.exclusions.values();
+            if(filters.length) { // If no filters just return original data array
+                this.data = this.originalData;
+                for (let f of filters) {
+                    let filtered;
+                    if (typeof f.range === 'boolean') filtered = [...this.data.filter(d => d[f.action] === true)];
+                    else filtered = [...this.data.filter((d) => d[f.action] >= f.range.min && d[f.action] <= f.range.max)];
+                    this.data = filtered;
+                    this.exclusions.set(f.action, { action: f.action, pv:  filtered.length, range: typeof f.range !== 'boolean' && f.range});
+                    this.setGraphData();
+                }
+                return this.data;
+            } else {
+                this.setGraphData();
+                newData = this.originalData;
+            }
+        }
+        return newData
+    }
+
+    @action formatSurveyFormData(inputs) {
+        let formData = inputs.map(i => {
+            let key = i.labels[0].textContent.replace(/[^\x00-\x7F]/g, '').slice(0, -1);
+            return {[key]:i.value}
+        });
+        let affiliations = [...this.surveyAffiliations.keys()].filter((k) => k !== 'other');
+        if(this.surveyAffiliations.has('other')) {
+            affiliations.push(`other: ${inputs.filter((i) => i.id === 'other')[0].value}`)
+        }
+        return [...formData, {affiliations: [...affiliations]}];
     }
 
     @action getAllDataSets(cid) {
@@ -169,6 +177,23 @@ export class MainStore {
         }
     }
 
+    @action getTrialData() {
+        this.loading = true;
+        api.getTrialData()
+            .then(checkStatus)
+            .then(response => response.json())
+            .then((json) => {
+                this.data = json.trialdata;
+                this.originalData = json.trialdata;
+                this.graphData = [{ // Set original graph data "All Patients"
+                    action: 'All Patients',
+                    pv: this.data.length,
+                    range: false
+                }];
+                this.loading = false;
+            }).catch(er => this.handleErrors(er))
+    }
+
     @action handleErrors(er) {
         this.loading = false;
         if(er.response) {
@@ -184,27 +209,23 @@ export class MainStore {
         }
     }
 
-    @action formatFormData(inputs) {
-        let formData = inputs.map(i => {
-            let key = i.labels[0].textContent.replace(/[^\x00-\x7F]/g, '').slice(0, -1);
-            return {[key]:i.value}
-        });
-        let affiliations = [...this.surveyAffiliations.keys()].filter((k) => k !== 'other');
-        if(this.surveyAffiliations.has('other')) {
-            affiliations.push(`other: ${inputs.filter((i) => i.id === 'other')[0].value}`)
-        }
-        return [...formData, {affiliations: [...affiliations]}];
-    }
-
     @action postUserResponse(inputs) {
         const { userProfile } = AuthStore;
         const file = this.datasets.find(d => d.id ===this.downloadQueue.keys().next().value).file;
-        const formData = this.formatFormData(inputs);
+        const formData = this.formatSurveyFormData(inputs);
         api.postUserResponse(userProfile, formData, file)
             .then(checkStatus)
             .then(response => response.json())
             .then(this.downloadDataset())
             .catch(er => this.handleErrors(er))
+    }
+
+    @action queueDownload(id) {
+        if(id) {
+            this.downloadQueue.set(id)
+        } else {
+            this.downloadQueue.clear();
+        }
     }
 
     @action setAnchorElement(anchorEl, i) {
@@ -213,62 +234,23 @@ export class MainStore {
         this.anchorElements = a;
     }
 
+    @action setCookieConsent() {
+        localStorage.setItem('cookie_consent', 'false');
+        this.showCookieConsent = !localStorage.getItem('cookie_consent');
+    }
+
     @action setExclusions(exclusion, value) {
         if(typeof value === 'boolean') {
             this.data = this.filterData(exclusion, value);
+            this.exclusions.set(exclusion, { action: exclusion, pv: this.data.length, range: typeof value !== 'boolean' && value });
         } else {
+            this.exclusions.set(exclusion, { action: exclusion, pv: this.data.length, range: typeof value !== 'boolean' && value }); //By default ranges are maxed so they should initially return the same # of patients as the current filter
             this.data = this.filterData(exclusion, value, false);
         }
-        this.exclusions.set( // Todo: Need to toggle the exclusion if it's a range and still get the correct PV value. Currently if it's a range I'm setting the exclusion twice which causes issues
-            exclusion,
-            {
-                action: exclusion,
-                pv: this.data.length, // This length is wrong for ranges...
-                range: typeof value !== 'boolean' && value
-            }
-        );
-        this.setGraphData();
-    }
-
-    filterData(exclusion, value, remove = true) {
-        let newData = [];
-        if(remove) { // If removing items just filter the existing this.data array
-            if (typeof value === 'boolean') newData = this.data.filter(d => d[exclusion] === true);
-            else newData = this.data.filter((d) => d[exclusion] >= value.min && d[exclusion] <= value.max);
-        } else { // If adding items back in replace this.data by filtering original data array ???
-            let filters = this.exclusions.values();
-            if(filters.length) { // If no filters just return original data array
-                this.data = data;
-                for (let f of filters) {
-                    let filtered;
-                    if (typeof f.range === 'boolean') filtered = [...this.data.filter(d => d[f.action] === true)];
-                    if (typeof f.range !== 'boolean') {
-                        let range = typeof value !== 'boolean' ? value : f.range; // TODO: this will fail with multiple ranges
-                        filtered = [...this.data.filter((d) => d[f.action] >= range.min && d[f.action] <= range.max)];
-                        // filtered = this.data.filter((d) => d[f.action] >= range.min && d[f.action] <= range.max);
-                    }
-                    this.data = filtered;
-                    this.exclusions.set(
-                        f.action,
-                        {
-                            action: f.action,
-                            pv:  filtered.length,
-                            range: typeof f.range !== 'boolean' && f.range
-                        }
-                    );
-                    this.setGraphData();
-                }
-                return this.data;
-            } else {
-                this.setGraphData();
-                newData = data;
-            }
-        }
-        return newData
+        if(typeof value === 'boolean') this.setGraphData(); // If not a bool, set graph data in filterData function
     }
 
     @action setGraphData() {
-        console.log(this.exclusions.values())
         this.graphData = [this.graphData[0], ...this.exclusions.values().sort((a, b) => b.pv - a.pv)];
     }
 
@@ -287,6 +269,10 @@ export class MainStore {
         }
     }
 
+    @action setInputValue(input, value, remove = false) {
+        remove ? this.inputValues.delete(input) : this.inputValues.set(input, value);
+    }
+
     @action setValidationErrors(id) {
         if(id === 'clearAll') {
             this.validationErrors.clear();
@@ -303,11 +289,11 @@ export class MainStore {
         !this.drawers.has(key) ? this.drawers.set(key, true) : this.drawers.delete(key);
     }
 
-    @action toggleExclusion(input, value) { // Todo: refactor this to set exclusions and pv value. This method is redundant
-        if(!this.exclusions.has(input)) {
-            this.setExclusions(input, value);
+    @action toggleExclusion(exc, value) {
+        if(!this.exclusions.has(exc)) {
+            this.setExclusions(exc, value);
         } else {
-            this.deleteExclusion(input, value);
+            this.deleteExclusions(exc, value);
         }
     }
 
@@ -359,14 +345,6 @@ export class MainStore {
         return !this.validationErrors.size &&
             !inputs.some(i => i.value.trim().length <= 0) &&
             !!this.surveyAffiliations.size > 0
-    }
-
-    @action queueDownload(id) {
-        if(id) {
-            this.downloadQueue.set(id)
-        } else {
-            this.downloadQueue.clear();
-        }
     }
 
     @action waitForToken(func, args, delay, counterId) {

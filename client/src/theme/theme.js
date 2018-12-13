@@ -15,6 +15,7 @@ class Colors {
         this.light_red = '#F44336';
         this.maroon = '#680001';
         this.gray = '#57585c';
+        this.light_grey = '#eee';
         this.dark_turquoise = '#016879';
         this.medium_blue = '#008aa1';
         this.light_blue = '#02b7d4';
