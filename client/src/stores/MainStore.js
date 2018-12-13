@@ -239,6 +239,10 @@ export class MainStore {
         this.showCookieConsent = !localStorage.getItem('cookie_consent');
     }
 
+    @action checkCookieConsent() {
+        this.showCookieConsent = !localStorage.getItem('cookie_consent');
+    }
+
     @action setExclusions(exclusion, value) {
         if(typeof value === 'boolean') {
             this.data = this.filterData(exclusion, value);
