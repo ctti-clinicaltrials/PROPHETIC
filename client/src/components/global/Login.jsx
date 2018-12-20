@@ -57,9 +57,12 @@ class Login extends Component {
 
     render() {
         const { classes } = this.props;
-        const {loading} = MainStore;
+        const { loading } = MainStore;
+        const { isLoggingIn } = AuthStore;
+        console.log(AuthStore.isAuthenticated());
+
         return (
-            <Card classes={{root: classes.paper}}>
+            !isLoggingIn ? <Card classes={{root: classes.paper}}>
                     <CardMedia
                         component="img"
                         className={classes.media}
@@ -98,7 +101,7 @@ class Login extends Component {
                     </Button>
                     {loading && <CircularProgress size={24} className={classes.progress} />}
                 </CardActions>
-            </Card>
+            </Card> : null
         );
     }
 }
