@@ -11,7 +11,8 @@ import PropTypes from "prop-types";
 
 const styles = {
     loginBtn: {
-        marginTop: 8
+        marginTop: 8,
+        width: 160
     },
 };
 
@@ -50,7 +51,8 @@ class HeaderDropdownMenu extends Component {
                     <MenuItem onClick={() => this.openLink('cp')}>Citation Policy</MenuItem>
                     <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
                 </Menu> :
-                <Button variant="contained"
+                <Button size="small"
+                        variant="outlined"
                         color="secondary"
                         onClick={this.initiateLogin}
                         style={styles.loginBtn}>

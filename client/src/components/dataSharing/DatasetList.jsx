@@ -25,6 +25,7 @@ const styles = theme => ({
         borderLeft: `solid 4px ${Color.light_blue}`,
         borderRadius: `4px 0px 0px 4px`,
     },
+    h5: { marginBottom: 19},
     heading: {
         fontSize: theme.typography.pxToRem(15),
         fontWeight: theme.typography.fontWeightRegular,
@@ -67,7 +68,7 @@ class DatasetList extends Component {
         const { datasets, expandedPanels } = MainStore;
         return (
             <div>
-                <Typography variant="h5" gutterBottom>
+                <Typography variant="h5" gutterBottom className={classes.h5}>
                     Downloadable Data
                     <Tooltip title="Data that the Clinical Trials Transformation Initiative has made available for public download. You will be asked for your name, email address and to answer a few short questions before downloading data.">
                         <Help className={classes.helpTooltip}
@@ -91,15 +92,15 @@ class DatasetList extends Component {
                                 </Typography>
                             </ExpansionPanelSummary>
                             {d.metadata &&
-                                d.metadata.map(m => {
-                                    return <ExpansionPanelDetails key={m.template_property.id}>
-                                        <Typography>
-                                            <b className={classes.boldHeadline}>{m.template_property.label}</b>
-                                            <br/>
-                                            {m.value}
-                                        </Typography>
-                                    </ExpansionPanelDetails>
-                                })
+                            d.metadata.map(m => {
+                                return <ExpansionPanelDetails key={m.template_property.id}>
+                                    <Typography>
+                                        <b className={classes.boldHeadline}>{m.template_property.label}</b>
+                                        <br/>
+                                        {m.value}
+                                    </Typography>
+                                </ExpansionPanelDetails>
+                            })
                             }
                             <ExpansionPanelDetails>
                                 <Typography>
