@@ -102,9 +102,9 @@ export class MainStore {
         if(remove) { // If removing items just filter the existing this.data array
             if (typeof value === 'boolean') newData = this.data.filter(d => d[exclusion] === true);
             else newData = this.data.filter((d) => d[exclusion] >= value.min && d[exclusion] <= value.max);
-        } else { // If adding items back in replace this.data by filtering original data array ???
+        } else { // If adding items back in replace this.data by filtering original data array
             let filters = this.exclusions.values();
-            if(filters.length) { // If no filters just return original data array
+            if(filters.length) { // Use values from exclusions to filter data
                 this.data = this.originalData;
                 for (let f of filters) {
                     let filtered;
@@ -117,7 +117,7 @@ export class MainStore {
                 return this.data;
             } else {
                 this.setGraphData();
-                newData = this.originalData;
+                newData = this.originalData; // If no filters just return original data array
             }
         }
         return newData
