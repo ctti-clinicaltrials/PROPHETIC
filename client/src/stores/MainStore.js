@@ -22,6 +22,8 @@ export class MainStore {
     @observable openNav;
     @observable modals;
     @observable showCookieConsent;
+    @observable showScrollButtonLeft;
+    @observable showScrollButtonRight;
     @observable showSharingIcons;
     @observable surveyAffiliations;
     @observable validationErrors;
@@ -47,6 +49,8 @@ export class MainStore {
         this.originalData = [];
         this.modals = observable.map();
         this.showCookieConsent = true;
+        this.showScrollButtonLeft = false;
+        this.showScrollButtonRight = false;
         this.showSharingIcons = false;
         this.surveyAffiliations = observable.map();
         this.validationErrors = observable.map();
@@ -274,6 +278,15 @@ export class MainStore {
 
     @action setInputValue(input, value, remove = false) {
         remove ? this.inputValues.delete(input) : this.inputValues.set(input, value);
+    }
+
+    @action setChipContainerScrollButtonLeft(show) {
+        this.showScrollButtonLeft = show;
+    }
+
+    @action setChipContainerScrollButtonRight(width ,xScrollWidth) {
+        if(width > xScrollWidth) this.showScrollButtonRight = true;
+        // this.showScrollButtonLeft = scrolled ? scrolled : false;
     }
 
     @action setValidationErrors(id) {
