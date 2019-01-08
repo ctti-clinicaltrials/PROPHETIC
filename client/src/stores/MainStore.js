@@ -27,6 +27,8 @@ export class MainStore {
     @observable showSharingIcons;
     @observable surveyAffiliations;
     @observable validationErrors;
+
+    @observable onlyShowScrollButtonRight
     
     constructor() {
         this.anchorElements = observable.map();
@@ -54,6 +56,8 @@ export class MainStore {
         this.showSharingIcons = false;
         this.surveyAffiliations = observable.map();
         this.validationErrors = observable.map();
+
+        this.onlyShowScrollButtonRight = false;
 
         this.organizationTypes = [
             "Academic Medical Center",
@@ -255,6 +259,7 @@ export class MainStore {
             this.data = this.filterData(exclusion, value, false);
         }
         if(typeof value === 'boolean') this.setGraphData(); // If not a bool, set graph data in filterData function
+        this.showOnlyChipContainerScrollButtonLeft(false); // Todo: Clean this up. Rename this
     }
 
     @action setGraphData() {
@@ -280,13 +285,18 @@ export class MainStore {
         remove ? this.inputValues.delete(input) : this.inputValues.set(input, value);
     }
 
-    @action setChipContainerScrollButtonLeft(show) {
+    @action setChipContainerScrollButtonLeft(show, onlyShowLeft) {
         this.showScrollButtonLeft = show;
     }
 
-    @action setChipContainerScrollButtonRight(width ,xScrollWidth) {
+    @action showOnlyChipContainerScrollButtonLeft(onlyShowLeft) {
+        this.onlyShowScrollButtonRight = onlyShowLeft;
+    }
+
+    @action setChipContainerScrollButtonRight(width ,xScrollWidth, endScroll, onlyShowLeft) {
         if(width > xScrollWidth) this.showScrollButtonRight = true;
-        // this.showScrollButtonLeft = scrolled ? scrolled : false;
+        if(endScroll) this.showScrollButtonRight = false;
+        if(onlyShowLeft) this.onlyShowScrollButtonRight = true;
     }
 
     @action setValidationErrors(id) {
