@@ -13,29 +13,20 @@ import {
 import {Color} from "../../theme/theme";
 import MainStore from "../../stores/MainStore";
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Help from '@material-ui/icons/Help';
 import DataSet from "@antv/data-set";
-import DownloadGraph from "./DownloadGraph";
 import Paper from "@material-ui/core/Paper";
-import HelpTooltip from "@material-ui/core/Tooltip";
-import Typography from "@material-ui/core/Typography";
-
 
 const styles = theme => ({
     root: {
         display: 'flex'
     },
     content: {
-        margin: '10px 10px 10px 0px',
+        margin: '2px 10px 10px 0px',
         flexGrow: 1,
         alignSelf: 'start',
         padding: theme.spacing.unit * 3,
         height: '92vh',
         overflow: 'auto',
-    },
-    helpTooltip: {
-        marginBottom: -3,
-        marginLeft: 10
     },
     progress: {
         position: 'absolute',
@@ -68,16 +59,6 @@ class Graph extends Component {
         };
         return (
             <Paper className={classes.content}>
-                <Typography variant="h5" gutterBottom>
-                    Trial Planning
-                    <HelpTooltip title="An interactive funnel chart for assistance planning efficient trials. Use the exclusions on the left to change the outcome of the remaining study population in the graph. E.g. you can create a graph showing the population with a max age of 56 years old between 80 and 100 kilograms in body weight, diagnosed as HIV positive with Congestive Heart Failure.">
-                        <Help className={classes.helpTooltip}
-                              color="disabled"
-                              fontSize="small"
-                        />
-                    </HelpTooltip>
-                    <DownloadGraph />
-                </Typography>
                 { loading ? <CircularProgress color="secondary" size={80} className={classes.progress} /> :
                     <Chart height={400}
                            data={data}
