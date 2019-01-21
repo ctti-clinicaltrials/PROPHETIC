@@ -59,7 +59,6 @@ class Login extends Component {
         const { classes } = this.props;
         const { loading } = MainStore;
         const { isLoggingIn } = AuthStore;
-        console.log(AuthStore.isAuthenticated());
 
         return (
             !isLoggingIn ? <Card classes={{root: classes.paper}}>

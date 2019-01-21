@@ -11,6 +11,7 @@ import Home from '../containers/Home.jsx';
 import IndeterminateLoader from '../components/global/IndeterminateLoader.jsx';
 import Login from '../components/global/Login.jsx';
 import TrialPlanningView from "../containers/TrialPlanning";
+import TrialPlanningHeading from "../components/trialPlanning/TrialPlanningHeading";
 import CookieWarning from "../components/global/CookieWarning";
 
 const styles = {
@@ -59,6 +60,7 @@ export default () => (
                     <DownloadConfirmationModal component={DownloadConfirmationModal}/>
                 </Grid>
                 {/*<PrivateRoute path="/trial-planning" component={FilterCloud} />*/}
+                {/*<PrivateRoute path="/trial-planning" component={TrialPlanningHeading} />*/}
                 <Switch>
                     {/*<PrivateRoute exact path="/trial-planning" component={TrialPlanningView} />*/}
                     <Fragment>
