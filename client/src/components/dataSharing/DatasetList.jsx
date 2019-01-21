@@ -20,6 +20,7 @@ import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
     boldHeadline: {textDecoration: 'underline'},
+    button: {padding: '2px 8px'},
     expandedPanel: {
         margin: '10px -10px',
         borderLeft: `solid 4px ${Color.light_blue}`,
@@ -37,6 +38,7 @@ const styles = theme => ({
         marginBottom: -3,
         marginLeft: 10
     },
+    panelActions: {padding: 10},
     rightIcon: {
         marginLeft: theme.spacing.unit,
     },
@@ -109,8 +111,13 @@ class DatasetList extends Component {
                                 </Typography>
                             </ExpansionPanelDetails>
                             <Divider />
-                            <ExpansionPanelActions>
-                                <Button size="small" color="primary" onClick={() => this.downloadDataset(d.file.id)}>
+                            <ExpansionPanelActions className={classes.panelActions}>
+                                <Button size="small"
+                                        color="primary"
+                                        variant="outlined"
+                                        className={classes.button}
+                                        onClick={() => this.downloadDataset(d.file.id)}
+                                >
                                     Download Data
                                     <CloudDownload className={classes.rightIcon} />
                                 </Button>
