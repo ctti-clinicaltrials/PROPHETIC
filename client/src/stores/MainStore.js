@@ -22,9 +22,13 @@ export class MainStore {
     @observable openNav;
     @observable modals;
     @observable showCookieConsent;
+    @observable showScrollButtonLeft;
+    @observable showScrollButtonRight;
     @observable showSharingIcons;
     @observable surveyAffiliations;
     @observable validationErrors;
+
+    @observable onlyShowScrollButtonRight
     
     constructor() {
         this.anchorElements = observable.map();
@@ -47,9 +51,13 @@ export class MainStore {
         this.originalData = [];
         this.modals = observable.map();
         this.showCookieConsent = true;
+        this.showScrollButtonLeft = false;
+        this.showScrollButtonRight = false;
         this.showSharingIcons = false;
         this.surveyAffiliations = observable.map();
         this.validationErrors = observable.map();
+
+        this.onlyShowScrollButtonRight = false;
 
         this.organizationTypes = [
             "Academic Medical Center",
@@ -97,7 +105,7 @@ export class MainStore {
             }).catch(ex => this.handleErrors(ex))
     }
 
-    filterData(exclusion, value, remove = true) {
+    @action filterData(exclusion, value, remove = true) {
         let newData = [];
         if(remove) { // If removing items just filter the existing this.data array
             if (typeof value === 'boolean') newData = this.data.filter(d => d[exclusion] === true);
@@ -188,7 +196,7 @@ export class MainStore {
             .then((json) => {
                 this.data = json.trialdata;
                 this.originalData = json.trialdata;
-                this.graphData = [{ // Set original graph data "All Patients"
+                this.graphData = [{
                     action: 'All Patients',
                     pv: this.data.length,
                     range: false
@@ -251,6 +259,7 @@ export class MainStore {
             this.data = this.filterData(exclusion, value, false);
         }
         if(typeof value === 'boolean') this.setGraphData(); // If not a bool, set graph data in filterData function
+        this.onlyShowChipScrollButtonRight(false);
     }
 
     @action setGraphData() {
@@ -274,6 +283,20 @@ export class MainStore {
 
     @action setInputValue(input, value, remove = false) {
         remove ? this.inputValues.delete(input) : this.inputValues.set(input, value);
+    }
+
+    @action setChipContainerScrollButtonLeft(show) {
+        this.showScrollButtonLeft = show;
+    }
+
+    @action onlyShowChipScrollButtonRight(onlyShowRight) {
+        this.onlyShowScrollButtonRight = onlyShowRight;
+    }
+
+    @action setChipContainerScrollButtonRight(width ,xScrollWidth, endScroll, onlyShowRight) {
+        this.showScrollButtonRight = width > xScrollWidth && true;
+        if(endScroll) this.showScrollButtonRight = false;
+        if(onlyShowRight) this.onlyShowScrollButtonRight = true;
     }
 
     @action setValidationErrors(id) {
