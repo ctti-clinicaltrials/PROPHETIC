@@ -10,6 +10,10 @@ import { Link } from 'react-router-dom';
 import PropTypes from "prop-types";
 
 const styles = {
+    link: {
+        textDecoration: 'none',
+        color: '#212121'
+    },
     loginBtn: {
         marginTop: 8,
         width: 160
@@ -38,6 +42,8 @@ class HeaderDropdownMenu extends Component {
 
     render() {
         const { anchorElements } = MainStore;
+        const { classes } = this.props;
+
         return (
             AuthStore.isAuthenticated() ?
                 <Menu id="simple-menu"
@@ -45,8 +51,8 @@ class HeaderDropdownMenu extends Component {
                       open={anchorElements.has('headerMenu')}
                       onClose={(e) => this.openMenu(e, 'headerMenu')}
                 >
-                    {/*<MenuItem onClick={() => this.openLink()}><Link style={{textDecoration: 'none', color: '#212121'}} to="/trial-planning">Trial Planning App</Link></MenuItem> //TODO Fix these styles. Use classes eventually.*/}
-                    <MenuItem onClick={() => this.openLink()}><Link style={{textDecoration: 'none', color: '#212121'}} to="/">Downloadable Data</Link></MenuItem>
+                    {/*<MenuItem onClick={() => this.openLink()}><Link className={classes.link} to="/trial-planning">Trial Planning App</Link></MenuItem> //TODO Fix these styles. Use classes eventually.*/}
+                    <MenuItem onClick={() => this.openLink()}><Link className={classes.link} to="/data-sharing">Downloadable Data</Link></MenuItem>
                     <MenuItem onClick={() => this.openLink('cu')}>Contact Us</MenuItem>
                     <MenuItem onClick={() => this.openLink('cp')}>Citation Policy</MenuItem>
                     <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
