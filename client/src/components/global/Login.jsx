@@ -58,10 +58,9 @@ class Login extends Component {
     render() {
         const { classes } = this.props;
         const { loading } = MainStore;
-        const { isLoggingIn } = AuthStore;
 
         return (
-            !isLoggingIn ? <Card classes={{root: classes.paper}}>
+            <Card classes={{root: classes.paper}}>
                     <CardMedia
                         component="img"
                         className={classes.media}

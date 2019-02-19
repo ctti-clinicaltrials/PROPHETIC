@@ -7,7 +7,6 @@ import MainStore from './MainStore';
 export class AuthStore {
     @observable auth0;
     @observable ddsAPIToken;
-    @observable isLoggingIn;
     @observable userProfile;
 
     constructor() {
@@ -23,7 +22,6 @@ export class AuthStore {
             }
         });
         this.ddsAPIToken = null;
-        this.isLoggingIn = false;
         this.userProfile = null;
     }
 
@@ -61,11 +59,9 @@ export class AuthStore {
         this.auth0.parseHash((err, authResult) => {
             if (authResult && authResult.accessToken && authResult.idToken) {
                 this.setSession(authResult);
-                this.isLoggingIn = true;
             } else if (err) {
                 window.location.assign('/login');
                 MainStore.toggleLoading();
-                this.isLoggingIn = false;
             }
         });
     }
@@ -77,7 +73,6 @@ export class AuthStore {
 
     @action login() {
         this.auth0.authorize();
-        this.isLoggingIn = true;
     }
 
     @action logout(er) {
@@ -100,7 +95,6 @@ export class AuthStore {
         const redirectUrl = localStorage.getItem('redirect_url') ? localStorage.getItem('redirect_url') : '/data-sharing';
         window.location.assign(redirectUrl);
         MainStore.toggleLoading();
-        this.isLoggingIn = false;
     }
 }
 
