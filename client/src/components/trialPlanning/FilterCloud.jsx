@@ -96,7 +96,7 @@ class FilterCloud extends Component {
                 >
                     <Button variant="fab" mini
                             color="secondary"
-                            style={{position: 'absolute', top: 102, left: 0, opacity: .8, display: showScrollButtonLeft && !!exclusions.size ? 'block' : 'none'}}
+                            style={{position: 'fixed', top: 102, left: 0, opacity: .8, display: showScrollButtonLeft && !!exclusions.size ? 'block' : 'none'}}
                             aria-label="Add" onClick={() => this.scrollButtonClick('left')}>
                         <ArrowLeftIcon />
                     </Button>
@@ -115,7 +115,7 @@ class FilterCloud extends Component {
                     }
                     <Button variant="fab" mini
                             color="secondary"
-                            style={{position: 'absolute', top: 102, right: 0, opacity: .8, display: showScrollButtonRight && !!exclusions.size ? 'block' : 'none'}}
+                            style={{position: 'fixed', top: 102, right: 0, opacity: .8, display: showScrollButtonRight && !!exclusions.size ? 'block' : 'none'}}
                             aria-label="Add" onClick={() => this.scrollButtonClick('right')}>
                         <ArrowRightIcon />
                     </Button>

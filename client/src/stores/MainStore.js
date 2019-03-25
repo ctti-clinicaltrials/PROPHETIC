@@ -19,6 +19,7 @@ export class MainStore {
     @observable graphData;
     @observable inputValues;
     @observable loading;
+    @observable onlyShowScrollButtonRight;
     @observable openNav;
     @observable modals;
     @observable showCookieConsent;
@@ -28,8 +29,6 @@ export class MainStore {
     @observable surveyAffiliations;
     @observable validationErrors;
 
-    @observable onlyShowScrollButtonRight
-    
     constructor() {
         this.anchorElements = observable.map();
         this.counter = observable.map();
