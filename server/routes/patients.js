@@ -8,7 +8,7 @@ const router = express.Router();
 const conn = mongoose.createConnection(dbConfig.DB);
 
 router.get("/", jwt.check(), (req, res, next) => {
-    conn.collection("trialdata").find({}, (err, docs) => {
+    conn.collection("patients").find({}, (err, docs) => {
         if(err) return next(err);
         docs.each((err, doc) => {
             if(err) res.status(500).json(error(500, "The server is unavailable or having trouble completing this request"));
