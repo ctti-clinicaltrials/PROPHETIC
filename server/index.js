@@ -31,7 +31,7 @@ mongoose.connect(dbConfig.DB).then(
 
 app.use('/api/agent-token', agentToken);
 app.use('/api/user-response', userResponse);
-app.use('/api/trial-data', patients);
+app.use('/api/patients', patients);
 
 // All remaining requests return the React app, so it can handle routing.
 app.get('/*', (request, response) => {
