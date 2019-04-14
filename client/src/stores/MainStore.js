@@ -193,8 +193,8 @@ export class MainStore {
             .then(checkStatus)
             .then(response => response.json())
             .then((json) => {
-                this.data = json.trialdata;
-                this.originalData = json.trialdata;
+                this.data = json.patients;
+                this.originalData = json.patients;
                 this.graphData = [{
                     action: 'All Patients',
                     pv: this.data.length,
