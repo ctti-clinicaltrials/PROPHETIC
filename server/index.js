@@ -1,6 +1,6 @@
 const agentToken = require('./routes/agentToken');
 const userResponse = require('./routes/userResponse');
-const patients = require('./routes/patients');
+const trialData = require('./routes/trialData');
 const cors = require('cors');
 const corsOptions = { origin: '*' };
 const bodyParser = require('body-parser');
@@ -31,7 +31,7 @@ mongoose.connect(dbConfig.DB).then(
 
 app.use('/api/agent-token', agentToken);
 app.use('/api/user-response', userResponse);
-app.use('/api/patients', patients);
+app.use('/api/trial-data', trialData);
 
 // All remaining requests return the React app, so it can handle routing.
 app.get('/*', (request, response) => {
